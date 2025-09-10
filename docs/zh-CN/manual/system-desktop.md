@@ -5,7 +5,7 @@
 DPanel Desktop 基于 [Wails](https://wails.io/) 实现。
 本质上是一个 CLI 程序管理器，通过 GUI 可视化的界面，管理主程序的环境变量、运行程序、接管控制台日志输出。
 
-在 Windows 系统中不再需要 Docker 环境的束缚，可以简单、快速的运行 DPanel 面板。
+在 Windows 系统中不再受到 Docker 环境的束缚，可以简单、快速的运行 DPanel 面板。
 基于 DPanel 的 多 Docker 服务端功能（支持 API、SSH 添加）。
 实现了对服务器的零侵入和零占用，杜绝了面板产生的任何安全风险。
 
