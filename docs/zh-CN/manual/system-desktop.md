@@ -27,6 +27,8 @@ DPanel Desktop 安装包会默认包含以下组件，二进制运行文件不�
 低于 Windows10 的系统无法使用 DPanel Desktop。
 :::
 
+Windows 10 及以上默认会安装 webview2 运行时，如果你的系统未包含相关组件通过 [Microsoft Edge WebView2](https://developer.microsoft.com/zh-cn/Microsoft-edge/webview2) 下载。
+
 ### dpanel.exe
 
 DPanel Desktop 运行时需要调用 DPanel 主程序，通过 [Releases](https://github.com/donknap/dpanel/releases) 页面下载 dpanel.exe 程序。
