@@ -10,6 +10,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       { text: '首页', link: getLink() },
       { text: '许可协议', link: getLink("license") },
       { text: '专业版', link: getLink("pro") },
+      { text: '更新记录', link: getLink("upgrade") },
       { text: '赞助', link: 'https://afdian.com/a/dpanel' },
       { text: '演示', link: "https://demo.dpanel.cc" },
     ],
@@ -111,6 +112,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: '开启 Docker Tcp 连接', link: getLink("manual/system-env-tcp") },
           { text: '桥接宿主机网络', link: getLink("manual/system-bind-macvlan") },
           { text: '计划任务脚本模板', link: getLink("manual/system-cron-template") },
+          { text: 'DPanel 桌面运行', link: getLink("manual/system-desktop") },
           { text: '常见错误', link: getLink("manual/system-qa") },
         ]
       },
