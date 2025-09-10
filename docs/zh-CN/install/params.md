@@ -29,7 +29,6 @@ dpanel server:start -f /etc/dpanel/config.yaml -e STORAGE_LOCAL_PATH=/home/dpane
 | APP_VERSION | 程序版本 | - |
 | APP_SERVER_PORT | 程序运行绑定端口 | 8086 |
 | STORAGE_LOCAL_PATH | 程序运行产生的数据目录 | ./ |
-| DP_JWT_SECRET | 登录 JWT 密钥 | 随机生成 |
 | DB_MODE | 数据库读写模式 ro\|rw\|rwc | rwc |
 
 ## 完整配置文件
@@ -73,8 +72,6 @@ database:
 storage:
   local:
     path: ${STORAGE_LOCAL_PATH}
-jwt:
-  secret: ${DP_JWT_SECRET}
 common:
   public_user_name: ${PUBLIC_USERNAME-__public__}
 ```

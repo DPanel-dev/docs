@@ -30,8 +30,6 @@ When resetting a username, you must also specify a password
 docker exec dpanel ./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
 ```
 
-!> When using the following command, you need to first configure the [DP_JWT_SECRET](/docs/en-US/install/docker?id=login-jwt-secret)  environment variable of the DPanel
-
 ### Sync Store
 
 - \--name The app store name

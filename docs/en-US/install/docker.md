@@ -131,18 +131,23 @@ docker run -d --name dpanel --restart=always \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
-## Login Jwt Secret
+## Mount DPanel Key File <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
-:::danger
-This value must be configured when executing the DPanel [Control Command](/docs/en-US/install/ctrl). Please be sure to use a strong password when configuring.
-:::
+The panel uses the RSA algorithm for login authentication and SSH-related functions. DPanel automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the /dpanel/cert/rsa directory.
+
+You can also mount your local ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub files into the panel container.
+
+When adding SSH permissions, select [Use DPanel Key] to allow the container to directly use the host machine's permissions.
+
+This approach also allows for unified permission management and quick replacement and updating.
 
 ```js
-docker run -d --name dpanel --restart=always \
- -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
- -e DP_JWT_SECRET=ok0neK0jfeEr2YGjxkzV \  // [!code focus] 
- -v /var/run/docker.sock:/var/run/docker.sock \
- -v /home/dpanel:/dpanel dpanel/dpanel:latest
+docker run -d --name dpanel --restart=always \ 
+-p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
+-v /home/test/.ssh/id_rsa:/dpanel/cert/rsa/id_rsa \ // [!code focus] 
+-v /home/test/.ssh/id_rsa.pub:/dpanel/cert/rsa/id_rsa.pub \ // [!code focus] 
+-v /var/run/docker.sock:/var/run/docker.sock \ 
+-v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
 ## Volume

@@ -105,16 +105,20 @@ chmod 755 ./runtime/dpanel
 ```
 :::
 
-## 当前环境未安装 docker
+## 当前环境未安装 Docker
 
-如果当前运行系统中并未安装 Docker 时，在启动面板后，可以通过 [多服务端管理](/manual/system-env) 功能配置默认的远程 Docker 服务端。
+如果当前运行系统中并未安装 Docker，在启动面板后，可以通过 [多服务端管理](/manual/system-env) 功能配置默认管理远程 Docker 服务端。
 
-### 安装 docker-cli 命令
+### 依赖 docker-cli 命令
 
 DPanel 部分功能依赖于 docker、docker compose (docker-compose) 命令。
 如果你未安装 Docker 服务端时需要手动安装 Docker 客户端组件, 根据使用的系统 [添加 Docker 软件源](https://docs.docker.com/engine/install/debian/)。
 
 安装 docker-cli 客户端命令组件。
+
+:::tip
+Windows 系统，你可以在 WSL 子系统下执行以下命令。面板会自动识别，通过 WSL 调用相关命令。
+:::
 
 :::code-group
 ```shell [Debian]

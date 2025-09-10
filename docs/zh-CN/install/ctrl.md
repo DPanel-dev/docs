@@ -31,11 +31,6 @@ docker exec dpanel ./dpanel -f config.yaml user:reset --password 123456
 ```
 docker exec dpanel ./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
 ```
-<br />
-
-:::danger
-调用以下命令时，安装面板时需要 [配置面板的 DP_JWT_SECRET 环境变量](/install/docker?id=自定义登录-jwt-密钥)
-:::
 
 ## 更新应用商店数据
 

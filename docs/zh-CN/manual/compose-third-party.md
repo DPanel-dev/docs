@@ -2,7 +2,7 @@
 
 面板支持通过挂载目录的时候将其它三方平台 compose 任务迁移至 DPanel
 
-### Portainer 迁移
+## Portainer 迁移
 
 假如你的 portainer 容器的 /data 目录挂载在宿主机的 /home/portainer 目录。
 
@@ -15,11 +15,11 @@ docker run -it -d --name dpanel ...(省略其它参数)... \
  dpanel/dpanel:lite
 ```
 
-#### 变更目录名称
+### 变更目录名称
 
 由于 portainer 的 compose 目录以数据的 id 命名，为了可以让 DPanel 识别到这些任务，需要将数字命名的目录更改为以 compose 标识命名。
 
-### dockage 迁移
+## dockage 迁移
 
 ```
 docker run -it -d --name dpanel ...(省略其它参数)... \
