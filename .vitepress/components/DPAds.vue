@@ -6,7 +6,9 @@ import { computed } from 'vue'
 <template>
   <div class="DPCenter">
     <div class="container">
-      <a href="https://www.lcayun.com/actcloud.html?from=dpanel" target="_blank"><img src="https://cdn.w7.cc/dpanel/6bc4515550b8c066261317ce5cd5ab02.png" width="100%" style="height: 80px;" /></a>
+      <a href="https://www.lcayun.com/actcloud.html?from=dpanel" target="_blank">
+        <img src="https://cdn.w7.cc/dpanel/6bc4515550b8c066261317ce5cd5ab02.png?date=20250912" width="100%" style="height: 80px;" />
+      </a>
     </div>
   </div>
 </template>
