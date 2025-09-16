@@ -104,12 +104,12 @@ chmod 755 ./runtime/dpanel
 
 ## Docker is not installed on the system
 
-If Docker is not installed on system, after starting the DPanel, you can configure the default remote Docker server through [Multiple Environment Management](/manual/system-env).
+If Docker is not installed on system, after starting the DPanel, you can configure the default remote Docker server through [Multiple Dockers Management](/manual/system-env).
 
 ### Install docker-cli command
 
 DPanel depends on docker and docker compose (docker-compose) commands.
-If you don't have docker engine installed, you need to install these client command components manually, according to the system you use [add Docker software source](https://docs.docker.com/engine/install/debian/).
+If you don't have docker engine installed, you need to install these client command components manually, according to the system you use [Add Docker software source](https://docs.docker.com/engine/install/).
 
 Install the docker-cli client command component.
 
@@ -118,3 +118,6 @@ Install the docker-cli client command component.
 sudo apt install docker-ce-cli docker-compose-plugin
 ```
 :::
+
+For Windows, download the corresponding executable files using [docker-cli](https://download.docker.com/win/static/stable/x86_64/) and [docker-compose-cli](https://github.com/docker/compose/releases).
+Save them to the same directory as dpanel.exe or add them to the system environment variables.

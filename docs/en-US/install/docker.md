@@ -25,9 +25,9 @@ Windows Please run the command in WSL
 DPanel container cannot bind to the host network <span style="color: red">（do not use the --network host !!!）</span>
 :::
 
-The Standard Edition provides nginx proxy-pass and HTTPS certificate features, which require binding ports 80 and 443. If you do not need these features, please use the Lite Edition.
+The Standard Edition provides Nginx proxy-pass and HTTPS certificate features, which require binding ports 80 and 443. If you do not need these features, please use the Lite Edition.
 
-The Lite Edition differs from the Standard Edition only in the image. Mapping ports 80 and 443 is no longer required. All other configurations are identical.
+The Lite Edition differs from the Standard Edition only in the image. Binding ports 80 and 443 is no longer required. Other configurations are same.
 
 The following commands all use the Standard Edition as an example. Please replace the parameters and image by hand.
 
@@ -106,9 +106,11 @@ unix:///Users/test/.docker/run/docker.sock
 
 When using the Docker API to manage Docker, you do not need to mount the /var/run/docker.sock file when creating a DPanel container.
 
+You can add a remote Docker Engine through **System** - **Dockers** after creating the DPanel.
+
 ## Custom Management Port
 
-By default, after the DPanel is installed, the management url is http://127.0.0.1:8807. \
+By default, after the DPanel is installed, the management url is http://127.0.0.1:8807. 
 You can also use the -p parameter to specify the management port.
 
 ```js
@@ -133,12 +135,11 @@ docker run -d --name dpanel --restart=always \
 ```
 ## Mount DPanel Key File <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
-The panel uses the RSA algorithm for login authentication and SSH-related functions. DPanel automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the /dpanel/cert/rsa directory.
+The DPanel uses the RSA for login authentication and SSH login. Automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the **_/dpanel/cert/rsa_** directory.
 
-You can also mount your local ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub files into the panel container.
+You can also mount your local **_~/.ssh/id_rsa_** and **_~/.ssh/id_rsa.pub_** files into the DPanel container.
 
-When adding SSH permissions, select [Use DPanel Key] to allow the container to directly use the host machine's permissions.
-
+When adding SSH permissions, select **_Use DPanel Key_** to allow the container to directly use the host machine's permissions.
 This approach also allows for unified permission management and quick replacement and updating.
 
 ```js

@@ -21,10 +21,11 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         collapsed: false,
         items: [
           { text: '使用安装脚本', link: getLink("install/shell") },
-          { text: '使用 Docker 安装', link: getLink("install/docker") },
-          { text: '使用 Compose 安装', link: getLink("install/compose") },
-          { text: '使用二进制文件安装', link: getLink("install/source") },
-          { text: '使用 DinD 安装', link: getLink("install/dind") },
+          { text: '使用 Docker', link: getLink("install/docker") },
+          { text: '使用 Compose', link: getLink("install/compose") },
+          { text: '使用 DinD', link: getLink("install/dind") },
+          { text: '使用二进制文件', link: getLink("install/source") },
+          { text: '使用 DPanel Desktop', link: getLink("install/desktop") },
         ]
       },
       {

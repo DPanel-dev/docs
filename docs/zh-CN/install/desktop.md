@@ -1,4 +1,4 @@
-# DPanel 桌面运行
+# 通过 DPanel Desktop 运行
 
 ## 介绍
 
@@ -12,6 +12,15 @@ DPanel Desktop 基于 [Wails](https://wails.io/) 实现。
 
 通过 DPanel Desktop 你还可以将其它基于 CLI 的程序像是 DPanel 一样方便的运行起来。
 
+## 下载地址
+
+:::tip
+DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 docker-compose.exe。
+:::
+
+- [DPanel Desktop Installer](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-installer.exe)
+- [DPanel Desktop](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop.exe)
+
 ## 预览
 
 ![desktop-1](https://cdn.w7.cc/dpanel/system-desktop-1.png){data-zoomable}
@@ -19,10 +28,6 @@ DPanel Desktop 基于 [Wails](https://wails.io/) 实现。
 ![desktop-1](https://cdn.w7.cc/dpanel/system-desktop-2.png){data-zoomable}
 
 ## 依赖
-
-:::tip
-DPanel Desktop 安装包会默认包含以下组件，二进制运行文件不会提供。
-:::
 
 ### WebView2
 
@@ -35,7 +40,7 @@ Windows 10 及以上默认会安装 webview2 运行时，如果你的系统未�
 ### dpanel.exe
 
 DPanel Desktop 运行时需要调用 DPanel 主程序，通过 [Releases](https://github.com/donknap/dpanel/releases) 页面下载 dpanel.exe 程序。
-后续面板时，将 dpanel.exe 覆盖即可。
+后续升级时，将 dpanel.exe 覆盖即可。
 
 ### docker.exe & docker-compose.exe
 
