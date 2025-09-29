@@ -23,8 +23,9 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: 'Install Script', link: getLink("install/shell") },
           { text: 'Install with Docker', link: getLink("install/docker") },
           { text: 'Install with Compose', link: getLink("install/compose") },
-          { text: 'Install with binary', link: getLink("install/source") },
           { text: 'Install with DinD', link: getLink("install/dind") },
+          { text: 'Run with binary', link: getLink("install/source") },
+          { text: 'Run with DPanel Desktop', link: getLink("install/desktop") },
         ]
       },
       {

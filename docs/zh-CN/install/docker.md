@@ -133,11 +133,10 @@ docker run -d --name dpanel --restart=always \
 
 ## 自定义面板密钥文件 <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
-面板通过 RSA 算法进行登录验证以及 SSH 相关功能。面板程序启动时会自动生成 RSA 公/密钥文件（仅当文件不存在时），文件位于 /dpanel/cert/rsa 目录中。
+面板通过 RSA 算法进行登录验证以及 SSH 相关功能。面板程序启动时会自动生成 RSA 公/密钥文件（仅当文件不存在时），文件位于 **_/dpanel/cert/rsa_** 目录中。
 
-你也可以将你本机的 ~/.ssh/id_rsa， ~/.ssh/id_rsa.pub 文件挂载到面板容器中。
+你也可以将你本机的 **_~/.ssh/id_rsa_**， **_~/.ssh/id_rsa.pub_** 文件挂载到面板容器中。
 在添加 SSH 权限时选择【使用面板密钥】使容器可以直接使用宿主机的权限。
-
 通过这样的方式也可以实现权限的统一管理以及快速的替换和更新。
 
 ```js

@@ -1,4 +1,4 @@
-# 使用二进制文件安装
+# 使用二进制文件运行
 
 :::tip 
 通过二进制包运行 DPanel 等价于 Lite 版，不包含域名转发等相关功能
@@ -109,19 +109,16 @@ chmod 755 ./runtime/dpanel
 
 如果当前运行系统中并未安装 Docker，在启动面板后，可以通过 [多服务端管理](/manual/system-env) 功能配置默认管理远程 Docker 服务端。
 
-### 依赖 docker-cli 命令
+### 依赖 docker-cli & docker-compose 命令
 
 DPanel 部分功能依赖于 docker、docker compose (docker-compose) 命令。
-如果你未安装 Docker 服务端时需要手动安装 Docker 客户端组件, 根据使用的系统 [添加 Docker 软件源](https://docs.docker.com/engine/install/debian/)。
-
-安装 docker-cli 客户端命令组件。
-
-:::tip
-Windows 系统，你可以在 WSL 子系统下执行以下命令。面板会自动识别，通过 WSL 调用相关命令。
-:::
+如果你未安装 Docker 服务端时需要手动安装 Docker 客户端组件, 根据使用的系统 [添加 Docker 软件源](https://docs.docker.com/engine/install/)，安装 docker-cli 客户端命令组件：
 
 :::code-group
-```shell [Debian]
+``` [其它系统自行更换包管理工具]
 sudo apt install docker-ce-cli docker-compose-plugin
 ```
 :::
+
+Windows 系统通过 [docker-cli](https://download.docker.com/win/static/stable/x86_64/) 和 [docker-compose-cli](https://github.com/docker/compose/releases) 下载对应的执行文件，\
+保存至与 dpanel.exe 同级目录或是添加系统环境变量。

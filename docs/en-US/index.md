@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "DPanel"
   text: "Lightweight container management panel"
-  tagline: Manage Docker & Podman with just one panel!
+  tagline: Manage Docker and Podman using only DPanel!
   image:
     src: https://cdn.w7.cc/dpanel/dpanel-logo-1.png
     alt: DPanel
