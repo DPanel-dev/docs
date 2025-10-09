@@ -113,7 +113,6 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: '开启 Docker Tcp 连接', link: getLink("manual/system-env-tcp") },
           { text: '桥接宿主机网络', link: getLink("manual/system-bind-macvlan") },
           { text: '计划任务脚本模板', link: getLink("manual/system-cron-template") },
-          { text: 'DPanel 桌面运行', link: getLink("manual/system-desktop") },
           { text: '常见错误', link: getLink("manual/system-qa") },
         ]
       },
