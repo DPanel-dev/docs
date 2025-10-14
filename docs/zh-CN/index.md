@@ -37,7 +37,7 @@ features:
     details: 标准版中内置 Nginx 组件，快速绑定域名转发容器端口
   - title: 应用商店
     icon: 🎁
-    details: 支持 1panel、casaos 等多种协议应用商店，并可同时添加多个商店
+    details: 支持 1panel、casaos 等多种协议应用商店，并可同时添加多个商店 
   - title: 多主机管理
     icon: 💻
     details: 支持通过 Api（TLS）、SSH 同时管理多个 Docker 客户端
