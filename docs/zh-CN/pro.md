@@ -200,7 +200,7 @@ Pro 版仅是社区版的增强和补充。对于通用的、广泛的基础功�
 :::code-group
 
 ```shell [标准版镜像]
-dpanel/dpanel-pe:lite
+dpanel/dpanel-pe:latest
 ```
 
 ```shell [Lite版镜像]
