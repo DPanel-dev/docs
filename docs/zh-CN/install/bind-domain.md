@@ -1,4 +1,4 @@
-# 为面板绑定域名 <Badge type="tip" text="DPanel Version >= 1.1.4" />
+# 为面板绑定域名 <Badge type="tip" text="DPanel Version >= 1.9.1" />
 
 本例中使用的 http:\/\/127.0.0.1:8807 地址为示例，实际根据面板容器映射端口配置反向代理，
 也可以使用 http:\/\/[面板在bridge网络的ip地址]:8080。
