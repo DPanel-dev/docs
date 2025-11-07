@@ -33,7 +33,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         collapsed: false,
         items: [
           { text: 'Custom image', link: getLink("install/custom-image") },
-          { text: 'Bind domain', link: getLink("install/bind-domain") },
+          { text: 'Bind domain or subdirectory', link: getLink("install/bind-domain") },
           { text: 'Control command', link: getLink("install/ctrl") }
         ]
       },

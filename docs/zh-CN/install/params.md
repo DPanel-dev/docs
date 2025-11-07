@@ -21,6 +21,12 @@ dpanel server:start -f /etc/dpanel/config.yaml
 dpanel server:start -f /etc/dpanel/config.yaml -e STORAGE_LOCAL_PATH=/home/dpanel
 ```
 
+### 通过环境变量覆盖配置
+
+```shell
+export STORAGE_LOCAL_PATH=/home/dpanel && dpanel server:start -f /etc/dpanel/config.yaml
+```
+
 ## 参数说明
 
 | 名称 | 描述 | 默认值 |
@@ -30,6 +36,7 @@ dpanel server:start -f /etc/dpanel/config.yaml -e STORAGE_LOCAL_PATH=/home/dpane
 | APP_SERVER_PORT | 程序运行绑定端口 | 8086 |
 | STORAGE_LOCAL_PATH | 程序运行产生的数据目录 | ./ |
 | DB_MODE | 数据库读写模式 ro\|rw\|rwc | rwc |
+| DP_SYSTEM_BASEURL | 面板访问 baseurl | - |
 
 ## 完整配置文件
 
@@ -39,13 +46,16 @@ app:
   version: ${APP_VERSION}
   env: ${APP_ENV-lite}
   family: ${APP_FAMILY-ce}
-  server: http
+  server: ${APP_SERVER-http}
   cors:
     - http://localhost:8000
 server:
   http:
     host: 0.0.0.0
     port: ${APP_SERVER_PORT-8086}
+  prof:
+    host: 0.0.0.0
+    port: 8087
 log:
   default:
     driver: stack
@@ -54,8 +64,8 @@ log:
       - console
   file:
     driver: file
-    path: /var/tmp/dpanel.log
-    level: info
+    path: ${STORAGE_LOCAL_PATH}/logs/dpanel.log
+    level: warn
   console:
     driver: console
     level: debug
@@ -69,10 +79,12 @@ database:
     prefix: ims_
     options:
       mode: ${DB_MODE}
-storage:
-  local:
-    path: ${STORAGE_LOCAL_PATH}
-common:
-  public_user_name: ${PUBLIC_USERNAME-__public__}
+system:
+  baseurl: ${DP_SYSTEM_BASEURL}
+  storage:
+    local:
+      path: ${STORAGE_LOCAL_PATH}
+  permission:
+    default_username: __public__
 ```
 

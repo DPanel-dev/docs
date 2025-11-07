@@ -34,7 +34,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         items: [
           { text: '配置参数', link: getLink("install/params") },
           { text: '自定义面板镜像', link: getLink("install/custom-image") },
-          { text: '绑定域名', link: getLink("install/bind-domain") },
+          { text: '绑定域名或目录', link: getLink("install/bind-domain") },
           { text: '控制命令', link: getLink("install/ctrl") }
         ]
       },
