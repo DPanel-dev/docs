@@ -32,10 +32,11 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         text: '扩展使用',
         collapsed: false,
         items: [
-          { text: '配置参数', link: getLink("install/params") },
+          { text: '启动参数', link: getLink("install/params") },
+          { text: '控制命令', link: getLink("install/ctrl") },
           { text: '自定义面板镜像', link: getLink("install/custom-image") },
           { text: '绑定域名或目录', link: getLink("install/bind-domain") },
-          { text: '控制命令', link: getLink("install/ctrl") }
+          { text: '扩展语言包', link: getLink("install/i18n") }
         ]
       },
       {
