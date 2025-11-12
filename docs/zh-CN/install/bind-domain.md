@@ -54,7 +54,7 @@ server {
         proxy_set_header Connection "upgrade";
         proxy_cache_bypass $http_upgrade;
 
-        proxy_pass http://127.0.0.1:8807/;
+        proxy_pass http://127.0.0.1:8807/apps;
         proxy_redirect off;
     }
 }
