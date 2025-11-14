@@ -187,6 +187,21 @@ docker run -d --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
+
+## Customizing DPanel Access to Second-Level Directories
+
+By default, the panel access address is **http://127.0.0.1:8807/dpanel/ui**. You can specify the second-level access directory as **http://127.0.0.1:8807/apps/dpanel/ui** by configuring the environment variable **DP_SYSTEM_BASEURL**.
+
+```js
+docker run -d --restart=always \ 
+ --name dpanel
+ -e DP_SYSTEM_BASEURL=/apps \ // [!code focus] 
+ -p 80:80 -p 443:443 -p 8807:8080  \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
+
 ## Host Ip Address
 
 Accessing 127.0.0.1 or localhost from within a container refers to the container itself.

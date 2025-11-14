@@ -182,6 +182,21 @@ docker run -d --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
+## 自定义面板访问二级目录
+
+默认情况下面板访问地址为 **http:\/\/127.0.0.1:8807/dpanel/ui**，你可以通过配置环境变量 **DP_SYSTEM_BASEURL** 指定二级访问目录为 
+**http:\/\/127.0.0.1:8807/apps/dpanel/ui**。
+
+```js
+docker run -d --restart=always \ 
+ --name dpanel
+ -e DP_SYSTEM_BASEURL=/apps \ // [!code focus] 
+ -p 80:80 -p 443:443 -p 8807:8080  \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
+
 ## 绑定宿主机 host {#bind-host}
 
 在容器内部访问 127.0.0.1 或是 localhost 指向的是容器本身。
