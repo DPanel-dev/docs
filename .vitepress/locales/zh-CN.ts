@@ -26,6 +26,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: '使用 DinD', link: getLink("install/dind") },
           { text: '使用二进制文件', link: getLink("install/source") },
           { text: '使用 DPanel Desktop', link: getLink("install/desktop") },
+          { text: '飞牛应用商店部署', link: getLink("install/fnnas") },
         ]
       },
       {
