@@ -158,6 +158,13 @@ function upgrade_panel() {
     fi
   fi
 
+  ENV_LIST=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "DPanel")                        
+  while read -r line; do
+    if [[ $line == *"APP_NAME="* ]]; then
+      RUN_COMMAND="$RUN_COMMAND -e $line"
+    fi                      
+  done < <(echo "$ENV_LIST")
+  
   CONTAINER_ID=$(docker inspect --format '{{.Id}}' "$INSTALL_CONTAINER_NAME")
 
   RESTART_POLICY=$(docker inspect "$INSTALL_CONTAINER_NAME" --format '{{.HostConfig.RestartPolicy.Name}}')
