@@ -8,4 +8,5 @@
 
 ## 下载地址
 
-- [DPanel FPK](https://github.com/donknap/dpanel/releases/latest/download/dpanel-amd64.fpk)
+- [dpanel-amd64.fpk (GitHub 下载)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-amd64.fpk)
+- [dpanel-amd64.fpk (官网下载)](https://dpanel.cc/download/dpanel-amd64.fpk)

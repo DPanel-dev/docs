@@ -18,7 +18,8 @@ DPanel Desktop 基于 [Wails](https://wails.io/) 实现。
 DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 docker-compose.exe。
 :::
 
-- [DPanel Desktop Installer](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-installer.exe)
+- [DPanel Desktop Installer (Github 下载)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-installer.exe)
+- [DPanel Desktop Installer (官网下载)](https://dpanel.cc/download/dpanel-desktop-amd64-installer.exe)
 - [DPanel Desktop](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop.exe)
 
 ## 预览
