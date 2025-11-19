@@ -18,6 +18,17 @@ DPanel 是一款轻量化的管理 Docker、Podman 容器的可视化面板
 ## 视频教程
 https://space.bilibili.com/346309066
 
+## 为爱发电
+
+### 爱发电平台
+
+[https://afdian.com/a/dpanel](https://afdian.com/a/dpanel)
+
+### 微信打赏
+
+<img src="https://cdn.w7.cc/dpanel/wx-sponsor.jpg" width="360" />
+
+
 ## 交流群
 
 <img src="https://cdn.w7.cc/dpanel/qq.png" width="300" />
