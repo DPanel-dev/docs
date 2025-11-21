@@ -50,17 +50,17 @@ fi
 
 :::code-group
 ```shell [获取宿主机的网络信息]
-docker run -it --rm --name dpanel-host-proxy --pid host --privileged busybox \
+docker run --rm --name dpanel-host-proxy --pid host --privileged busybox \
 nsenter --target 1 --net --mount -- /bin/sh -c "ip addr"
 ```
 
 ```shell [获取 docker 的配置文件]
-docker run -it --rm --name dpanel-host-proxy --pid host --privileged busybox \
+docker run --rm --name dpanel-host-proxy --pid host --privileged busybox \
 nsenter --target 1 --net --mount -- /bin/sh -c "cat /etc/docker/daemon.json"
 ```
 
 ```shell [操作宿主机文件系统]
-docker run -it --rm --name dpanel-host-proxy -v /:/host busybox \
+docker run --rm --name dpanel-host-proxy -v /:/host busybox \
 ls -al /host
 ```
 :::

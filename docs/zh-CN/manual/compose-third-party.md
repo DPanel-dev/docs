@@ -10,7 +10,7 @@
 在创建时增加挂载参数，如下：
 
 ```
-docker run -it -d --name dpanel ...(省略其它参数)... \
+docker run -d --name dpanel ...(省略其它参数)... \
  -v /home/protainer/compose:/data/compose \
  dpanel/dpanel:lite
 ```
@@ -22,7 +22,7 @@ docker run -it -d --name dpanel ...(省略其它参数)... \
 ## dockage 迁移
 
 ```
-docker run -it -d --name dpanel ...(省略其它参数)... \
+docker run -d --name dpanel ...(省略其它参数)... \
  -v /opt/stacks:/opt/stacks \
  dpanel/dpanel:lite
 ```
