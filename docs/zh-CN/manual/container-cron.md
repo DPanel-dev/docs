@@ -43,27 +43,30 @@ fi
 ## 操作宿主机环境
 
 :::tip
-执行 docker run 相关命令必须在 DPanel 容器中并可以正常拉取 busybox 镜像
+执行 docker run 相关命令必须在 DPanel 容器中并可以正常拉取 busybox 镜像。如无法拉取，请事先通过面板使用加速拉取。
 :::
 
-如果你不得不在宿主机中执行一些命令，可以通过新建特权代理容器方式切换至宿主机的 shell 环境，示例：
+如果你需要在宿主机中执行一些命令，可以通过新建特权代理容器方式切换至宿主机的 shell 环境，示例：
 
 :::code-group
-```shell [获取宿主机的网络信息]
+
+```shell [操作主机文件系统]
+docker run --rm --name dpanel-host-proxy -v /:/host busybox \
+ls -al /host
+```
+
+```shell [获取网络信息]
 docker run --rm --name dpanel-host-proxy --pid host --privileged busybox \
 nsenter --target 1 --net --mount -- /bin/sh -c "ip addr"
 ```
 
-```shell [获取 docker 的配置文件]
+```shell [获取Docker配置文件]
 docker run --rm --name dpanel-host-proxy --pid host --privileged busybox \
 nsenter --target 1 --net --mount -- /bin/sh -c "cat /etc/docker/daemon.json"
 ```
-
-```shell [操作宿主机文件系统]
-docker run --rm --name dpanel-host-proxy -v /:/host busybox \
-ls -al /host
-```
 :::
+
+示例中使用了 busybox 镜像，你也可以更换其它你更熟悉或是命令更加丰富的镜像，例如 alpine、ubuntu 等。
 
 
 ## 执行周期
