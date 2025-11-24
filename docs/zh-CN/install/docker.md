@@ -187,6 +187,10 @@ docker run -d --restart=always \
 默认情况下面板访问地址为 **http:\/\/127.0.0.1:8807/dpanel/ui**，你可以通过配置环境变量 **DP_SYSTEM_BASEURL** 指定二级访问目录为 
 **http:\/\/127.0.0.1:8807/apps/dpanel/ui**。
 
+:::warning
+自定义目录时，需要尽量避免包含 /dpanel、/ws/common、/api 防止重复替换导致路径错误
+:::
+
 ```js
 docker run -d --restart=always \ 
  --name dpanel
