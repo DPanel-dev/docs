@@ -37,7 +37,6 @@ export STORAGE_LOCAL_PATH=/home/dpanel && dpanel server:start -f /etc/dpanel/con
 | STORAGE_LOCAL_PATH | 程序运行产生的数据目录 | ./ | - |
 | DB_MODE | 数据库读写模式 ro\|rw\|rwc | rwc | - |
 | DP_SYSTEM_BASEURL | 面板访问 baseurl | - | > 1.9.1 |
-| DP_SYSTEM_DOCKER_INIT_TIMEOUT | 初始化或是切换 Docker 服务端的超时时间 | 10秒 | > 1.9.1 |
 
 ## 配置文件
 
