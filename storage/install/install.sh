@@ -158,7 +158,7 @@ function upgrade_panel() {
     fi
   fi
 
-  ENV_LIST=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "DPanel")                        
+  ENV_LIST=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$INSTALL_CONTAINER_NAME")
   while read -r line; do
     if [[ $line == *"APP_NAME="* ]]; then
       RUN_COMMAND="$RUN_COMMAND -e $line"
