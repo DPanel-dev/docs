@@ -71,6 +71,32 @@ nsenter --target 1 --net --mount -- /bin/sh -c "cat /etc/docker/daemon.json"
 
 ## 执行周期
 
+### 手动执行 <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+通过手动触发任务。
+
+### 容器事件 <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+通过容器事件触发任务，目前支持以下几种事件：
+
+- 容器创建
+- 容器销毁
+- 容器启动
+- 容器停止
+
+在容器事件发生时，事件不一定能代表此时容器的状态。比如在容器重启时，会重复触发 **启动** 和 **停止** 事件。
+为了更精确的执行任务，在触发脚本中应当再次确认容器的状态。例如:
+
+```shell
+STATUS=$(docker inspect test2-nginx-1 --format '{{.State.Status}}')
+RESTART_COUNT=$(docker inspect test2-nginx-1 --format '{{.RestartCount}}')
+echo "当前容器状态: ${STATUS}, 是否在重启：$([ "$RESTART_COUNT" -eq 0 ] && echo "否" || echo "是")"
+
+# 根据容器的状态，再去执行对应的操作
+```
+
+### 定时任务
+
 兼容 Linux 计划任务表达式，扩展了 **秒** 级参数，
 
 ```
@@ -85,7 +111,7 @@ nsenter --target 1 --net --mount -- /bin/sh -c "cat /etc/docker/daemon.json"
 └──────────────── 秒 (0 - 59)
 ```
 
-### 预设周期
+#### 预设周期
 
 面板为了方便大家使用预设了一些常用的周期字段：
 
