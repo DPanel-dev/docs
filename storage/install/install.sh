@@ -35,6 +35,7 @@ INSTALL_PROXY=""
 INSTALL_DNS=""
 INSTALL_SOCK_FILE="/var/run/docker.sock"
 INSTALL_IN_PODMAN=false
+INSTALL_IPV6=n
 
 BACKUP_CONTAINER_NAME=""
 
@@ -179,6 +180,8 @@ function upgrade_panel() {
   if [[ -n "$ADD_HOSTS" ]]; then
     RUN_COMMAND="$RUN_COMMAND $ADD_HOSTS"
   fi
+
+  RUN_COMMAND="$RUN_COMMAND --log-driver json-file  --log-opt max-size=5m --log-opt max-file=10 "
   
   log "$TXT_UPGRADE_BACKUP $INSTALL_CONTAINER_NAME"
   BACKUP_CONTAINER_NAME="$INSTALL_CONTAINER_NAME-${CONTAINER_ID:0:12}"
@@ -694,7 +697,7 @@ function main(){
   install_dir
   install_port
   install_sock
-
+  
   DOCKER_CMD="run -d --name ${INSTALL_CONTAINER_NAME} --restart=always --hostname dpanel.pod.dpanel.local"
   if ! $INSTALL_IN_PODMAN; then 
     DOCKER_CMD="$DOCKER_CMD --add-host host.dpanel.local:host-gateway"
@@ -706,6 +709,11 @@ function main(){
 
   if [[ -n "$INSTALL_DNS" ]]; then
     DOCKER_CMD="$DOCKER_CMD --dns $INSTALL_DNS"
+  fi
+
+  if [[ "$INSTALL_IPV6" =~ ^[yY]$ ]]; then
+  
+    docker network create dpanel-local --ipv6
   fi
 
   if [[ "$INSTALL_IMAGE" == *lite ]]; then
@@ -720,6 +728,8 @@ function main(){
     echo -e "docker $DOCKER_CMD \n"
     exit 1
   fi
+
+  DOCKER_CMD="$DOCKER_CMD --log-driver json-file  --log-opt max-size=5m --log-opt max-file=10 "
   
   docker $DOCKER_CMD
 
