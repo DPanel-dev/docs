@@ -12,7 +12,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       { text: '专业版', link: getLink("pro") },
       { text: '更新记录', link: getLink("upgrade") },
       { text: '赞助', link: 'https://afdian.com/a/dpanel' },
-      { text: '演示', link: "https://demo.dpanel.cc" },
+      { text: '演示', link: "https://demo.deepanel.com" },
     ],
 
     sidebar: [
