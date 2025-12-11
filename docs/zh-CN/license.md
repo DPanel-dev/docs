@@ -3,7 +3,7 @@ next: false
 aside: false
 ---
 
-# 许可协议
+# DPanel 社区版使用许可协议
 
 ::: danger **如不同意本协议的条款，请不要使用本软件。** <br /><br />
 
