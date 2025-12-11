@@ -75,6 +75,23 @@ podman run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
+## Windows Docker Desktop
+
+使用 Windows 系统时无法在创建时挂载 sock 文件或是 pipe 管道。
+开启 Docker Desktop 的 Tcp 连接，在命令中配置 DOCKER_HOST 环境变量或是在创建后修改默认环境连接参数。
+
+:::tip
+通过 --add-host 将宿主机的 IP 绑定到容器中使用，也可以直接使用宿主机在局域网内的 IP
+:::
+
+```js
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
+ --add-host=host.dpanel.local:host-gateway  \ // [!code focus]
+ -e DOCKER_HOST=tcp://host.dpanel.local:2375 \  // [!code focus]
+ -v D:\\data\\dpanel:/dpanel dpanel/dpanel:latest
+```
+
 ## 挂载 docker.sock 文件
 
 创建面板时需要挂载 docker.sock 文件用于与 Docker 接口通信。
