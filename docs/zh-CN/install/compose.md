@@ -20,6 +20,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/dpanel:/dpanel # 将 /home/dpanel 更改为你想要挂载的宿主机目录
+    extra_hosts:
+      - "host.dpanel.local:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
 ```
 
 ```yaml [Lite 版]
@@ -35,6 +42,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /home/dpanel:/dpanel # 将 /home/dpanel 更改为你想要挂载的宿主机目录
+    extra_hosts:
+      - "host.dpanel.local:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "10"
 ```
-
 :::

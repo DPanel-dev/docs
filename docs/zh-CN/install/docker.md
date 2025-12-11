@@ -29,7 +29,7 @@ Windows 请在 wsl 中运行命令
 标准版本中提供了域名绑定及证书功能，需要绑定 80 及 443 端口，如果你不需要这些功能，请使用 Lite 版。
 Lite 版与标准版只有镜像地址区别，除不再需要映射 80 及 443 端口外，其余配置均一致。
 
-后续命令演示均以【标准版】为例，请根据实际安装的版本替换参数及镜像地址。
+##### 后续命令演示均以【标准版】为例，请根据实际安装的版本替换参数及镜像地址。
 
 ```shell
 docker run -d --name dpanel --restart=always \
@@ -214,6 +214,25 @@ docker run -d --name dpanel --restart=always \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
+
+## 切割日志文件
+
+面板在运行时会将警告及以上的日志写入到 /dpanel/logs/ 目录中，运行时日志通过 docker 管理。
+避免长时间运行导致日志文件过大，可以配置面板容器日志切割配置。
+
+
+```js
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
+ --log-driver json-file  --log-opt max-size=5m --log-opt max-file=10 \  // [!code focus] 
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
+## 开启 IPV6
+
+如果 Docker 环境没有配置默认 IPV6 支持，标准版将无法转发 IPV6 的地址。可以在面板中创建任意 IPV6 的网络，并将面板容器加入该网络即可。
+
 
 ## 更新或重建面板
 
