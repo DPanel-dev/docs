@@ -7,14 +7,6 @@ The dpanel-plugin-explorer container uses the alpine image. You can also [create
 If there is no dpanel-plugin-explorer container DPanel will be automatically created. If you cannot accept this, please do not use the [File Explorer] function.！！！！ 
 :::
 
-:::tip
-Macos you need to link the docker.sock file to the /var/run/docker.sock directory first
-
-sudo ln -s -f /Users/Your Name/.docker/run/docker.sock /var/run/docker.sock
-
-Windows Please run the command in WSL
-:::
-
 <br />
 
 ###### [:rocket::rocket::rocket: Use install script to quickly install or upgrade the DPanel container](/docs/en-US/install/shell)
@@ -76,37 +68,43 @@ podman run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Mount docker.sock File
+## Docker Desktop (Windows / Macos)
 
-When create DPanel container, you must mount the docker.sock file to access the Docker API.
+Mount the docker.sock file via the path //var/run/docker.sock.
 
-If you're binding to a non-default /var/run/docker.sock file or running within Podman, you must specify the sock file in the arguments.
+:::code-group
+
+```js [Windows]
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+ -v //var/run/docker.sock:/var/run/docker.sock // [!code focus] \
+ -v D:\data\dpanel:/dpanel dpanel/dpanel:latest // [!code focus]
+```
+
+```js [Macos]
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+ -v //var/run/docker.sock:/var/run/docker.sock // [!code focus] \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+:::
+
+## Use Docker Tcp
+
+When using [Docker TCP](/manual/system-env-tcp), there is no need to mount the `/var/run/docker.sock` file when creating the panel container.
+The Api address is specified via the `DOCKER_HOST` environment variable during creation.
+
+:::tip
+Use `--add-host` to bind the host machine's IP address to the container; otherwise, you need to use the host machine's IP address within the local network.
+:::
 
 ```js
 docker run -d --name dpanel --restart=always \
- -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
- -v /Users/test/.docker/run/docker.sock:/var/run/docker.sock \  // [!code focus]
- -v /home/dpanel:/dpanel dpanel/dpanel:latest
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
+ --add-host=host.dpanel.local:host-gateway  \ // [!code focus]
+ -e DOCKER_HOST=tcp://host.dpanel.local:2375 \  // [!code focus]
+ -v /home/dpanel dpanel/dpanel:latest
 ```
-
-### Find docker.sock File
-
-In a Docker you can find the sock file using the following command
-
-```shell
-docker context inspect $(docker context show)  --format '{{.Endpoints.docker.Host}}'
-```
-
-:::details Output
-unix:///Users/test/.docker/run/docker.sock
-:::
-
-
-## Use Docker Api
-
-When using the Docker API to manage Docker, you do not need to mount the /var/run/docker.sock file when creating a DPanel container.
-
-You can add a remote Docker Engine through **System** - **Dockers** after creating the DPanel.
 
 ## Custom Management Port
 
@@ -133,6 +131,7 @@ docker run -d --name dpanel --restart=always \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
+
 ## Mount DPanel Key File <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
 The DPanel uses the RSA for login authentication and SSH login. Automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the **_/dpanel/cert/rsa_** directory.
@@ -216,6 +215,23 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
+## Log File
+
+DPanel writes logs of warning level and above to the `/dpanel/logs/` directory during runtime. Runtime logs are managed by Docker.
+To prevent log files from becoming too large due to long-term operation, you can configure log option for DPanel container.
+
+```js
+docker run -d --name dpanel --restart=always \
+-p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+--log-driver json-file  --log-opt max-size=5m --log-opt max-file=10 \  // [!code focus]
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
+## Enabling IPv6
+
+If your Docker environment does not have default IPv6 support configured, the standard version will not be able to forward IPv6 addresses. You can create any IPv6 network in the panel and add the panel container to that network.
+
 ## Upgrade & Recreate
 
 The difference between updating and re-creating is whether to keep the directory data (/dpanel) previously mounted on the panel container. If you delete the host mount directory or re-specify the directory, the panel is re-created.
@@ -230,5 +246,5 @@ If you set the dpanel-plugin-explorer container tag com.dpanel.container.auto_re
 :::
 
 ```js
-docker run -it -d --name dpanel-plugin-explorer --restart always --pid host --label com.dpanel.container.title="dpanel 文件管理助手" --label com.dpanel.container.auto_remove=false alpine
+docker run -it -d --name dpanel-plugin-explorer --restart always --pid host --label com.dpanel.container.title="DPanel Explorer" --label com.dpanel.container.auto_remove=false alpine
 ```

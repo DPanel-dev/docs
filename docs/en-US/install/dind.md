@@ -4,22 +4,9 @@ The Docker In Docker approach allows running a new Docker server in a container 
 
 ## Compose Yaml
 
-:::code-group
-```yaml [Standard Edition]
+```yaml
 services:
-  dpanel:
-    image: dpanel/dpanel:latest
-    container_name: dpanel
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-      - 8807:8080
-    environment:
-      APP_NAME: dpanel
-      DOCKER_HOST: tcp://docker:2375
-    volumes:
-      - /home/dpanel:/dpanel
+<!--@include: ../include/yaml.md-->
     depends_on:
       - docker
   docker:
@@ -28,27 +15,3 @@ services:
       DOCKER_TLS_CERTDIR: ""
     privileged: true
 ```
-
-
-```yaml [Lite Edition]
-services:
-  dpanel:
-    image: dpanel/dpanel:lite
-    container_name: dpanel
-    restart: always
-    ports:
-      - 8807:8080
-    environment:
-      APP_NAME: dpanel
-      DOCKER_HOST: tcp://docker:2375
-    volumes:
-      - /home/dpanel:/dpanel
-    depends_on:
-      - docker
-  docker:
-    image: docker:dind
-    environment:
-      DOCKER_TLS_CERTDIR: ""
-    privileged: true 
-```
-:::

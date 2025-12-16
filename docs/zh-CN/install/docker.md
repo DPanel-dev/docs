@@ -7,13 +7,6 @@ DPanel 面板为了隔离权限，在管理容器文件时，会自动创建 dpa
 如果你没有手动创建，面板会自动创建。如果你无法接受，请勿使用【文件管理】功能！！！！ 
 :::
 
-:::tip
-MacOS 下需要先将 docker.sock 文件 link 到 /var/run/docker.sock 目录中 \
-sudo ln -s -f /Users/用户/.docker/run/docker.sock /var/run/docker.sock 
-
-Windows 请在 wsl 中运行命令
-:::
-
 <br />
 
 ###### [:rocket::rocket::rocket: 使用安装脚本可快速安装、升级 DPanel 面板](/install/shell)
@@ -75,13 +68,34 @@ podman run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Windows Docker Desktop
+## Docker Desktop (Windows / Macos)
 
-使用 Windows 系统时无法在创建时挂载 sock 文件或是 pipe 管道。
-开启 Docker Desktop 的 Tcp 连接，在命令中配置 DOCKER_HOST 环境变量或是在创建后修改默认环境连接参数。
+通过 //var/run/docker.sock 的形式挂载 docker.sock 文件
+
+:::code-group
+
+```js [Windows]
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+ -v //var/run/docker.sock:/var/run/docker.sock // [!code focus] \
+ -v D:\data\dpanel:/dpanel dpanel/dpanel:latest // [!code focus]
+```
+
+```js [Macos]
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+ -v //var/run/docker.sock:/var/run/docker.sock // [!code focus] \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+:::
+
+## 使用 Docker Tcp 管理
+
+使用 [Docker Tcp](/manual/system-env-tcp) 时在创建面板容器无须挂载 /var/run/docker.sock 文件。
+创建时通过 DOCKER_HOST 环境变量指定接口地址。
 
 :::tip
-通过 --add-host 将宿主机的 IP 绑定到容器中使用，也可以直接使用宿主机在局域网内的 IP
+通过 --add-host 将宿主机的 IP 绑定到容器中使用，否则需要使用宿主机在局域网内的 IP
 :::
 
 ```js
@@ -89,38 +103,8 @@ docker run -d --name dpanel --restart=always \
  -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
  --add-host=host.dpanel.local:host-gateway  \ // [!code focus]
  -e DOCKER_HOST=tcp://host.dpanel.local:2375 \  // [!code focus]
- -v D:\\data\\dpanel:/dpanel dpanel/dpanel:latest
+ -v /home/dpanel dpanel/dpanel:latest
 ```
-
-## 挂载 docker.sock 文件
-
-创建面板时需要挂载 docker.sock 文件用于与 Docker 接口通信。
-如果你绑定的非默认 /var/run/docker.sock 文件或是运行在 Podman 中，你需要在参数中指定 sock 文件。
-
-```js
-docker run -d --name dpanel --restart=always \
- -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
- -v /Users/test/.docker/run/docker.sock:/var/run/docker.sock \  // [!code focus]
- -v /home/dpanel:/dpanel dpanel/dpanel:latest
-```
-
-### 获取 docker.sock 文件路径
-
-在 Docker 环境中你可以使用以下命令查找 sock 文件
-
-```shell
-docker context inspect $(docker context show)  --format '{{.Endpoints.docker.Host}}'
-```
-
-:::details 输出
-unix:///Users/test/.docker/run/docker.sock
-:::
-
-### 使用 Docker Api 管理
-
-使用 Docker Api 的形式管理 Docker 时在创建面板容器无须挂载 /var/run/docker.sock 文件。
-通过[开启 Docker Tcp 连接](/manual/system-env-tcp)在面板容器创建完后，
-通过[配置默认 docker 客户端](/manual/system-env#setting-default-env)配置接口地址即可。
 
 ## 自定义面板管理端口
 
@@ -263,5 +247,5 @@ docker run -d --name dpanel --restart=always \
 :::
 
 ```js
-docker run -it -d --name dpanel-plugin-explorer --restart always --pid host --label com.dpanel.container.title="dpanel 文件管理助手" --label com.dpanel.container.auto_remove=false alpine
+docker run -it -d --name dpanel-plugin-explorer --restart always --pid host --label com.dpanel.container.title="DPanel 文件管理助手" --label com.dpanel.container.auto_remove=false alpine
 ```
