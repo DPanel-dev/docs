@@ -1,12 +1,24 @@
 # 面板控制命令 <Badge type="tip" text="DPanel Version >= 1.2.2" />
 
 :::tip
-控制命令需要进入 DPanel 面板容器运行。如果你更改了 DPanel 面板的容器名称，请将下方命令中的 dpanel 替换成你的面板容器名字
+控制命令需要进入 DPanel 面板容器运行。如果你更改了 DPanel 面板的容器名称，请将下方命令中的 **dpanel** 替换成你的面板容器名字
 :::
+
+## 调用方式 
+
+### 在宿主机中调用
 
 1. 登录服务器的 ssh 
 2. 通过 docker exec 命令执行 DPanel 容器中的控制命令
 3. 根据需求，执行对应的命令
+
+### 在计划任务中调用
+
+必须指定运行容器为 DPanel 容器
+
+```
+/app/server/dpanel -f /app/server/config.yaml user:reset
+```
 
 ## 重置管理员用户
 
@@ -102,18 +114,66 @@ docker exec dpanel ./dpanel -f config.yaml container:backup --name 容器名称 
 
 - \--name compose 任务名称，面板已经部署或是可发现的任务名称
 - \--docker-env 指定 docker env 环境名称
-- \--environment yaml 中所需要的环境变量，可配置多个
-- \--service-name 只定要部署的的服务名称，可配置多个
-- \--remove-orphans 清理删除已失效的服务容器
+- \--environment yaml 中所需要的环境变量，可配置多个, --environment test=1
 - \--pull-image 指定拉取镜像方式 dpanel command
 
 ```
-docker exec dpanel ./dpanel -f config.yaml compose:deploy --name 任务名称 --remove-orphans 1 --environment name=test --environment age=10 --service-name test --service-name test2 --pull-image dpanel
+docker exec dpanel ./dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
 ```
 
 ### 返回
 
 ```
 {"name":"test123"}
+
+```
+
+## 清理系统消息、事件及缓存 <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+```
+docker exec dpanel ./dpanel -f config.yaml system:prune
+```
+
+### 返回
+
+```
+{"db":"vacuum","events":204,"gc":true,"notice":7,"temp":0}
+
+```
+
+## 发送通知 <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+- \--subject 通知的标题
+- \--content 通知的内容
+- \--target 通知的目标，邮件的方式为邮箱。
+- \--channel 通知的方式 email 
+
+```
+docker exec dpanel ./dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
+```
+
+### 返回
+
+```
+{"code":200,"error":"","data":"success"}
+
+```
+
+## 简易缓存数据存储 <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+利用缓存功能，可以辅助在脚本中做一些数据缓存或是标志位检测
+
+- \--key 缓存名称
+- \--value 缓存内容，为空时获取 --key 的内容
+- \--keep 缓存生命周期，默认为 -1 直到主程序重启
+
+```
+docker exec dpanel ./dpanel -f config.yaml system:cache --key test1 --value 123
+```
+
+### 返回
+
+```
+{"value":"123","found":true}
 
 ```
