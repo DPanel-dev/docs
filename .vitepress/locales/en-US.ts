@@ -36,6 +36,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: 'Control command', link: getLink("install/ctrl") },
           { text: 'Custom image', link: getLink("install/custom-image") },
           { text: 'Custom i18n', link: getLink("install/i18n") },
+          { text: 'Icon Resource', link: getLink("install/resource") }
         ]
       },
     ]
