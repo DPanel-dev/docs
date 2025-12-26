@@ -1,20 +1,28 @@
 # 面板控制命令 <Badge type="tip" text="DPanel Version >= 1.2.2" />
 
-:::tip
-控制命令需要进入 DPanel 面板容器运行。如果你更改了 DPanel 面板的容器名称，请将下方命令中的 **dpanel** 替换成你的面板容器名字
-:::
-
 ## 调用方式 
 
+执行命令时根据当前的执行环境，请修改示例代码执行。
+
 ### 在宿主机中调用
+
+:::tip
+实际运行时，请将下方命令中的 **dpanel** 替换成你的面板容器名字
+:::
 
 1. 登录服务器的 ssh 
 2. 通过 docker exec 命令执行 DPanel 容器中的控制命令
 3. 根据需求，执行对应的命令
 
-### 在计划任务中调用
+```
+docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
+```
 
-必须指定运行容器为 DPanel 容器
+### 计划任务与二进制调用
+
+:::tip
+计划任务中调用时，执行容器留空或是指定为 DPanel 容器
+:::
 
 ```
 /app/server/dpanel -f /app/server/config.yaml user:reset
@@ -27,13 +35,13 @@
 将使用随机密码重置用户
 
 ```
-docker exec dpanel ./dpanel -f config.yaml user:reset
+./dpanel -f config.yaml user:reset
 ```
 
 ### 重置密码
 
 ```
-docker exec dpanel ./dpanel -f config.yaml user:reset --password 123456
+./dpanel -f config.yaml user:reset --password 123456
 ```
 
 ### 重置用户名
@@ -41,7 +49,7 @@ docker exec dpanel ./dpanel -f config.yaml user:reset --password 123456
 重置用户名时，必须指定密码
 
 ```
-docker exec dpanel ./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
 ```
 
 ## 更新应用商店数据
@@ -49,7 +57,7 @@ docker exec dpanel ./dpanel -f config.yaml user:reset user:reset --password 1234
 - \--name 指定应用商店名称
 
 ```
-docker exec dpanel ./dpanel -f config.yaml store:sync --name 应用商店标识
+./dpanel -f config.yaml store:sync --name test
 ```
 
 ### 返回
@@ -58,13 +66,13 @@ docker exec dpanel ./dpanel -f config.yaml store:sync --name 应用商店标识
 {"total":151}
 ```
 
-## 检测容器镜像是否有新版
+## 检测容器更新
 
 - \--name 指定检测的容器名称
-- \--docker-env 指定 docker env 环境名称
+- \--docker-env 指定 docker env 环境名称，默认: local
 
 ```
-docker exec dpanel ./dpanel -f config.yaml container:upgrade --name 容器名称 --docker-env local
+./dpanel -f config.yaml container:upgrade --name containerName --docker-env local
 ```
 
 ### 返回
@@ -75,14 +83,16 @@ docker exec dpanel ./dpanel -f config.yaml container:upgrade --name 容器名称
 {"upgrade":false,"digest":"sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55","digestLocal":["registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel@sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55"]}
 ```
 
-## 当容器有更新时升级容器
+## 升级容器
 
-- \--name 指定检测的容器名称
-- \--upgrade 当容器有更新时升级容器
+- \--name 指定容器名称
 - \--docker-env 指定 docker env 环境名称
+- \--enable-bak 是否备份旧容器，默认: true
+- \--disable-bak 不备份旧容器，等同于 --enable-bak=false
+- \--image-tag 指定新的镜像名称，此镜像一定要与容器的镜像完全兼容
 
 ```
-docker exec dpanel ./dpanel -f config.yaml container:upgrade --name 容器名称 --upgrade
+./dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name containerName 
 ```
 
 ### 返回
@@ -99,9 +109,12 @@ docker exec dpanel ./dpanel -f config.yaml container:upgrade --name 容器名称
 - \--name 指定检测的容器名称
 - \--docker-env 指定 docker env 环境名称
 - \--enable-image 是否备份容器镜像
+- \--backup-image 备份镜像类型 image 或是 container (docker commit)
+- \--enable-volume 是否备份挂载目录
+- \--backup-volume 指定备份的挂载目录
 
 ```
-docker exec dpanel ./dpanel -f config.yaml container:backup --name 容器名称 --enable-image 1
+./dpanel -f config.yaml container:backup --name 容器名称 --enable-image --enable-volume
 ```
 
 ### 返回
@@ -118,7 +131,7 @@ docker exec dpanel ./dpanel -f config.yaml container:backup --name 容器名称 
 - \--pull-image 指定拉取镜像方式 dpanel command
 
 ```
-docker exec dpanel ./dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
+./dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
 ```
 
 ### 返回
@@ -130,8 +143,11 @@ docker exec dpanel ./dpanel -f config.yaml compose:deploy --name 任务名称 --
 
 ## 清理系统消息、事件及缓存 <Badge type="tip" text="DPanel Version >= 1.9.2" />
 
+- \--enable-notice 清除通知和事件
+- \--enable-temp-file 清理临时文件
+
 ```
-docker exec dpanel ./dpanel -f config.yaml system:prune
+./dpanel -f config.yaml system:prune
 ```
 
 ### 返回
@@ -149,7 +165,7 @@ docker exec dpanel ./dpanel -f config.yaml system:prune
 - \--channel 通知的方式 email 
 
 ```
-docker exec dpanel ./dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
+./dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
 ```
 
 ### 返回
@@ -161,14 +177,14 @@ docker exec dpanel ./dpanel -f config.yaml system:notice  --content test123 --ta
 
 ## 简易缓存数据存储 <Badge type="tip" text="DPanel Version >= 1.9.2" />
 
-利用缓存功能，可以辅助在脚本中做一些数据缓存或是标志位检测
+利用缓存数据存储功能，可以脚本中做一些数据缓存或是标志位检测。
 
 - \--key 缓存名称
 - \--value 缓存内容，为空时获取 --key 的内容
-- \--keep 缓存生命周期，默认为 -1 直到主程序重启
+- \--keep 缓存生命周期（秒），默认为 -1 直到主程序重启
 
 ```
-docker exec dpanel ./dpanel -f config.yaml system:cache --key test1 --value 123
+./dpanel -f config.yaml system:cache --key test1 --value 123
 ```
 
 ### 返回
