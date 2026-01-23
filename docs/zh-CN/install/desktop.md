@@ -2,14 +2,13 @@
 
 ## 介绍
 
-DPanel Desktop 基于 [Wails](https://wails.io/) 实现。
+DPanel Desktop 基于 [Wails V3](https://wails.io/) 实现。
 本质上是一个 CLI 程序管理器，通过 GUI 可视化的界面，管理主程序的环境变量、运行程序、接管控制台日志输出。
 
 在 Windows 系统中，可以不再受到 Docker 环境的束缚，双击程序就可以运行 DPanel 面板。
 可以简单、快速的使用本地的 DPanel 面板的【多服务端功能】管理本地、内网、公网的 Docker 主机。
 
 即开即用，随关随停。实现了对服务器的零侵入和零占用，杜绝了面板产生的任何安全风险。
-
 通过 DPanel Desktop 你还可以将其它基于 CLI 的程序像是 DPanel 一样方便的运行起来。
 
 ## 下载地址
@@ -18,9 +17,9 @@ DPanel Desktop 基于 [Wails](https://wails.io/) 实现。
 DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 docker-compose.exe。
 :::
 
-- [DPanel Desktop Installer (Github 下载)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-installer.exe)
-- [DPanel Desktop Installer (官网下载)](https://dpanel.cc/download/dpanel-desktop-amd64-installer.exe)
-- [DPanel Desktop](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop.exe)
+- [DPanel Desktop 安装版 (Github 下载)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-installer.exe)
+- [DPanel Desktop 安装版 (官网下载)](https://dpanel.cc/download/dpanel-desktop-amd64-installer.exe)
+- [DPanel Desktop 绿色版 (Github 下载)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-portable.zip)
 
 ## 预览
 

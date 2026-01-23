@@ -20,7 +20,7 @@ The DPanel Desktop Installer package includes dpanel.exe, docker.exe, and docker
 :::
 
 - [DPanel Desktop Installer](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-installer.exe)
-- [DPanel Desktop](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop.exe)
+- [DPanel Desktop Portable](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-amd64-portable.zip)
 
 ## Preview
 
