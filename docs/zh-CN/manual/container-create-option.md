@@ -127,6 +127,14 @@ Docker 的默认 bridge 网络无法修改容器的 ip 地址。
 
 > --label name=123
 
+### 特殊标签
+
+#### 隐藏容器不显示在列表中
+
+```
+com.dpanel.container.hidden=true
+```
+
 ## 资源配置
 
 ### 资源限制
