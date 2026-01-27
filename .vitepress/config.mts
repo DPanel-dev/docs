@@ -1,7 +1,106 @@
 import { defineConfig } from 'vitepress'
 import { zhCNConfig } from './locales/zh-CN'
 import { enUSConfig } from './locales/en-US'
+import { execSync } from 'child_process'
+import fs from 'fs'
+import path from 'path'
 
+// ==============================================================================
+// 1. 定义 NEW 图标逻辑工具函数
+// ==============================================================================
+
+const NEW_THRESHOLD_DAYS = 7; // 7天内更新显示 NEW
+
+function getFileLastCommitTime(filePath: string): number {
+  try {
+    if (!fs.existsSync(filePath)) return 0;
+    // 获取 git 最后提交时间
+    const timestamp = execSync(`git log -1 --format=%ct "${filePath}"`, { encoding: 'utf-8' });
+    const time = parseInt(timestamp.trim(), 10) * 1000;
+    // 如果 git 获取失败（例如新文件），尝试获取文件系统时间
+    if (Number.isNaN(time) || time === 0) {
+      return fs.statSync(filePath).mtimeMs;
+    }
+    return time;
+  } catch (e) {
+    return 0;
+  }
+}
+
+/**
+ * 递归处理 Sidebar
+ * @param items Sidebar 数组
+ * @param baseDir 文件在项目中的物理根目录 (例如 'docs/zh-CN')
+ */
+function processSidebar(items: any[], baseDir: string) {
+  const now = Date.now();
+  const threshold = NEW_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+
+  return items.map((item) => {
+    // 递归处理子项
+    if (item.items) {
+      item.items = processSidebar(item.items, baseDir);
+    }
+
+    // 处理具体链接
+    if (item.link) {
+      // 1. 处理文件后缀
+      let relativePath = item.link;
+      if (!relativePath.endsWith('.md')) {
+        relativePath += '.md';
+      }
+      // 2. 移除开头的 /，防止 path.resolve 错误定位到系统根目录
+      relativePath = relativePath.replace(/^\//, '');
+
+      // 3. 拼接完整的物理路径
+      // 注意：这里结合了 baseDir (docs/zh-CN) 来找到真实文件
+      const fullPath = path.resolve(process.cwd(), baseDir, relativePath);
+
+      const lastTime = getFileLastCommitTime(fullPath);
+
+      // 4. 判断并注入 HTML
+      if (lastTime && (now - lastTime < threshold)) {
+        // 防止重复添加（如果开发模式下热更新）
+        if (!item.text.includes('vp-badge-new')) {
+          item.text = `${item.text} <span class="vp-badge-new">New</span>`;
+        }
+      }
+    }
+    return item;
+  });
+}
+
+/**
+ * 辅助函数：处理 Sidebar 可能是对象（多侧边栏）的情况
+ */
+function injectNewBadge(config: any, baseDir: string) {
+  if (config?.themeConfig?.sidebar) {
+    const sidebar = config.themeConfig.sidebar;
+    if (Array.isArray(sidebar)) {
+      config.themeConfig.sidebar = processSidebar(sidebar, baseDir);
+    } else if (typeof sidebar === 'object') {
+      // 如果是多侧边栏对象结构 { '/guide/': [] }
+      for (const path in sidebar) {
+        sidebar[path] = processSidebar(sidebar[path], baseDir);
+      }
+    }
+  }
+}
+
+// ==============================================================================
+// 2. 在导出前，对导入的配置进行“加工”
+// ==============================================================================
+
+// 处理中文配置：物理路径在 docs/zh-CN
+injectNewBadge(zhCNConfig, 'docs/zh-CN');
+
+// 处理英文配置：物理路径在 docs/en-US
+injectNewBadge(enUSConfig, 'docs/en-US');
+
+
+// ==============================================================================
+// 3. 原始配置导出
+// ==============================================================================
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   rewrites: {
