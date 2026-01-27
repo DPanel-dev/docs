@@ -29,7 +29,7 @@
 ### 推荐加速方案
 
 在仓库中配置多个加速地址，面板会采用轮询的方式拉取镜像，直到拉取成功或是失败。
-你可以 [国内 Docker 服务状态 & 镜像加速监控](https://status.1panel.top) 查询公开的加速地址。
+你可以 [镜像加速检测-1](https://status.1panel.top)、[镜像加速检测-2](https://status.anye.xyz/) 查询公开的加速地址。
 也可以使用 [KSpeeder](https://kspeeder.com/) 搭建加镜像加速服务。
 
 将地址添加到加速地址列表中即可
