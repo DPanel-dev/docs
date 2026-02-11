@@ -15,14 +15,12 @@ DPanel 面板为了隔离权限，在管理容器文件时，会自动创建 dpa
 
 ## 标准版
 
-:::danger
-面板容器不能绑定主机 host 网络 <span style="color: red">（请勿使用 --network host 参数 !!!）</span>
+:::warning
+#### <span style="color: #cd1f00">后续命令演示均以【标准版】为例，请根据实际安装的版本替换参数及镜像地址。</span>
 :::
 
 标准版本中提供了域名绑定及证书功能，需要绑定 80 及 443 端口，如果你不需要这些功能，请使用 Lite 版。
 Lite 版与标准版只有镜像地址区别，除不再需要映射 80 及 443 端口外，其余配置均一致。
-
-##### 后续命令演示均以【标准版】为例，请根据实际安装的版本替换参数及镜像地址。
 
 ```shell
 docker run -d --name dpanel --restart=always \
@@ -118,6 +116,18 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
+## 绑定主机网络 --network host
+
+绑定主机端口时默认使用 http://hostip:8080 访问面板，更改端口需要配置环境变量。
+使用主机网络时，需要确保对应的端口（标准版还包含 80 及 443 端口）没有被占用。
+
+```js
+docker run -d --name dpanel --restart=always \
+ -e APP_NAME=dpanel -e APP_SERVER_PORT=2456 \  // [!code focus]
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
 ## 配置面板代理
 
 创建面板时通过环境变量配置容器内的代理地址 \
@@ -200,7 +210,6 @@ docker run -d --restart=always \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
-
 
 ## 绑定宿主机 host {#bind-host}
 
