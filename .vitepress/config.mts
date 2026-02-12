@@ -57,6 +57,7 @@ function processSidebar(items: any[], baseDir: string) {
       const fullPath = path.resolve(process.cwd(), baseDir, relativePath);
 
       const lastTime = getFileLastCommitTime(fullPath);
+      console.log(`Path: ${fullPath}, GitTime: ${lastTime}`);
 
       // 4. 判断并注入 HTML
       if (lastTime && (now - lastTime < threshold)) {
