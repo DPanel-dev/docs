@@ -11,19 +11,39 @@ import path from 'path'
 
 const NEW_THRESHOLD_DAYS = 7; // 7天内更新显示 NEW
 
+/**
+ * 获取文件最后提交时间
+ * 修复逻辑：CI 环境下严格依赖 Git 时间，失败则不显示 New，防止误判
+ */
 function getFileLastCommitTime(filePath: string): number {
   try {
     if (!fs.existsSync(filePath)) return 0;
+
     // 获取 git 最后提交时间
-    const timestamp = execSync(`git log -1 --format=%ct "${filePath}"`, { encoding: 'utf-8' });
+    // 使用 stdio: ignore 忽略 stderr，防止 git 报错中断构建
+    const timestamp = execSync(`git log -1 --format=%ct "${filePath}"`, {
+      encoding: 'utf-8',
+      stdio: ['pipe', 'pipe', 'ignore']
+    });
+
     const time = parseInt(timestamp.trim(), 10) * 1000;
-    // 如果 git 获取失败（例如新文件），尝试获取文件系统时间
+
+    // 严谨判断：如果 git 获取失败 (time 为 NaN 或 0)
     if (Number.isNaN(time) || time === 0) {
+      // 【关键修复】
+      // 在 CI 环境 (GitHub Actions) 中，如果拿不到 git 时间，直接返回 0。
+      // 绝对不能回退到 fs.statSync，因为 CI 里 git checkout 下来的文件时间都是"刚刚"，会导致全显示 New。
+      if (process.env.CI) {
+        return 0;
+      }
+      // 只有在本地开发环境，才允许回退到文件系统时间 (方便调试新建未提交的文件)
       return fs.statSync(filePath).mtimeMs;
     }
     return time;
   } catch (e) {
-    return 0;
+    // 发生错误时，CI 环境返回 0，本地环境尝试返回文件时间
+    if (process.env.CI) return 0;
+    return fs.existsSync(filePath) ? fs.statSync(filePath).mtimeMs : 0;
   }
 }
 
@@ -44,25 +64,38 @@ function processSidebar(items: any[], baseDir: string) {
 
     // 处理具体链接
     if (item.link) {
-      // 1. 处理文件后缀
-      let relativePath = item.link;
+      // 1. 规范化 link，移除开头的 /
+      let relativePath = item.link.replace(/^\//, '');
+
+      // 2. 补全后缀
       if (!relativePath.endsWith('.md')) {
         relativePath += '.md';
       }
-      // 2. 移除开头的 /，防止 path.resolve 错误定位到系统根目录
-      relativePath = relativePath.replace(/^\//, '');
 
       // 3. 拼接完整的物理路径
-      // 注意：这里结合了 baseDir (docs/zh-CN) 来找到真实文件
-      const fullPath = path.resolve(process.cwd(), baseDir, relativePath);
+      // 【关键修复】检查 link 是否已经包含了 baseDir，防止出现 docs/en-US/docs/en-US/...
+      let fullPath;
+
+      // 注意：这里简单的字符串包含检查可能不够，建议检查开头
+      // baseDir 例如: 'docs/en-US'
+      if (relativePath.startsWith(baseDir)) {
+        // 如果 link 已经是 /docs/en-US/guide/xxx，则直接基于 cwd 解析
+        fullPath = path.resolve(process.cwd(), relativePath);
+      } else {
+        // 如果 link 是 /guide/xxx，则拼接 baseDir
+        fullPath = path.resolve(process.cwd(), baseDir, relativePath);
+      }
+
+      // 调试日志：如果构建时还发现路径不对，可以解开下面注释查看
+      // console.log(`[Badge Check] Link: ${item.link} -> Full: ${fullPath}`);
 
       const lastTime = getFileLastCommitTime(fullPath);
-      console.log(`Path: ${fullPath}, GitTime: ${lastTime}`);
 
       // 4. 判断并注入 HTML
-      if (lastTime && (now - lastTime < threshold)) {
-        // 防止重复添加（如果开发模式下热更新）
-        if (!item.text.includes('vp-badge-new')) {
+      // 只有时间有效且在阈值内才添加
+      if (lastTime > 0 && (now - lastTime < threshold)) {
+        // 确保 item.text 是字符串且不重复添加
+        if (typeof item.text === 'string' && !item.text.includes('vp-badge-new')) {
           item.text = `${item.text} <span class="vp-badge-new">New</span>`;
         }
       }
@@ -93,9 +126,12 @@ function injectNewBadge(config: any, baseDir: string) {
 // ==============================================================================
 
 // 处理中文配置：物理路径在 docs/zh-CN
+// 中文配置通常 link 是 /install/xxx，拼接后为 /app/docs/zh-CN/install/xxx (正确)
 injectNewBadge(zhCNConfig, 'docs/zh-CN');
 
 // 处理英文配置：物理路径在 docs/en-US
+// 英文配置如果使用了 rewrites 或 link 本身带前缀 /docs/en-US/install/xxx
+// processSidebar 里的修复逻辑会处理它，避免重复拼接
 injectNewBadge(enUSConfig, 'docs/en-US');
 
 

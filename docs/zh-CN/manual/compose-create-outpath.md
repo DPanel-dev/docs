@@ -13,7 +13,7 @@
 ### 查找 compose 任务使用的 yaml 文件
 
 
-```sehll
+```shell
 docker compose ls --filter name=my-compose
 ```
 
