@@ -13,15 +13,14 @@ If there is no dpanel-plugin-explorer container DPanel will be automatically cre
 
 ## Standard Edition
 
-:::danger
-DPanel container cannot bind to the host network <span style="color: red">（do not use the --network host !!!）</span>
+:::warning
+#### <span style="color: #cd1f00">The following examples use the **Standard Edition**. Please adjust parameters and image tags according to your actual version.</span>
 :::
+
 
 The Standard Edition provides Nginx proxy-pass and HTTPS certificate features, which require binding ports 80 and 443. If you do not need these features, please use the Lite Edition.
 
 The Lite Edition differs from the Standard Edition only in the image. Binding ports 80 and 443 is no longer required. Other configurations are same.
-
-The following commands all use the Standard Edition as an example. Please replace the parameters and image by hand.
 
 ```shell
 docker run -d --name dpanel --restart=always \
@@ -117,6 +116,17 @@ docker run -d --name dpanel --restart=always \
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
+
+## Host Network Mode (--network host)
+
+In host network mode, the panel uses http://hostip:8080 by default. Port changes require environment variable configuration. Ensure ports (including 80/443 for Standard Edition) are not occupied.
+```js
+docker run -d --name dpanel --restart=always \
+ -e APP_NAME=dpanel -e APP_SERVER_PORT=2456 \  // [!code focus]
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
 
 ## Http(s) Proxy
 
