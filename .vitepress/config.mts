@@ -135,6 +135,14 @@ export default defineConfig({
     ],
     [
       'script',
+      {
+        async: '', // 或者填 true
+        src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1086432794987062',
+        crossorigin: 'anonymous'
+      }
+    ],
+    [
+      'script',
       { id: "baidu" },
       `var _hmt = _hmt || [];
       (function () {
@@ -144,7 +152,6 @@ export default defineConfig({
         s.parentNode.insertBefore(hm, s);
       })();`
     ],
-    // 这里顺便帮你把 CSS 注入，省得你再去改 CSS 文件
     [
       'style',
       {},
