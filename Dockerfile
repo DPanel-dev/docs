@@ -24,6 +24,7 @@ FROM nginx:1.27
 
 COPY ./storage /usr/share/nginx/html/storage
 COPY ./storage/image/dpanel.ico /usr/share/nginx/html/favicon.ico
+COPY ./storage/ads.txt /usr/share/nginx/html/ads.txt
 COPY ./storage/quick.sh /usr/share/nginx/html/quick.sh
 
 RUN sed -i '/root.*;/a\ try_files \$uri \$uri/ \$uri.html =404;' \
