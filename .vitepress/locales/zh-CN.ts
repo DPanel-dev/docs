@@ -12,7 +12,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       { text: '专业版', link: getLink("pro") },
       { text: '更新记录', link: getLink("upgrade") },
       { text: '赞助', link: 'https://afdian.com/a/dpanel' },
-      { text: '演示', link: "https://demo.deepanel.com" },
+      { text: '演示', link: "https://demo.dpanel.cc" },
     ],
 
     sidebar: [
@@ -107,6 +107,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: '宿主机管理', link: getLink("manual/system-env-host") },
           { text: '应用商店', link: getLink("manual/system-store") },
           { text: '更新面板', link: getLink("manual/system-dpanel-upgrade") },
+          { text: '迁移面板', link: getLink("manual/system-dpanel-migrate") },
         ]
       },
       {

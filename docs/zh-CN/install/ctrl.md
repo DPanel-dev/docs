@@ -193,3 +193,21 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 {"value":"123","found":true}
 
 ```
+
+## 备份面板数据 <Badge type="tip" text="DPanel Version >= 1.9.4" />
+
+备份 DPanel 面板的数据
+
+- \--backup-path 要备份的目录，留空为全部
+- \--ignore-path-prefix 跳过备份的目录前缀，--ignore-path-prefix storage/temp 跳过 storage/temp 开头的目录或是文件
+
+```
+./dpanel -f config.yaml system:backup
+```
+
+### 返回
+
+```
+{"path":"dpanel-main-20260226191909.snapshot"}
+
+```
