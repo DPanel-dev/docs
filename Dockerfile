@@ -19,8 +19,6 @@ RUN set -eux; \
                 curl -sL -O "$url" ;; \
         esac; \
     done
-    curl -s "https://api.github.com/repos/donknap/dpanel/releases?per_page=10" | \
-    jq '[.[] | {version: .tag_name, description: .body}]' > /api/upgrade.json
 
 FROM nginx:1.27
 
@@ -28,6 +26,7 @@ COPY ./storage /usr/share/nginx/html/storage
 COPY ./storage/image/dpanel.ico /usr/share/nginx/html/favicon.ico
 COPY ./storage/ads.txt /usr/share/nginx/html/ads.txt
 COPY ./storage/quick.sh /usr/share/nginx/html/quick.sh
+COPY ./storage/api /usr/share/nginx/html/api
 
 RUN sed -i '/root.*;/a\ try_files \$uri \$uri/ \$uri.html =404;' \
   /etc/nginx/conf.d/default.conf && \
@@ -36,4 +35,3 @@ RUN sed -i '/root.*;/a\ try_files \$uri \$uri/ \$uri.html =404;' \
 
 COPY --from=builder /app/.vitepress/dist /usr/share/nginx/html/
 COPY --from=downloader /download/* /usr/share/nginx/html/download/
-COPY --from=downloader /api/ /usr/share/nginx/html/api/
