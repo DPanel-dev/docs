@@ -35,7 +35,7 @@ export STORAGE_LOCAL_PATH=/home/dpanel && dpanel server:start -f /etc/dpanel/con
 | APP_VERSION | 程序版本 | - | - |
 | APP_SERVER_PORT | 程序运行绑定端口 | 8086 | - |
 | STORAGE_LOCAL_PATH | 程序运行产生的数据目录 | ./ | - |
-| DB_MODE | 数据库读写模式 ro\|rw\|rwc | rwc | - |
+| DP_DB_MODE | 数据库读写模式 ro\|rw\|rwc | rwc | - |
 | DP_SYSTEM_BASEURL | 面板访问 baseurl | - | > 1.9.1 |
 
 ## 配置文件
@@ -79,7 +79,7 @@ database:
     charset: utf8mb4
     prefix: ims_
     options:
-      mode: ${DB_MODE}
+      mode: ${DP_DB_MODE}
 system:
   baseurl: ${DP_SYSTEM_BASEURL}
   storage:
