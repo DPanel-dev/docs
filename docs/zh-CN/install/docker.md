@@ -116,7 +116,7 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## 使用主机网络 --network host
+## 使用主机网络 --network host 
 
 绑定主机端口时默认使用 http://hostip:8080 访问面板，如果更改端口，添加环境变量 APP_SERVER_PORT=2456 。
 使用主机网络时，需要确保主机端口（标准版还包含 80 及 443 端口）没有被占用。
