@@ -39,8 +39,10 @@ aside: false
 
     releases.forEach((release: any) => {
       markdown += `## ${release.tag_name}\n\n`;
-      const formattedBody = release.body.replace(/\r?\n/g, ' \\\n');
+      const body = release.body || '';
+      const formattedBody = body.replace(/\r?\n/g, ' \\\n');
       markdown += `${formattedBody}\n\n`;
+
     });
 
     // 确保目录存在
@@ -54,7 +56,7 @@ aside: false
 
     const jsonContent = releases.map((release: any) => ({
       version: release.tag_name,
-      description: release.body
+      description: release.body || ''
     }));
 
     // 确保 JSON 目录存在并写入

@@ -116,14 +116,18 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## 绑定主机网络 --network host
+## 使用主机网络 --network host
 
-绑定主机端口时默认使用 http://hostip:8080 访问面板，更改端口需要配置环境变量。
-使用主机网络时，需要确保对应的端口（标准版还包含 80 及 443 端口）没有被占用。
+绑定主机端口时默认使用 http://hostip:8080 访问面板，如果更改端口，添加环境变量 APP_SERVER_PORT=2456 。
+使用主机网络时，需要确保主机端口（标准版还包含 80 及 443 端口）没有被占用。
+
+:::warning
+使用主机网络时，添加容器域名转发时只能通过 IP:PORT 的形式
+:::
 
 ```js
 docker run -d --name dpanel --restart=always \
- -e APP_NAME=dpanel -e APP_SERVER_PORT=2456 \  // [!code focus]
+ -e APP_NAME=dpanel -e APP_SERVER_PORT=2456 --network host \  // [!code focus]
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
