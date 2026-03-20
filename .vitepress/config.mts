@@ -85,7 +85,7 @@ await generateUpgradeDocs();
 // 2. 定义 NEW 图标逻辑工具函数
 // ==============================================================================
 
-const NEW_THRESHOLD_DAYS = 7;
+const NEW_THRESHOLD_DAYS = 30;
 
 /**
  * 获取文件最后提交时间
