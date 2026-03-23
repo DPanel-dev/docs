@@ -55,6 +55,6 @@ curl -sSL https://dpanel.cc/quick.sh -o quick.sh && bash quick.sh test
 
 After using the install script to generate a Docker API TLS certificate, configure the certificate according to [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/).
 
-## Priview
+## Preview
 
 ![install-1](https://cdn.w7.cc/dpanel/install-1.png?t=1)

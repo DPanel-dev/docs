@@ -67,9 +67,9 @@ podman run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Docker Desktop (Windows / Macos)
+## Docker Desktop (Windows / macOS)
 
-Mount the docker.sock file via the path //var/run/docker.sock.
+Mount the docker.sock file via the path `//var/run/docker.sock`:
 
 :::code-group
 
@@ -80,7 +80,7 @@ docker run -d --name dpanel --restart=always \
  -v D:\data\dpanel:/dpanel dpanel/dpanel:latest // [!code focus]
 ```
 
-```js [Macos]
+```js [macOS]
 docker run -d --name dpanel --restart=always \
  -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
  -v //var/run/docker.sock:/var/run/docker.sock // [!code focus] \
@@ -88,10 +88,10 @@ docker run -d --name dpanel --restart=always \
 ```
 :::
 
-## Use Docker Tcp
+## Use Docker TCP
 
 When using [Docker TCP](/manual/system-env-tcp), there is no need to mount the `/var/run/docker.sock` file when creating the panel container.
-The Api address is specified via the `DOCKER_HOST` environment variable during creation.
+The API address is specified via the `DOCKER_HOST` environment variable during creation.
 
 :::tip
 Use `--add-host` to bind the host machine's IP address to the container; otherwise, you need to use the host machine's IP address within the local network.
@@ -128,10 +128,10 @@ docker run -d --name dpanel --restart=always \
 ```
 
 
-## Http(s) Proxy
+## HTTP(S) Proxy
 
-Configure the proxy address in the container through environment variables \
-If the proxy address is the host, do not use 127.0.0.1 or localhost, these addresses point to the container itself rather than the host, please use the host LAN address.
+Configure the proxy address in the container through environment variables.
+If the proxy address is the host, do not use `127.0.0.1` or `localhost`, these addresses point to the container itself rather than the host. Please use the host's LAN address:
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -144,7 +144,7 @@ docker run -d --name dpanel --restart=always \
 
 ## Mount DPanel Key File <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
-The DPanel uses the RSA for login authentication and SSH login. Automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the **_/dpanel/cert/rsa_** directory.
+DPanel uses RSA for login authentication and SSH login. It automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the **_/dpanel/cert/rsa_** directory.
 
 You can also mount your local **_~/.ssh/id_rsa_** and **_~/.ssh/id_rsa.pub_** files into the DPanel container.
 
@@ -211,11 +211,11 @@ docker run -d --restart=always \
 ```
 
 
-## Host Ip Address
+## Host IP Address
 
-Accessing 127.0.0.1 or localhost from within a container refers to the container itself.
+Accessing `127.0.0.1` or `localhost` from within a container refers to the container itself.
 
-To access the host from within a container, you need to use the host's local network address or the host address injected into the container  host.dpael.local .
+To access the host from within a container, you need to use the host's local network address or the host address injected into the container, `host.dpanel.local`.
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -228,7 +228,7 @@ docker run -d --name dpanel --restart=always \
 ## Log File
 
 DPanel writes logs of warning level and above to the `/dpanel/logs/` directory during runtime. Runtime logs are managed by Docker.
-To prevent log files from becoming too large due to long-term operation, you can configure log option for DPanel container.
+To prevent log files from becoming too large due to long-term operation, you can configure log options for the DPanel container:
 
 ```js
 docker run -d --name dpanel --restart=always \

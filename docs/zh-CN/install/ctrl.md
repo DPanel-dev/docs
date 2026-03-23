@@ -1,8 +1,8 @@
 # 面板控制命令 <Badge type="tip" text="DPanel Version >= 1.2.2" />
 
-## 调用方式 
+## 调用方式
 
-执行命令时根据当前的执行环境，请修改示例代码执行。
+执行命令时请根据当前环境修改示例代码。
 
 ### 在宿主机中调用
 
@@ -10,9 +10,9 @@
 实际运行时，请将下方命令中的 **dpanel** 替换成你的面板容器名字
 :::
 
-1. 登录服务器的 ssh 
-2. 通过 docker exec 命令执行 DPanel 容器中的控制命令
-3. 根据需求，执行对应的命令
+1. 登录服务器 ssh
+2. 通过 `docker exec` 命令执行 DPanel 容器中的控制命令
+3. 根据需求执行对应的命令
 
 ```
 docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
@@ -32,7 +32,7 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 
 ### 快速重置
 
-将使用随机密码重置用户
+使用随机密码重置用户
 
 ```
 ./dpanel -f config.yaml user:reset
@@ -177,11 +177,11 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 
 ## 简易缓存数据存储 <Badge type="tip" text="DPanel Version >= 1.9.2" />
 
-利用缓存数据存储功能，可以脚本中做一些数据缓存或是标志位检测。
+利用缓存数据存储功能，可在脚本中进行数据缓存或标志位检测。
 
 - \--key 缓存名称
 - \--value 缓存内容，为空时获取 --key 的内容
-- \--keep 缓存生命周期（秒），默认为 -1 直到主程序重启
+- \--keep 缓存生命周期（秒），默认为 -1（直到主程序重启）
 
 ```
 ./dpanel -f config.yaml system:cache --key test1 --value 123

@@ -3,13 +3,13 @@
 ## 介绍
 
 DPanel Desktop 基于 [Wails V3](https://wails.io/) 实现。
-本质上是一个 CLI 程序管理器，通过 GUI 可视化的界面，管理主程序的环境变量、运行程序、接管控制台日志输出。
+本质是一个 CLI 程序管理器，通过 GUI 可视化界面管理主程序的环境变量、运行程序、接管控制台日志输出。
 
-在 Windows 系统中，可以不再受到 Docker 环境的束缚，双击程序就可以运行 DPanel 面板。
-可以简单、快速的使用本地的 DPanel 面板的【多服务端功能】管理本地、内网、公网的 Docker 主机。
+在 Windows 系统中，可不再受 Docker 环境束缚，双击程序即可运行 DPanel 面板。
+可简单、快速地使用本地 DPanel 面板的【多服务端功能】管理本地、内网、公网的 Docker 主机。
 
 即开即用，随关随停。实现了对服务器的零侵入和零占用，杜绝了面板产生的任何安全风险。
-通过 DPanel Desktop 你还可以将其它基于 CLI 的程序像是 DPanel 一样方便的运行起来。
+通过 DPanel Desktop 还可将其他基于 CLI 的程序像 DPanel 一样方便地运行起来。
 
 ## 下载地址
 
@@ -32,10 +32,10 @@ DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 d
 ### WebView2
 
 :::warning
-低于 Windows10 的系统无法使用 DPanel Desktop。
+低于 Windows 10 的系统无法使用 DPanel Desktop。
 :::
 
-Windows 10 及以上默认会安装 webview2 运行时，如果你的系统未包含相关组件通过 [Microsoft Edge WebView2](https://developer.microsoft.com/zh-cn/Microsoft-edge/webview2) 下载。
+Windows 10 及以上版本默认会安装 WebView2 运行时，如系统未包含相关组件，请通过 [Microsoft Edge WebView2](https://developer.microsoft.com/zh-cn/Microsoft-edge/webview2) 下载。
 
 ### dpanel.exe
 
@@ -44,8 +44,8 @@ DPanel Desktop 运行时需要调用 DPanel 主程序，通过 [Releases](https:
 
 ### docker.exe & docker-compose.exe
 
-DPanel 面板中会调用 docker 命令及 docker-compose 命令，本机未安装 Docker Desktop 时将不会包含相关命令。
-通过 [docker-cli](https://download.docker.com/win/static/stable/x86_64/) 和 [docker-compose-cli](https://github.com/docker/compose/releases) 下载。
+DPanel 面板会调用 docker 命令及 docker-compose 命令，本机未安装 Docker Desktop 时将不包含相关命令。
+可通过 [docker-cli](https://download.docker.com/win/static/stable/x86_64/) 和 [docker-compose-cli](https://github.com/docker/compose/releases) 下载。
 
 ## 配置文件 setting.json
 

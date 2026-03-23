@@ -1,22 +1,22 @@
 # 创建 Compose 覆盖配置
 
-在使用远程 yaml 或是应用商店创建 Compose 任务时，有时候需要修改 compose.yaml 中的一些参数，比如：端口、挂载目录等配置。
-如果直接去修改 yaml 就会导致，当应用作者发布新版后，就需要人工去合并这部分的差异。
+使用远程 yaml 或应用商店创建 Compose 任务时，有时需要修改 compose.yaml 中的一些参数，如端口、挂载目录等配置。
+如直接修改 yaml，当应用作者发布新版后，需要人工合并这些差异。
 
-这时候使用覆盖 yaml 的方式去新建一个 yaml 文件把配置追加、覆盖到原始的 yaml 文件中。
+此时可使用覆盖 yaml 的方式新建一个 yaml 文件，将配置追加、覆盖到原始的 yaml 文件中。
 
 
 ## 创建覆盖配置文件
 
-:::tip 
-覆盖配置文件只需要添加想要调整的配置项
+:::tip
+覆盖配置文件只需添加想要调整的配置项。
 :::
 
 ![compose-override-yaml.png](https://cdn.w7.cc/dpanel/compose-override-yaml.png)
 
 ## 覆盖配置
 
-假设原始的 yaml 文件内容为
+假设原始的 yaml 文件内容为：
 
 ```yaml 
 name: easyimage
@@ -44,7 +44,7 @@ services:
 
 ### 新增配置
 
-新增一个端口映射，可以配置为，部署时将同时映射 80 及 88
+新增一个端口映射，可配置为部署时同时映射 80 及 88：
 
 ```
 services:
@@ -55,7 +55,7 @@ services:
 
 ### 更改配置
 
-更改映射目录，其中一个重新指向宿主机目录，一个指向存储卷
+更改映射目录，其中一个重新指向宿主机目录，一个指向存储卷：
 
 ```
 services:
@@ -73,7 +73,7 @@ volumes:
 ### 强制覆盖配置
 
 :::danger
-群辉或是老旧 Docker 版本不支持此配置，如果有覆盖操作需要直接原始文件
+群晖或老旧 Docker 版本不支持此配置，如有覆盖操作需要直接修改原始文件。
 :::
 
 ```
@@ -96,7 +96,7 @@ services:
 
 ### 清空配置
 
-采用 !reset 的写法，可以将映射端口配置清空掉，不暴露任何端口。
+采用 `!reset` 的写法，可将映射端口配置清空，不暴露任何端口。
 
 ```
 services:
@@ -106,14 +106,14 @@ services:
 
 ## 替换 yaml 中的服务为已存在的容器
 
-用 compose 部署两个 wordpress 项目，会产多个 mysql 数据库。
-但是在实际中，大部分的做法是让多个 wordpress 共用同一个 mysql 实例，用不同的数据库进行区分。
+用 compose 部署两个 wordpress 项目，会产生多个 mysql 数据库。
+但在实际中，大部分做法是让多个 wordpress 共用同一个 mysql 实例，用不同的数据库进行区分。
 
-在下面的 yaml 中，如果不想部署 db 服务，让 phpmyadmin 管理你已经存在的 localmysql。可以定义以下覆盖配置。
-在部署 compose 任务时，取消掉 db 服务的勾选，面板不再会部署 db 服务。
+在下面的 yaml 中，如不想部署 db 服务，让 phpmyadmin 管理已存在的 localmysql，可定义以下覆盖配置。
+部署 compose 任务时，取消 db 服务的勾选，面板将不再部署 db 服务。
 
 :::tip
-需要注意的 compose 中的 phpmyadmin 可以访问到 localmysql 时需要将他们加入到同一个网络中
+需要注意的是 compose 中的 phpmyadmin 要能访问到 localmysql，需将它们加入到同一个网络中。
 :::
 
 ```yaml

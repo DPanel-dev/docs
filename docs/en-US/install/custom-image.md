@@ -2,7 +2,7 @@
 
 Based on the image of DPanel, add your own runtime environment or scripts. Define the Dockerfile as follows:
 
-### Standard Version Edition
+### Standard Edition
 
 ```
 FROM dpanel/dpanel:latest
@@ -21,7 +21,7 @@ ENTRYPOINT [ "/docker/entrypoint.sh" ]
 
 ```
 
-### Lite Version Edition
+### Lite Edition
 
 ```
 FROM dpanel/dpanel:lite

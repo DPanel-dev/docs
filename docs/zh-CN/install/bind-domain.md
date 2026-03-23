@@ -1,13 +1,13 @@
 # 为面板绑定域名 <Badge type="tip" text="DPanel Version >= 1.9.1" />
 
-本例中使用的 http:\/\/127.0.0.1:8807 地址为示例，实际根据面板容器映射端口配置反向代理，
-也可以使用 http:\/\/[面板在bridge网络的ip地址]:8080。
+本例使用 `http://127.0.0.1:8807` 地址为示例，实际需根据面板容器映射端口配置反向代理。
+也可使用 `http://[面板在bridge网络的IP地址]:8080`。
 
 
 ## Nginx 反向代理
 
 :::warning
-配置反向代理或是 cdn 请开启 websocket 支持
+配置反向代理或 CDN 请开启 WebSocket 支持。
 :::
 
 ```
@@ -31,7 +31,7 @@ server {
 
 ## 配置子目录
 
-配置面板子目录时，除了需要配置 Nginx 反向代理，还需要在创建面板容器时配置 [baseurl 环境变量](/install/params)。
+配置面板子目录时，除需配置 Nginx 反向代理外，还需在创建面板容器时配置 [baseurl 环境变量](/install/params)：
 
 ```js
 docker run -d --name dpanel --restart=always \

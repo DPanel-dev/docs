@@ -2,18 +2,18 @@
 
 > 内置脚本：https://github.com/donknap/dpanel/tree/master/docker/script
 
-用户自定义的脚本模板位于 /dpanel/script 目录中，该目录下的包含多个子目录，每一个子目录表示一组脚本模板。
+用户自定义的脚本模板位于 `/dpanel/script` 目录中，该目录包含多个子目录，每个子目录表示一组脚本模板。
 
 ```
 /dpanel/script
 ├─ /template-1                  # template-1 脚本组
-│  ├─ /script-1         
-│  │  └─ data.yaml 
-│  ├─ /script-2        
+│  ├─ /script-1
 │  │  └─ data.yaml
-│  ├─ /script-3              
+│  ├─ /script-2
+│  │  └─ data.yaml
+│  ├─ /script-3
 │  │  └─ data.yml
-│  └─ ... 
+│  └─ ...
 └─ ....
 ```
 

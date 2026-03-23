@@ -1,10 +1,10 @@
 # 使用 Docker 安装
 
-:::danger 
-DPanel 面板为了隔离权限，在管理容器文件时，会自动创建 dpanel-plugin-explorer 容器。
-此插件容器并不暴露任何端口，面板会在你关闭所有访问页面后自动销毁该容器。\
-此插件容器使用 alpine 镜像，你也可以 [手动创建](/install/docker#create-explorer-plugin)，名称保持为 dpanel-plugin-explorer 即可。\
-如果你没有手动创建，面板会自动创建。如果你无法接受，请勿使用【文件管理】功能！！！！ 
+:::danger
+管理容器文件时，面板会自动创建 dpanel-plugin-explorer 容器进行权限隔离。
+该容器使用 alpine 镜像，不暴露任何端口，关闭访问页面后自动销毁。
+你也可以 [手动创建](/install/docker#create-explorer-plugin)，容器名称需保持为 dpanel-plugin-explorer。
+如无法接受自动创建，请勿使用【文件管理】功能。
 :::
 
 <br />
@@ -19,8 +19,8 @@ DPanel 面板为了隔离权限，在管理容器文件时，会自动创建 dpa
 #### <span style="color: #cd1f00">后续命令演示均以【标准版】为例，请根据实际安装的版本替换参数及镜像地址。</span>
 :::
 
-标准版本中提供了域名绑定及证书功能，需要绑定 80 及 443 端口，如果你不需要这些功能，请使用 Lite 版。
-Lite 版与标准版只有镜像地址区别，除不再需要映射 80 及 443 端口外，其余配置均一致。
+标准版提供域名绑定及证书功能，需要映射 80 及 443 端口。如不需要这些功能，请使用 Lite 版。
+Lite 版与标准版仅镜像地址不同，除无需映射 80 及 443 端口外，其余配置一致。
 
 ```shell
 docker run -d --name dpanel --restart=always \
@@ -40,7 +40,7 @@ docker run -d --name dpanel --restart=always \
 
 ## Podman
 
-Podman 与 Docker 命令兼容，将创建命令中的 docker 替换成 podman 运行即可，例如：
+Podman 与 Docker 命令兼容，将创建命令中的 docker 替换为 podman 即可：
 
 ```shell
 podman run -d --name dpanel --restart=always \
@@ -51,7 +51,7 @@ podman run -d --name dpanel --restart=always \
 
 ### Rootless
 
-Podman 可以在非 root 用户下管理容器. 创建面板容器时，你需要先激活普通用户的 podman.sock 会话
+Podman 支持在非 root 用户下管理容器。创建面板容器前，需先激活普通用户的 podman.sock 会话：
 
 ```shell
 systemctl --user enable --now podman.socket
@@ -68,7 +68,7 @@ podman run -d --name dpanel --restart=always \
 
 ## Docker Desktop (Windows / Macos)
 
-通过 //var/run/docker.sock 的形式挂载 docker.sock 文件
+通过 `//var/run/docker.sock` 挂载 docker.sock 文件：
 
 :::code-group
 
@@ -89,11 +89,10 @@ docker run -d --name dpanel --restart=always \
 
 ## 使用 Docker Tcp 管理
 
-使用 [Docker Tcp](/manual/system-env-tcp) 时在创建面板容器无须挂载 /var/run/docker.sock 文件。
-创建时通过 DOCKER_HOST 环境变量指定接口地址。
+使用 [Docker Tcp](/manual/system-env-tcp) 时，创建面板容器无需挂载 /var/run/docker.sock 文件，通过 DOCKER_HOST 环境变量指定接口地址即可。
 
 :::tip
-通过 --add-host 将宿主机的 IP 绑定到容器中使用，否则需要使用宿主机在局域网内的 IP
+通过 `--add-host` 将宿主机 IP 绑定到容器，否则需使用宿主机在局域网内的 IP。
 :::
 
 ```js
@@ -106,8 +105,7 @@ docker run -d --name dpanel --restart=always \
 
 ## 自定义面板管理端口
 
-使用默认命令安装面板后通过 http://127.0.0.1:8807 访问面板。
-你可以自定义面板容器的 8080 对外映射端口
+使用默认命令安装后，通过 `http://127.0.0.1:8807` 访问面板。可自定义 8080 端口的对外映射端口：
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -118,8 +116,8 @@ docker run -d --name dpanel --restart=always \
 
 ## 使用主机网络 --network host 
 
-绑定主机端口时默认使用 http://hostip:8080 访问面板，如果更改端口，添加环境变量 APP_SERVER_PORT=2456 。
-使用主机网络时，需要确保主机端口（标准版还包含 80 及 443 端口）没有被占用。
+使用主机网络时，默认通过 `http://hostip:8080` 访问面板。如需更改端口，添加环境变量 `APP_SERVER_PORT=2456`。
+需确保主机端口未被占用（标准版还包含 80 及 443 端口）。
 
 :::warning
 使用主机网络时，添加容器域名转发时只能通过 IP:PORT 的形式
@@ -134,8 +132,8 @@ docker run -d --name dpanel --restart=always \
 
 ## 配置面板代理
 
-创建面板时通过环境变量配置容器内的代理地址 \
-如果代理地址为宿主机，请勿使用 127.0.0.1 或 localhost，这些地址指向的是容器本身而非宿主机，请使用宿主机局域网地址
+创建面板时通过环境变量配置容器内代理地址。
+如代理地址为宿主机，请勿使用 127.0.0.1 或 localhost（这些地址指向容器本身），应使用宿主机局域网地址：
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -148,11 +146,10 @@ docker run -d --name dpanel --restart=always \
 
 ## 自定义面板密钥文件 <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
-面板通过 RSA 算法进行登录验证以及 SSH 相关功能。面板程序启动时会自动生成 RSA 公/密钥文件（仅当文件不存在时），文件位于 **_/dpanel/cert/rsa_** 目录中。
+面板使用 RSA 算法进行登录验证及 SSH 相关功能，启动时自动生成 RSA 公/私钥文件（仅当文件不存在时），位于 **_/dpanel/cert/rsa_** 目录。
 
-你也可以将你本机的 **_~/.ssh/id_rsa_**， **_~/.ssh/id_rsa.pub_** 文件挂载到面板容器中。
-在添加 SSH 权限时选择【使用面板密钥】使容器可以直接使用宿主机的权限。
-通过这样的方式也可以实现权限的统一管理以及快速的替换和更新。
+也可将本机的 **_~/.ssh/id_rsa_**、**_~/.ssh/id_rsa.pub_** 文件挂载到面板容器。
+添加 SSH 权限时选择【使用面板密钥】，容器即可直接使用宿主机权限，实现权限的统一管理及快速更新：
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -169,8 +166,8 @@ docker run -d --name dpanel --restart=always \
 如果需要挂载 compose yaml 文件或是在 compose yaml 中使用相对路径，请务必将挂载 /dpanel 目录到宿主机。添加 compose 任务查看 [通过挂载存储路径的方式创建](/manual/compose-create#mount)
 :::
 
-面板在运行时会产生一些数据，并存储在面板容器内的的 /dpanel 目录中。如果在创建时没有挂载该目录 docker 会自动挂载到存储卷中 \
-你可以自定义容器内的 /dpanel 目录的主机挂载目录，必须使用绝对路径。
+面板运行时产生的数据存储在容器内的 `/dpanel` 目录中。创建时如未挂载该目录，Docker 会自动挂载到存储卷。
+可自定义容器内 `/dpanel` 目录的宿主机挂载路径（需使用绝对路径）：
 
 
 ```js
@@ -187,7 +184,7 @@ docker run -d --name dpanel --restart=always \
 
 ## 自定义面板容器名称
 
-如果你想更改面板容器名称或是需要同时安装多个面板，可以通过 APP_NAME 环境变量配置容器名称。
+如需更改面板容器名称或同时安装多个面板，可通过 `APP_NAME` 环境变量配置：
 
 ```js
 docker run -d --restart=always \ 
@@ -217,9 +214,9 @@ docker run -d --restart=always \
 
 ## 绑定宿主机 host {#bind-host}
 
-在容器内部访问 127.0.0.1 或是 localhost 指向的是容器本身。
+容器内访问 127.0.0.1 或 localhost 指向容器本身。
 
-在容器内部访问宿主机时需要使用宿主机在局域网内的地址或是注入到容器内部的宿主机地址 host.dpael.local
+访问宿主机时，需使用宿主机在局域网内的地址或注入的宿主机地址 `host.dpanel.local`：
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -231,8 +228,8 @@ docker run -d --name dpanel --restart=always \
 
 ## 切割日志文件
 
-面板在运行时会将警告及以上的日志写入到 /dpanel/logs/ 目录中，运行时日志通过 docker 管理。
-避免长时间运行导致日志文件过大，可以配置面板容器日志切割配置。
+面板将警告及以上级别的日志写入 `/dpanel/logs/` 目录，运行时日志由 Docker 管理。
+为避免日志文件过大，可配置容器日志切割：
 
 
 ```js
@@ -245,18 +242,18 @@ docker run -d --name dpanel --restart=always \
 
 ## 开启 IPV6
 
-如果 Docker 环境没有配置默认 IPV6 支持，标准版将无法转发 IPV6 的地址。可以在面板中创建任意 IPV6 的网络，并将面板容器加入该网络即可。
+如 Docker 环境未配置默认 IPv6 支持，标准版将无法转发 IPv6 地址。可在面板中创建任意 IPv6 网络，并将面板容器加入该网络。
 
 
 ## 更新或重建面板
 
-更新与重新安装的区别就在于是否保留面板挂载的目录（/dpanel）的配置。删除宿主机挂载目录或是重新指定目录，则为重建面板。
-否则表示升级面板容器[查看面板升级命令](/manual/system-dpanel-upgrade)
+更新与重建的区别在于是否保留面板挂载目录（`/dpanel`）的配置。
+删除宿主机挂载目录或重新指定目录为重建面板，否则为升级面板[查看升级命令](/manual/system-dpanel-upgrade)。
 
 ## 手动创建文件管理插件 {#create-explorer-plugin}
 
 :::tip
-将文件管理容器的标签 com.dpanel.container.auto_remove=true 配置为 true 时，面板会在每次关闭浏览之后自动清理容器，配置为 false 时则不会清理。
+将文件管理容器的标签 `com.dpanel.container.auto_remove` 配置为 `true` 时，面板会在每次关闭浏览器后自动清理容器；配置为 `false` 则不清理。
 :::
 
 ```js

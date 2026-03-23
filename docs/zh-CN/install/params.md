@@ -13,7 +13,7 @@ dpanel server:start -f /etc/dpanel/config.yaml
 
 ### 直接修改 config.yaml
 
-直接修改 config.yaml 文件的对应的配置即可
+直接修改 config.yaml 文件中的对应配置即可。
 
 ### 通过启动命令覆盖配置
 
@@ -36,8 +36,8 @@ export STORAGE_LOCAL_PATH=/home/dpanel && dpanel server:start -f /etc/dpanel/con
 | APP_SERVER_PORT | 程序运行绑定端口 | 8086 | - |
 | STORAGE_LOCAL_PATH | 程序运行产生的数据目录 | ./ | - |
 | DP_DB_MODE | 数据库读写模式 ro\|rw\|rwc | rwc | - |
-| DP_ACME_COMMAND_NAME | 覆盖 acme 的命令路径 | /root/.acme/acme.sh |  |
-| DP_ACME_CONFIG_HOME | 覆盖 acme 的配置目录 | /root/.acme/ | |
+| DP_ACME_COMMAND_NAME | 覆盖 acme 的命令路径 | /root/.acme/acme.sh | - |
+| DP_ACME_CONFIG_HOME | 覆盖 acme 的配置目录 | /root/.acme/ | - |
 | DP_SYSTEM_BASEURL | 面板访问 baseurl | - | > 1.9.1 |
 | DP_LOG_CONSOLE_LEVEL | 日志级别 info\|debug | info | > 1.10.0 |
 | DP_RUN_IN_CONTAINER | 是否在容器中运行 | 1 | > 1.10.0 |

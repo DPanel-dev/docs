@@ -2,7 +2,7 @@
 
 The Docker In Docker approach allows running a new Docker server in a container that is isolated from the outside world.
 
-## Compose Yaml
+## Compose YAML
 
 ```yaml
 services:

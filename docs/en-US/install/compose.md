@@ -1,6 +1,6 @@
 # Install with Compose
 
-## Compose Yaml
+## Compose YAML
 
 ```yaml
 services:

@@ -1,4 +1,4 @@
-# Resource
+# Related Resources
 
 ## Icon x 64
 

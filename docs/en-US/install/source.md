@@ -10,7 +10,7 @@ We recommend using a container to create DPanel for greater compatibility.
 
 You can download the packaged binary packages from the [Release](https://github.com/donknap/dpanel/releases) page.
 
-### For Ubuntu、Centos、Debian etc
+### For Ubuntu, CentOS, Debian, etc.
 
 - dpanel-amd64 
 - dpanel-arm
@@ -21,12 +21,12 @@ You can download the packaged binary packages from the [Release](https://github.
 - dpanel-musl-arm64
 - dpanel-musl-arm
 
-### For MacOSX 
+### For macOS 
 
 - dpanel-darwin-ARM64
 - dpanel-darwin-X64
 
-### For Synology
+### For Synology NAS
 
 - dpanel-synology-arm64 
 - dpanel-synology-amd64 
@@ -37,7 +37,7 @@ You can download the packaged binary packages from the [Release](https://github.
 
 ## Compile
 
-### Environmental requirements
+### Environment Requirements
 
 - Go Version >= 1.23
 - Please make sure that the Libc or Musl library has been installed and CC CXX has been configured in the environment variables.
@@ -102,11 +102,11 @@ chmod 755 ./runtime/dpanel
 ```
 :::
 
-## Docker is not installed on the system
+## Docker Not Installed on System
 
 If Docker is not installed on system, after starting the DPanel, you can configure the default remote Docker server through [Multiple Dockers Management](/manual/system-env).
 
-### Install docker-cli command
+### Install docker-cli Command
 
 DPanel depends on docker and docker compose (docker-compose) commands.
 If you don't have docker engine installed, you need to install these client command components manually, according to the system you use [Add Docker software source](https://docs.docker.com/engine/install/).

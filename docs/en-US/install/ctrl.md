@@ -1,117 +1,213 @@
-# Control Command <Badge type="tip" text="DPanel Version >= 1.2.2" />
+# Panel Control Commands <Badge type="tip" text="DPanel Version >= 1.2.2" />
 
-The control command needs to be run in the DPanel container. If you change the DPanel container name, please replace dpanel in the command below with your name
+## Call Method
 
-1. Log in to the server's ssh
-2. Execute the control command in the DPanel container through the docker exec command
-3. Execute the command
+Please modify the example code according to the current environment when executing commands.
 
-### Reset Admin Account {#user-reset}
+### Call in Host Machine
 
-#### Quick Reset
+:::tip
+When actually running, please replace **dpanel** in the command below with your panel container name
+:::
 
-The user will be reset with a random password
-
-```
-docker exec dpanel ./dpanel -f config.yaml user:reset
-```
-
-#### Reset Password
+1. Login to server ssh
+2. Execute DPanel container control commands through `docker exec` command
+3. Execute corresponding commands as needed
 
 ```
-docker exec dpanel ./dpanel -f config.yaml user:reset --password 123456
+docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 ```
 
-#### Reset Username
+### Scheduled Task and Binary Call
 
-When resetting a username, you must also specify a password
-
-```
-docker exec dpanel ./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
-```
-
-### Sync Store
-
-- \--name The app store name
+:::tip
+When calling in a scheduled task, leave the execution container empty or specify it as the DPanel container
+:::
 
 ```
-docker exec dpanel ./dpanel -f config.yaml store:sync --name somename
+/app/server/dpanel -f /app/server/config.yaml user:reset
 ```
 
-#### Result
+## Reset Admin User
+
+### Quick Reset
+
+Use a random password to reset user
+
+```
+./dpanel -f config.yaml user:reset
+```
+
+### Reset Password
+
+```
+./dpanel -f config.yaml user:reset --password 123456
+```
+
+### Reset Username
+
+When resetting username, must specify password
+
+```
+./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+```
+
+## Update App Store Data
+
+- --name Specify app store name
+
+```
+./dpanel -f config.yaml store:sync --name test
+```
+
+### Return
 
 ```
 {"total":151}
 ```
 
-### Check Container New Version
+## Detect Container Updates
 
-- \--name Container name
-- \--docker-env The docker environment to which the container belongs
+- --name Specify the container name to detect
+- --docker-env Specify docker env environment name, default: local
 
 ```
-docker exec dpanel ./dpanel -f config.yaml container:upgrade --name containername --docker-env local
+./dpanel -f config.yaml container:upgrade --name containerName --docker-env local
 ```
 
-#### Result
+### Return
 
-> upgrade is true to indicate an update
+> upgrade is true means there is an update
 
 ```
 {"upgrade":false,"digest":"sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55","digestLocal":["registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel@sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55"]}
 ```
 
-### Upgrade Container
+## Upgrade Container
 
-- \--name Container name
-- \--upgrade Upgrading the container
-- \--docker-env The docker environment to which the container belongs
+- --name Specify container name
+- --docker-env Specify docker env environment name
+- --enable-bak Whether to backup old container, default: true
+- --disable-bak Do not backup old container, equivalent to --enable-bak=false
+- --image-tag Specify new image name, this image must be fully compatible with the container's image
 
 ```
-docker exec dpanel ./dpanel -f config.yaml container:upgrade --name containername --upgrade
+./dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name containerName
 ```
 
-#### Result
+### Return
 
-> When the container is not updated, the return value is the same as [Check Container New Version]
+> When the container has no update, the return is consistent with [Check if container image has new version]
 
 ```
 {"containerId": "14fc0a4d5e3e31f98f9179512085299b5c502ddf57d584ce39a7cadab6e3f643"}
 
 ```
 
-### Container snapshot
+## Generate Container Snapshot
 
-- \--name Container name
-- \--docker-env The docker environment to which the container belongs
-- \--enable-image Backup container images
+- --name Specify the container name to detect
+- --docker-env Specify docker env environment name
+- --enable-image Whether to backup container image
+- --backup-image Backup image type image or container (docker commit)
+- --enable-volume Whether to backup mount directories
+- --backup-volume Specify the mount directory to backup
 
 ```
-docker exec dpanel ./dpanel -f config.yaml container:backup --name containername --enable-image 1
+./dpanel -f config.yaml container:backup --name ContainerName --enable-image --enable-volume
 ```
 
-#### Result
+### Return
 
 ```
 {"path":"/dpanel/backup/dpanel-doc/dpanel-dpanel-doc-20250424175215.snapshot"}
 ```
 
-### Deploy compose task
+## Deploy or Upgrade Compose Task
 
-- \--name compose Task name, the name of the task that has been deployed or discovered by the panel
-- \--docker-env Specify the docker env environment name
-- \--environment The environment variables required in yaml, multiple configurations are allowed
-- \--service-name Only the service name to be deployed, multiple configurations are allowed
-- \--remove-orphans Clean up and delete expired service containers
-- \--pull-image Specify the image pull method dpanel command
+- --name Compose task name, already deployed or discoverable task name in the panel
+- --docker-env Specify docker env environment name
+- --environment Environment variables required in yaml, can configure multiple, --environment test=1
+- --pull-image Specify image pull method dpanel command
 
 ```
-docker exec dpanel ./dpanel -f config.yaml compose:deploy --name 任务名称 --remove-orphans 1 --environment name=test --environment age=10 --service-name test --service-name test2 --pull-image dpanel
+./dpanel -f config.yaml compose:deploy --name TaskName --environment name=test --environment age=10 --pull-image dpanel
 ```
 
-#### Result
+### Return
 
 ```
 {"name":"test123"}
+
+```
+
+## Clean System Messages, Events & Cache <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+- --enable-notice Clear notifications and events
+- --enable-temp-file Clean temporary files
+
+```
+./dpanel -f config.yaml system:prune
+```
+
+### Return
+
+```
+{"db":"vacuum","events":204,"gc":true,"notice":7,"temp":0}
+
+```
+
+## Send Notification <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+- --subject Notification title
+- --content Notification content
+- --target Notification target, email method is mailbox.
+- --channel Notification method email
+
+```
+./dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject Test notification
+```
+
+### Return
+
+```
+{"code":200,"error":"","data":"success"}
+
+```
+
+## Simple Cache Data Storage <Badge type="tip" text="DPanel Version >= 1.9.2" />
+
+Using the cache data storage function, you can cache data or detect flag bits in scripts.
+
+- --key Cache name
+- --value Cache content, when empty get content of --key
+- --keep Cache lifecycle (seconds), default is -1 (until main program restarts)
+
+```
+./dpanel -f config.yaml system:cache --key test1 --value 123
+```
+
+### Return
+
+```
+{"value":"123","found":true}
+
+```
+
+## Backup Panel Data <Badge type="tip" text="DPanel Version >= 1.9.4" />
+
+Backup DPanel panel data
+
+- --backup-path Directory to backup, leave empty for all
+- --ignore-path-prefix Skip directory prefix to backup, --ignore-path-prefix storage/temp skips directories or files starting with storage/temp
+
+```
+./dpanel -f config.yaml system:backup
+```
+
+### Return
+
+```
+{"path":"dpanel-main-20260226191909.snapshot"}
 
 ```

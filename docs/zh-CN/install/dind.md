@@ -1,6 +1,6 @@
 # 使用 Docker In Docker 安装
 
-使用 Docker In Docker 的方式可以创建一个与外部完全隔离的 Docker 环境。
+使用 Docker In Docker 方式可创建一个与外部完全隔离的 Docker 环境。
 
 <!--@include: ../include/image.md-->
 
