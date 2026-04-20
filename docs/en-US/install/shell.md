@@ -1,59 +1,188 @@
-# Install Script
+# Use Installer
 
-The install script generates and runs the docker run or podman run command to create DPanel container through wizard mode.
+DPanel Installer supports two usage modes.
 
-:::danger Dependencies
-Before using the install script, make sure the system contains bash and curl commands, and use package management tools such as apt, yum, and apk to install dependencies.
+- `TUI` wizard mode: install DPanel through an interactive interface, and discover installed instances for upgrade or uninstall.
+- `CLI` command mode: suitable for unattended or integration scenarios.
+
+## How to Get It
+
+### Get via Script
+
+:::danger Requirements
+Before running `quick.sh` on Linux or macOS, make sure the system contains `bash`, `curl`, `tar`, and `gzip`.
+Before running `quick.ps1` on Windows, make sure the system contains `PowerShell` and `tar`.
+Before running the installer, make sure the current user has Docker access and can access the Docker socket.
 :::
-
-## Use
 
 :::code-group
 
-```shell [Root]
-curl -sSL https://dpanel.cc/quick.sh -o quick.sh && bash quick.sh
+```shell [Linux / macOS]
+curl -sSL https://dpanel.cc/quick.sh | bash
 ```
 
-```shell [Rootless]
-sudo sh -c "curl -sSL https://dpanel.cc/quick.sh -o quick.sh && bash quick.sh"
+```shell [Linux / macOS Root]
+curl -sSL https://dpanel.cc/quick.sh | sudo bash
 ```
 
-```shell [Podman]
-curl -sSL https://dpanel.cc/quick.sh -o quick.sh && bash quick.sh
+```powershell [Windows]
+Invoke-WebRequest https://dpanel.cc/quick.ps1 -OutFile quick.ps1
+Set-ExecutionPolicy -Scope Process Bypass
+.\quick.ps1
 ```
 
-```shell [Debug]
-curl -sSL https://dpanel.cc/quick.sh -o quick.sh && bash quick.sh test
-
+```shell [Legacy Script]
+curl -sSL https://dpanel.cc/quick-v1.sh | bash
 ```
 :::
 
-### No Docker ?
+### Get via Container
 
-:::tip 
-If you want to use Podman as a container management client, please install by hand before running install script
+If Docker is already available in the environment, you can start the installer directly from the image.
+
+:::code-group
+
+```shell [Docker Hub]
+docker run --rm -it --pull always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  dpanel/installer:latest
+```
+
+```shell [Aliyun Registry]
+docker run --rm -it --pull always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  registry.cn-hangzhou.aliyuncs.com/dpanel/installer:latest
+```
 :::
 
-If the host doesn't have Docker or Podman installed, the install script will install Docker using the https://get.docker.com script.
+## Usage Modes
 
-The script has been tested on Debian, Ubuntu, and Alpine distributions; Debian is recommended.
+### TUI Wizard Mode
 
-If the script fails to install Docker, please install Docker or Podman by hand.
+The installer enters `TUI` mode by default. Follow the prompts to complete the operation.
+`TUI` mode supports install, upgrade, uninstall, Docker Engine install, and Docker API TLS certificate generation.
 
-### Upgrade DPanel
+### Install Docker Engine
 
-You can use install script to upgrade the DPanel container already installed on your system.
+:::tip
+If you want to use Podman as the container management client, or use Docker Desktop on Windows, install it before running the installer.
+:::
 
-After running the install script, specify the name of the DPanel container you want to upgrade.
+The installer uses the integrated script at `https://linuxmirrors.cn/docker.sh` to install Docker Engine and Docker Compose.
+It also supports configuring Docker registry mirrors.
 
-The script will stop and back up the old container, then create the new DPanel container using the original container configuration and the latest image.
+### Generate Docker API TLS Certificate
 
+Before generating TLS certificates, configure the domain name and password in `config.yaml`.
+After generation, configure the certificates according to [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/).
+
+### CLI Command Mode
+
+`CLI` mode uses the `install`, `upgrade`, and `uninstall` subcommands.
+
+Global flags:
+
+- `--dry-run`: resolve the final execution config and write it to `run.log` without executing
+- `--progress plain|quiet`: progress output mode
+- `-y, --yes`: auto-confirm prompts
+- `-h, --help`: show help
+- `-v, --version`: show version
+
+### install
+
+- `--name`: instance name, default `dpanel`
+- `--type`: install type, `container` or `binary`
+- `--version`: version, `ce`, `pe`, `be`
+- `--edition`: edition, `standard` or `lite`
+- `--data-path`: data directory
+- `--server-host`: server bind host
+- `--server-port`: server port, `0` means random
+- `--docker-sock`: Docker socket path
+- `--dns`: DNS address
+- `--proxy`: proxy address
+- `--base-image`: base image system, `alpine`, `debian`, `darwin`, `windows`
+
+Example:
+
+```shell
+dpanel-installer install --name dpanel --type container --version ce --edition lite
 ```
-curl -sSL https://dpanel.cc/quick.sh -o quick.sh && bash quick.sh test
-```
-## Generate Docker API TLS certificate
 
-After using the install script to generate a Docker API TLS certificate, configure the certificate according to [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/).
+### upgrade
+
+- `--name`: instance name, required
+- `--version`: target version, `ce`, `pe`, `be`
+- `--edition`: target edition, `standard` or `lite`
+- `--data-path`: existing install directory
+- `--docker-sock`: Docker socket path
+- `--dns`: override existing DNS config
+- `--proxy`: override existing proxy config
+- `--disable-backup`: skip backup before upgrade
+
+Example:
+
+```shell
+dpanel-installer upgrade --name dpanel
+```
+
+### uninstall
+
+- `--name`: instance name, required
+- `--data-path`: existing install directory
+- `--docker-sock`: Docker socket path
+- `--remove-data`: remove the data directory too
+
+Example:
+
+```shell
+dpanel-installer uninstall --name dpanel --remove-data
+```
+
+## Configuration File
+
+The installer is stored under `~/.dpanel/installer` by default. After running the installer, a default `config.yaml` file is generated.
+It is mainly used to customize or extend environment variables during installation. Example:
+
+```yaml
+settings:
+  # Installer theme: 1-5
+  theme: 1
+  # Installer log file path, supports $SETTING_LOG_PATH or ${SETTING_LOG_PATH-./run.log}
+  log_path: ${SETTING_LOG_PATH-./run.log}
+
+install:
+  # HTTP proxy used by binary runtime and container environment
+  HTTP_PROXY: ""
+  # HTTPS proxy used by binary runtime and container environment
+  HTTPS_PROXY: ""
+  # Custom DNS server passed to DPanel runtime
+  DP_DNS: ""
+  # Console log level, e.g. info or debug
+  DP_LOG_CONSOLE_LEVEL: ""
+  # File log level, e.g. warn or debug
+  DP_LOG_FILE_LEVEL: ""
+  # Public base URL used by DPanel runtime
+  DP_SYSTEM_BASEURL: ""
+  # SQLite open mode, e.g. ro rw rwc
+  DP_DB_MODE: ""
+  # SQLite journal mode, e.g. DELETE or WAL
+  DP_DB_JOURNAL: ""
+  # Custom acme command path
+  DP_ACME_COMMAND_NAME: ""
+  # Custom acme config directory
+  DP_ACME_CONFIG_HOME: ""
+
+script:
+  install_docker:
+    # Registry mirrors used by install_docker.sh
+    DOCKER_REGISTRY_ADDRESS: docker.1ms.run,docker.1panel.live,docker.m.daocloud.io
+
+  generate_docker_tls:
+    # Required when generating Docker TLS certificates
+    GENERATE_DOCKER_TLS_IP: ""
+    # Optional passphrase for CA private key
+    GENERATE_DOCKER_TLS_PASSWORD: ""
+```
 
 ## Preview
 

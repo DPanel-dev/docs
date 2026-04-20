@@ -17,8 +17,8 @@ DPanel Desktop 基于 [Wails V3](https://wails.io/) 实现。
 DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 docker-compose.exe。
 :::
 
-- [DPanel Desktop 安装版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-amd64-installer.exe)
-- [DPanel Desktop 绿色版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-amd64-portable.zip)
+- [DPanel Desktop 安装版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-installer.exe)
+- [DPanel Desktop 绿色版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-portable.zip)
 
 ## 预览
 
