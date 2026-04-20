@@ -7,6 +7,71 @@ aside: false
 查看完整的更新记录，跳转至仓库 [Release](https://github.com/donknap/dpanel/releases) 页面
 :::
 
+## v1.10.3-beta
+
+
+
+## v1.10.2
+
+fix container snapshot restore failure \
+fix image import tar.gz extension support and OCI image compatibility \
+fix container title not loaded on edit \
+fix compose remoteGitUrl task address editing \
+fix compose task directory file creation failure \
+ \
+<br/> \
+<br/> \
+ \
+修复 容器快照恢复失败 \
+修复 导入镜像 tar.gz 扩展名支持及 OCI 镜像包兼容 \
+修复 编辑容器时未获取到标题 \
+修复 Compose 远程 Git 任务地址无法编辑 \
+修复 Compose 任务目录新建文件失败
+
+## v1.10.2-beta
+
+
+
+## v1.10.1
+
+fix container update check failure \
+ \
+fix ssh sensitive information not encrypted #284 \
+fix cron task multiple cycles trigger issue on manual execution \
+fix cron task environment selection compatibility \
+fix repository pull defaulting to master branch #283 \
+fix image registry auth error without verification enabled \
+fix file manager error messages #280 #282 \
+fix default environment offline after dpanel restart \
+fix volume mount directory in file manager \
+fix multi-environment submit no response \
+fix pe version default environment monitor failure \
+fix ipv6 resolve parsing error \
+refactor version detection code \
+refactor image registry code \
+feat mysql database support \
+feat postgresql database support \
+ \
+<br/> \
+<br/> \
+ \
+修复 检查容器更新失败 \
+修复 SSH 敏感信息未加密存储 #284 \
+修复 计划任务多周期手动执行触发多次 \
+修复 计划任务未选择执行环境的兼容 \
+修复 拉取仓库默认指定 master 分支 #283 \
+修复 镜像仓库未开启验证时授权失败 \
+修复 文件管理器提示错误 #280 #282 \
+修复 重启后默认环境显示宕机 \
+修复 存储卷文件管理器挂载目录 \
+修复 多环境提交没有反应 \
+修复 PE 版本默认环境监控失败 \
+修复 IPv6 时获取 resolve 错误 \
+优化 版本检测代码 \
+优化 镜像仓库代码 \
+新增 MySQL 数据库支持 \
+新增 PostgreSQL 数据库支持
+
 ## v1.10.0
 
 # 更新记录 \
@@ -144,78 +209,4 @@ aside: false
 修复 挂载目录 Compose 任务修改 yaml 文件名或是扩展名后，提示找不到文件 \
 修复 标准版域名转发时配置转发 http https 错误 \
 修复 首页任务数据统计错误
-
-## v1.9.1.1
-
-修复 标准版申请证书时使用 Nginx 方式不成功 \
-修复 标准版申请证书或是上传证书列表不显示 \
-修复 多个服务端共享 Compose 目录数据没有显示 \
-修复 查看镜像内的文件列表数据错误及没有显示目录 \
-修复 拉取镜像时选择仓库无效 \
-
-
-## v1.9.1
-
-修复 首页用量统计数据偶尔数据错乱 \
-修复 windows  打包 exe 程序没有显示版本号 \
-修复 面板设置中提示找不到容器错误 \
-修复 面板设置中升级脚本没有显示错误 \
-修复 windows 连接远程 ssh docker 导致 edge 崩溃 \
-修复 登录页面没有跟随系统暗色风格 #220 \
-修复 多 docker 服务端区分 compose 目录后还提示同名任务 \
-修复 compose 列表页面标题丢失 \
-修复 compose 批量拉取镜像是最后一个显示空报错 \
-修复 首页回收站数值及连接错误 \
-修复 添加应用商店报 data.yml 文件找不到 \
-修复 应用商店创建部分应用失败，没有初始化 .env 数据 \
- \
-优化 兼容 windows 平台文件管理 \
-优化 创建网络时自定完善网关信息 #241 \
-优化 获取到用量信息后自动刷新显示 \
- \
-增加 自定义面板 baseurl 转发时可以配置二级目录 https://dpanel.cc/install/bind-domain \
-增加 自定义初始化 docker 超时时间环境变量，避免有些平台初始化过长导致无法获取信息  DP_SYSTEM_DOCKER_INIT_TIMEOUT \
-增加 自定义扩展语言包 https://dpanel.cc/install/i18n #242 \
-增加 创建 compose 任务支持导入 git 仓库
-
-## v1.9.0
-
-修复 部分环境使用 ssh root 管理远程 docker 客户端提示拒绝权限 #227 \
-修复 未能完全的清理掉未使用的镜像 \
-修复 使用 host 网络的容器在列表中没有显示端口 \
-修复 编辑容器时健康检查配置获取错误及修改错误 \
-修复 acme 获取证书的时间错误 \
-修复 构建镜像时不能指定分支  \
-修复 编辑容器时配置的网络别名为空 #223 \
- \
-优化 表格批量操作，操作栏随表格滚动 #224 \
-优化 compose 操作的整体操作逻辑 \
-优化 compose 去掉部署的 dpanel-c 前缀 \
-优化 完善 1panel 应用商店的环境应用支持 \
-优化 容器列表的多种筛选查询 \
-优化 镜像的构建 \
-优化 容器回收站功能，可以快速的恢复已经删除的容器 \
-优化 容器的创建方式，统一采用弹出抽屉的形式 \
-优化 批量更新容器时，强制拉取镜像 \
-优化 无法检测容器更新时不提示通知 \
-优化 镜像和容器导出，直接通过浏览器下载，避免过大的文件卡死 \
-优化 首页及容器详情页的容器运行状态统计信息响应速度 \
- \
-新增 容器列表、compose列表、文件管理增加右键快捷菜单 #200 \
-新增 创建容器时添加 group-add 参数 \
-新增 增加 compose 任务目录管理功能 #221 \
-新增 标准版增加 php 快速建站功能（仅支持通过应用商店创建的 Php 环境） \
-新增 文件管理器增加重命名功能 #200 \
-
-
-## v1.8.1.2
-
-修复 首页和查看容器时报错 \
-修复 通过 ssh 添加服务端后，查看 compose 报错 \
- \
-优化 容器列表状态配色 \
-优化 启动配置，程序中集成默认 config.yaml 配置，启动时无需再显示指定 -f config.yaml 参数，环境变量说明： https://dpanel.cc/install/params \
-优化 启动程序时判断存储目录并自动创建 \
- \
-增加 构建镜像时可以配置完成后直接推送
 
