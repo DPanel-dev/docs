@@ -80,6 +80,19 @@ docker run --rm -it --pull always \
 
 `CLI` 模式通过 `install`、`upgrade`、`uninstall` 子命令使用。
 
+:::code-group
+
+```shell
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- --help
+```
+
+```shell [Hub 镜像]
+docker run --rm -it --pull always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  dpanel/installer:latest --help
+```
+:::
+
 全局参数：
 
 - `--dry-run`：仅解析最终执行配置并写入 `run.log`
@@ -186,4 +199,4 @@ script:
 
 ## 预览
 
-![install-1](https://cdn.w7.cc/dpanel/install-1.png?t=1)
+![install-1](https://cdn.w7.cc/dpanel/install-2.png?t=1)
