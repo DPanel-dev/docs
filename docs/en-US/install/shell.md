@@ -55,32 +55,6 @@ docker run --rm -it --pull always \
 ```
 :::
 
-### CLI Invocation
-
-If you want to use `CLI` mode directly, append installer arguments after `quick.sh`:
-
-```shell
-curl -sSL https://dpanel.cc/quick.sh | sudo bash -s -- --help
-```
-
-```shell
-curl -sSL https://dpanel.cc/quick.sh | sudo bash -s -- install --name dpanel --type container --version ce --edition lite
-```
-
-You can also invoke `CLI` directly through the container:
-
-```shell
-docker run --rm -it --pull always \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  registry.cn-hangzhou.aliyuncs.com/dpanel/installer:latest --help
-```
-
-```shell
-docker run --rm -it --pull always \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  registry.cn-hangzhou.aliyuncs.com/dpanel/installer:latest install --name dpanel --type container --version ce --edition lite
-```
-
 ## Usage Modes
 
 ### TUI Wizard Mode
@@ -105,6 +79,19 @@ After generation, configure the certificates according to [Protect the Docker da
 ### CLI Command Mode
 
 `CLI` mode uses the `install`, `upgrade`, and `uninstall` subcommands.
+
+:::code-group
+
+```shell
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --help
+```
+
+```shell [Hub 镜像]
+docker run --rm -it --pull always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  dpanel/installer:latest install --help
+```
+:::
 
 Global flags:
 

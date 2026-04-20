@@ -83,13 +83,13 @@ docker run --rm -it --pull always \
 :::code-group
 
 ```shell
-curl -sSL https://dpanel.cc/quick.sh | bash -s -- --help
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --help
 ```
 
 ```shell [Hub 镜像]
 docker run --rm -it --pull always \
   -v /var/run/docker.sock:/var/run/docker.sock \
-  dpanel/installer:latest --help
+  dpanel/installer:latest install --help
 ```
 :::
 
