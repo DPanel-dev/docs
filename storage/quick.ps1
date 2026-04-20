@@ -1,5 +1,8 @@
 $ErrorActionPreference = "Stop"
 
+# [深度修复 1]：强制启用 TLS 1.2，确保在较旧的 Windows (如 Server 2012 R2/2016) 上也能顺利连接 Docker Hub 和阿里云
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $RegistryDockerHub = "docker.io"
 $RegistryDockerHubApi = "registry-1.docker.io"
 $RegistryAliYun = "registry.cn-hangzhou.aliyuncs.com"
@@ -335,9 +338,13 @@ $arch = Get-ArchTag
 $os = "windows"
 Prepare-InstallerHome
 $imageTag = "windows-$arch"
-Write-Log "probing registries for $ImageRepo:$imageTag"
+
+# [深度修复 2]：使用 ${} 显式包裹变量名，防止 PowerShell 在内存执行 (iex) 时将 `:` 错误解析为磁盘驱动器
+Write-Log "probing registries for ${ImageRepo}:${imageTag}"
 $registry = Select-Registry $imageTag
-$tempDir = Join-Path $InstallerHomeDir "tmp"
+
+# [深度修复 3]：使用进程 ID ($PID) 建立独立的临时目录，防止用户并发/双击多次运行时因目录占用导致的竞态锁死
+$tempDir = Join-Path $InstallerHomeDir "tmp_$PID"
 
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
@@ -345,8 +352,9 @@ try {
     $layerFile = Join-Path $tempDir "layer.tar"
 
     Write-Log "selected registry: $registry"
-    Write-Log "selected image: $ImageRepo:$imageTag"
-    Write-Log "downloading installer to $installerPath"
+    
+    # [深度修复 2] 同上，修复变量域隔离
+    Write-Log "selected image: ${ImageRepo}:${imageTag}"
 
     $manifest = Resolve-Manifest $registry $imageTag $os $arch
     if ($null -eq $manifest.layers -or $manifest.layers.Count -eq 0) {
@@ -359,6 +367,9 @@ try {
     }
 
     $installerPath = Join-Path $InstallerHomeDir ("install-" + (Get-ShortDigest $firstLayer.digest) + ".exe")
+    
+    Write-Log "downloading installer to $installerPath"
+
     if (Test-Path $installerPath) {
         Remove-Item -Path (Join-Path $InstallerHomeDir "manifest.json") -Force -ErrorAction SilentlyContinue
         Remove-Item -Path $layerFile -Force -ErrorAction SilentlyContinue
@@ -387,6 +398,7 @@ try {
     Remove-Item -Path (Join-Path $InstallerHomeDir "manifest.json") -Force -ErrorAction SilentlyContinue
     Remove-Item -Path $layerFile -Force -ErrorAction SilentlyContinue
 } finally {
+    # 退出前安全清理属于当前进程的临时目录
     Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }
 
