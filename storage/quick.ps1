@@ -1,4 +1,6 @@
 $ErrorActionPreference = "Stop"
+# [深度修复 4]：禁用 PowerShell 进度条渲染，防止 Invoke-WebRequest 在某些环境下卡死或极慢
+$ProgressPreference = "SilentlyContinue"
 
 # [深度修复 1]：强制启用 TLS 1.2，确保在较旧的 Windows (如 Server 2012 R2/2016) 上也能顺利连接 Docker Hub 和阿里云
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -100,7 +102,8 @@ function Get-AuthHeader {
     param([string]$Url)
 
     try {
-        Invoke-WebRequest -Uri $Url -Headers @{ Accept = $AcceptHeaderValue } -UseBasicParsing | Out-Null
+        # 修改点：加入 -TimeoutSec 5，防止探测鉴权头时一直死等
+        Invoke-WebRequest -Uri $Url -Headers @{ Accept = $AcceptHeaderValue } -UseBasicParsing -TimeoutSec 5 | Out-Null
         return $null
     } catch {
         if ($null -eq $_.Exception.Response) {
@@ -140,7 +143,8 @@ function Get-RegistryToken {
     }
 
     $tokenUrl = "{0}?service={1}&scope={2}" -f $realm, [uri]::EscapeDataString($service), [uri]::EscapeDataString($scope)
-    $response = Invoke-RestMethod -Uri $tokenUrl -UseBasicParsing
+    # 修改点：加入 -TimeoutSec 5，防止请求 Token 时一直死等
+    $response = Invoke-RestMethod -Uri $tokenUrl -UseBasicParsing -TimeoutSec 5
     if ([string]::IsNullOrWhiteSpace($response.token)) {
         Fail "failed to request registry token"
     }
@@ -187,7 +191,8 @@ function Measure-RegistrySeconds {
         $token = Get-RegistryTokenForImage $Registry $ImageTag
         $headers = Get-RequestHeaders $token $AcceptHeaderValue
         $watch = [System.Diagnostics.Stopwatch]::StartNew()
-        Invoke-WebRequest -Uri $manifestUrl -Headers $headers -UseBasicParsing | Out-Null
+        # 修改点：加入 -TimeoutSec 5，这是最关键的测速点，5秒不通立刻切换
+        Invoke-WebRequest -Uri $manifestUrl -Headers $headers -UseBasicParsing -TimeoutSec 5 | Out-Null
         $watch.Stop()
         return $watch.Elapsed.TotalSeconds
     } catch {
@@ -230,7 +235,8 @@ function Get-Manifest {
     $manifestUrl = Get-RegistryManifestUrl $Registry $Reference
     $token = Get-RegistryTokenForImage $Registry $ImageTag
     $headers = Get-RequestHeaders $token $Accept
-    return Invoke-RestMethod -Uri $manifestUrl -Headers $headers -UseBasicParsing
+    # 修改点：拉取配置清单加入 -TimeoutSec 10（比测速长一点，增加容错）
+    return Invoke-RestMethod -Uri $manifestUrl -Headers $headers -UseBasicParsing -TimeoutSec 10
 }
 
 function Resolve-Manifest {
@@ -298,6 +304,7 @@ function Download-Layer {
         $headers["Authorization"] = "Bearer $token"
     }
 
+    # 注意：这里下载真正的数据层（大文件）不能加短超时，保持原样
     Invoke-WebRequest -Uri $blobUrl -Headers $headers -OutFile $OutputFile -UseBasicParsing
 }
 

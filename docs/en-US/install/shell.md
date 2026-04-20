@@ -26,9 +26,7 @@ curl -sSL https://dpanel.cc/quick.sh | sudo bash
 ```
 
 ```powershell [Windows]
-Invoke-WebRequest https://dpanel.cc/quick.ps1 -OutFile quick.ps1
-Set-ExecutionPolicy -Scope Process Bypass
-.\quick.ps1
+powershell -ExecutionPolicy Bypass -Command "iwr -useb https://dpanel.cc/quick.ps1 | iex"
 ```
 
 ```shell [Legacy Script]
