@@ -26,6 +26,8 @@ COPY ./storage /usr/share/nginx/html/storage
 COPY ./storage/image/dpanel.ico /usr/share/nginx/html/favicon.ico
 COPY ./storage/ads.txt /usr/share/nginx/html/ads.txt
 COPY ./storage/quick.sh /usr/share/nginx/html/quick.sh
+COPY ./storage/quick-v1.sh /usr/share/nginx/html/quick-v1.sh
+COPY ./storage/quick.ps1 /usr/share/nginx/html/quick.ps1
 COPY ./storage/api /usr/share/nginx/html/api
 
 RUN sed -i '/root.*;/a\ try_files \$uri \$uri/ \$uri.html =404;' \
