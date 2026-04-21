@@ -12,28 +12,30 @@ You can download the packaged binary packages from the [Release](https://github.
 
 ### For Ubuntu, CentOS, Debian, etc.
 
-- dpanel-amd64 
-- dpanel-arm
-- dpanel-arm64
+- dpanel-ce-gnu-amd64
+- dpanel-ce-gnu-arm
+- dpanel-ce-gnu-arm64
 
-### For Alpine and using the MUSL library
-- dpanel-musl-amd64
-- dpanel-musl-arm64
-- dpanel-musl-arm
+### For Alpine and distributions using MUSL
 
-### For macOS 
+- dpanel-ce-musl-amd64
+- dpanel-ce-musl-arm
+- dpanel-ce-musl-arm64
 
-- dpanel-darwin-ARM64
-- dpanel-darwin-X64
+### For macOS
+
+- dpanel-ce-darwin-amd64
+- dpanel-ce-darwin-arm64
 
 ### For Synology NAS
 
-- dpanel-synology-arm64 
-- dpanel-synology-amd64 
+- dpanel-synology-amd64
+- dpanel-synology-arm64
 
 ### For Windows
 
-- dpanel.exe 
+- dpanel-ce-windows-amd64.exe
+- dpanel-ce-windows-arm64.exe 
 
 ## Compile
 

@@ -12,28 +12,30 @@
 
 ### 适用于 Ubuntu Centos Debian 等主流发行版
 
-- dpanel-amd64 
-- dpanel-arm
-- dpanel-arm64
+- dpanel-ce-gnu-amd64
+- dpanel-ce-gnu-arm
+- dpanel-ce-gnu-arm64
 
-### 适用于 Alpine 等使用 Musl 的发行版 
-- dpanel-musl-amd64
-- dpanel-musl-arm64
-- dpanel-musl-arm
+### 适用于 Alpine 等使用 Musl 的发行版
 
-### 适用于 macOS 
+- dpanel-ce-musl-amd64
+- dpanel-ce-musl-arm
+- dpanel-ce-musl-arm64
 
-- dpanel-darwin-ARM64
-- dpanel-darwin-X64
+### 适用于 macOS
+
+- dpanel-ce-darwin-amd64
+- dpanel-ce-darwin-arm64
 
 ### 适用于群晖
 
-- dpanel-synology-arm64 
-- dpanel-synology-amd64 
+- dpanel-synology-amd64
+- dpanel-synology-arm64
 
 ### 适用于 Windows
 
-- dpanel.exe 
+- dpanel-ce-windows-amd64.exe
+- dpanel-ce-windows-arm64.exe 
 
 ## 手动编译
 
