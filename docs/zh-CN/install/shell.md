@@ -54,9 +54,7 @@ docker run --rm -it --pull always \
 ```
 :::
 
-## 使用方式
-
-### TUI 向导模式
+## TUI 向导模式
 
 安装器默认进入 `TUI` 模式，按照步骤提示操作即可。
 `TUI` 模式支持安装、更新、卸载、安装 Docker Engine、生成 Docker Api TLS 证书等功能。
@@ -74,9 +72,9 @@ docker run --rm -it --pull always \
 
 生成 TLS 证书前需要在 `config.yaml` 中配置证书域名和密码。生成完成后可根据 [开启 Docker TCP 远程连接](/manual/system-env-tcp) 配置证书。
 
-### CLI 命令模式
+## CLI 命令模式
 
-`CLI` 模式通过 `install`、`upgrade`、`uninstall` 子命令使用。
+`CLI` 模式通过 `install`、`upgrade`、`uninstall` 子命令使用，只需要在 `TUI` 模式后面增加参数即可。
 
 :::code-group
 
@@ -93,39 +91,40 @@ docker run --rm -it --pull always \
 
 全局参数：
 
-- `--dry-run`：仅解析最终执行配置并写入 `run.log`
-- `--progress plain|quiet`：输出进度模式
 - `-y, --yes`：自动确认提示
-- `-h, --help`：查看帮助
 - `-v, --version`：查看版本
 
 ### install
 
 - `--name`：实例名称，默认 `dpanel`
-- `--type`：安装方式，`container` 或 `binary`
-- `--version`：版本，`ce`、`pe`、`be`
-- `--edition`：版本类型，`standard` 或 `lite`
-- `--data-path`：数据目录
+- `--type`：安装方式，`container`、 `binary`，缺省下会优先使用 `container`
+- `--version`：版本，`ce` 社区版、`pe` 专业版
+- `--edition`：版本类型，`standard` 标准版、`lite` 精简版
+- `--dev`：使用开发版
+- `--data-path`：数据目录，`binary` 模式下为安装目录
 - `--server-host`：服务绑定地址
 - `--server-port`：服务端口，`0` 表示随机端口
 - `--docker-sock`：Docker Socket 路径
 - `--dns`：DNS 地址
 - `--proxy`：代理地址
-- `--base-image`：基础镜像系统，`alpine`、`debian`、`darwin`、`windows`
+- `--base-image`：`container` 模式下指定基础镜像系统，`alpine`、`debian`
 
 示例：
 
 ```shell
-dpanel-installer install --name dpanel --type container --version ce --edition lite
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --name dpanel --type container
 ```
 
 ### upgrade
 
-- `--name`：实例名称，必填
-- `--version`：更新后的版本，`ce`、`pe`、`be`
-- `--edition`：更新后的版本类型，`standard` 或 `lite`
-- `--data-path`：已有安装目录
-- `--docker-sock`：Docker Socket 路径
+:::tip
+保留旧配置仅升级容器时，只需要指定 `--name` 参数即可
+:::
+
+- `--name`：指定要升级的实例名称
+- `--version`：版本，`ce` 社区版、`pe` 专业版
+- `--edition`：版本类型，`standard` 标准版、`lite` 精简版
+- `--dev`：使用开发版
 - `--dns`：覆盖原有 DNS 配置
 - `--proxy`：覆盖原有代理配置
 - `--disable-backup`：更新前不备份
@@ -133,20 +132,18 @@ dpanel-installer install --name dpanel --type container --version ce --edition l
 示例：
 
 ```shell
-dpanel-installer upgrade --name dpanel
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel
 ```
 
 ### uninstall
 
-- `--name`：实例名称，必填
-- `--data-path`：已有安装目录
-- `--docker-sock`：Docker Socket 路径
+- `--name`：：指定要卸载的实例名称
 - `--remove-data`：同时删除数据目录
 
 示例：
 
 ```shell
-dpanel-installer uninstall --name dpanel --remove-data
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- uninstall --name dpanel --remove-data
 ```
 
 ## 配置文件

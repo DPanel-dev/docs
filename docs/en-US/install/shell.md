@@ -53,9 +53,7 @@ docker run --rm -it --pull always \
 ```
 :::
 
-## Usage Modes
-
-### TUI Wizard Mode
+## TUI Wizard Mode
 
 The installer enters `TUI` mode by default. Follow the prompts to complete the operation.
 `TUI` mode supports install, upgrade, uninstall, Docker Engine install, and Docker API TLS certificate generation.
@@ -74,9 +72,9 @@ It also supports configuring Docker registry mirrors.
 Before generating TLS certificates, configure the domain name and password in `config.yaml`.
 After generation, configure the certificates according to [Protect the Docker daemon socket](https://docs.docker.com/engine/security/protect-access/).
 
-### CLI Command Mode
+## CLI Command Mode
 
-`CLI` mode uses the `install`, `upgrade`, and `uninstall` subcommands.
+`CLI` mode uses the `install`, `upgrade`, and `uninstall` subcommands, just append parameters after the `TUI` mode command.
 
 :::code-group
 
@@ -93,39 +91,40 @@ docker run --rm -it --pull always \
 
 Global flags:
 
-- `--dry-run`: resolve the final execution config and write it to `run.log` without executing
-- `--progress plain|quiet`: progress output mode
 - `-y, --yes`: auto-confirm prompts
-- `-h, --help`: show help
 - `-v, --version`: show version
 
 ### install
 
 - `--name`: instance name, default `dpanel`
-- `--type`: install type, `container` or `binary`
-- `--version`: version, `ce`, `pe`, `be`
+- `--type`: install type, `container` or `binary`, defaults to `container`
+- `--version`: version, `ce` community edition, `pe` professional edition
 - `--edition`: edition, `standard` or `lite`
-- `--data-path`: data directory
+- `--dev`: use development version
+- `--data-path`: data directory, install directory in `binary` mode
 - `--server-host`: server bind host
 - `--server-port`: server port, `0` means random
 - `--docker-sock`: Docker socket path
 - `--dns`: DNS address
 - `--proxy`: proxy address
-- `--base-image`: base image system, `alpine`, `debian`, `darwin`, `windows`
+- `--base-image`: base image system in `container` mode, `alpine`, `debian`
 
 Example:
 
 ```shell
-dpanel-installer install --name dpanel --type container --version ce --edition lite
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --name dpanel --type container
 ```
 
 ### upgrade
 
-- `--name`: instance name, required
-- `--version`: target version, `ce`, `pe`, `be`
-- `--edition`: target edition, `standard` or `lite`
-- `--data-path`: existing install directory
-- `--docker-sock`: Docker socket path
+:::tip
+To keep the existing config and only upgrade the container, just specify the `--name` parameter.
+:::
+
+- `--name`: instance name to upgrade
+- `--version`: version, `ce` community edition, `pe` professional edition
+- `--edition`: edition, `standard` or `lite`
+- `--dev`: use development version
 - `--dns`: override existing DNS config
 - `--proxy`: override existing proxy config
 - `--disable-backup`: skip backup before upgrade
@@ -133,20 +132,18 @@ dpanel-installer install --name dpanel --type container --version ce --edition l
 Example:
 
 ```shell
-dpanel-installer upgrade --name dpanel
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel
 ```
 
 ### uninstall
 
-- `--name`: instance name, required
-- `--data-path`: existing install directory
-- `--docker-sock`: Docker socket path
+- `--name`: instance name to uninstall
 - `--remove-data`: remove the data directory too
 
 Example:
 
 ```shell
-dpanel-installer uninstall --name dpanel --remove-data
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- uninstall --name dpanel --remove-data
 ```
 
 ## Configuration File
@@ -197,4 +194,4 @@ script:
 
 ## Preview
 
-![install-1](https://cdn.w7.cc/dpanel/install-1.png?t=1)
+![install-1](https://cdn.w7.cc/dpanel/install-2.png?t=1)

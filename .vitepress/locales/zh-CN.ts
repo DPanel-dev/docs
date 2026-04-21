@@ -20,7 +20,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         text: '安装部署',
         collapsed: false,
         items: [
-          { text: '使用安装脚本', link: getLink("install/shell") },
+          { text: '使用安装程序', link: getLink("install/shell") },
           { text: '使用 Docker', link: getLink("install/docker") },
           { text: '使用 Compose', link: getLink("install/compose") },
           { text: '使用 DinD', link: getLink("install/dind") },
