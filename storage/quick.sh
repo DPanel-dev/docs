@@ -94,7 +94,9 @@ extract_header_value() {
 request_auth_header() {
   local url="$1"
   local header_file="$2"
+  shift 2
   curl -sS -D "$header_file" -o /dev/null \
+    "$@" \
     -H "Accept: ${ACCEPT_HEADER_VALUE}" \
     "$url" || true
   extract_header_value "$header_file" "www-authenticate"
@@ -108,6 +110,7 @@ parse_auth_field() {
 
 request_registry_token() {
   local auth_header="$1"
+  shift
   local realm service scope
   realm="$(parse_auth_field "$auth_header" "realm")"
   service="$(parse_auth_field "$auth_header" "service")"
@@ -118,6 +121,7 @@ request_registry_token() {
   [ -n "$scope" ] || fail "failed to parse registry auth scope"
 
   curl -fsSLG \
+    "$@" \
     --data-urlencode "service=${service}" \
     --data-urlencode "scope=${scope}" \
     "$realm" | \
@@ -270,12 +274,12 @@ measure_registry_seconds() {
 
   manifest_url="$(registry_manifest_url "$registry" "$image_tag")"
   header_file="${INSTALLER_HOME_DIR}/auth-header.txt"
-  auth_header="$(request_auth_header "$manifest_url" "$header_file")"
+  auth_header="$(request_auth_header "$manifest_url" "$header_file" --connect-timeout 5 --max-time 5)"
   rm -f "$header_file"
 
   token=""
   if [ -n "$auth_header" ]; then
-    token="$(request_registry_token "$auth_header")"
+    token="$(request_registry_token "$auth_header" --connect-timeout 5 --max-time 5)"
   fi
 
   if [ -n "$token" ]; then
