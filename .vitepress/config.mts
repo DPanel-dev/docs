@@ -4,85 +4,8 @@ import { enUSConfig } from './locales/en-US'
 import { execSync } from 'child_process'
 import fs from 'fs'
 import path from 'path'
-
 // ==============================================================================
-// 1. 自动获取 GitHub Release 并生成 upgrade.md
-// ==============================================================================
-
-async function generateUpgradeDocs() {
-  // ⚠️ 请根据你的实际目录结构调整这里。如果你的 upgrade.md 在项目根目录，改为 path.resolve('upgrade.md')
-  const targetPath = path.resolve('docs/zh-CN/upgrade.md');
-  const targetJsonPath = path.resolve('storage/api/upgrade.json');
-  const repo = 'donknap/dpanel';
-  const url = `https://api.github.com/repos/${repo}/releases?per_page=10`;
-
-  try {
-    console.log('⏳ Fetching latest releases from GitHub...');
-    const response = await fetch(url, {
-      headers: { 'User-Agent': 'VitePress-Builder' }
-    });
-
-    if (!response.ok) throw new Error(`Failed to fetch: ${response.statusText}`);
-
-    const releases = await response.json();
-
-    let markdown = `---
-next: false
-aside: false
----
-
-:::tip
-查看完整的更新记录，跳转至仓库 [Release](https://github.com/donknap/dpanel/releases) 页面
-:::
-
-`;
-
-    releases.forEach((release: any) => {
-      markdown += `## ${release.tag_name}\n\n`;
-      const body = release.body || '';
-      const formattedBody = body.replace(/\r?\n/g, ' \\\n');
-      markdown += `${formattedBody}\n\n`;
-
-    });
-
-    // 确保目录存在
-    const dir = path.dirname(targetPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    fs.writeFileSync(targetPath, markdown, 'utf-8');
-    console.log(`✅ upgrade.md 自动生成成功: ${targetPath}`);
-
-    const jsonContent = releases.map((release: any) => ({
-      version: release.tag_name,
-      description: release.body || ''
-    }));
-
-    // 确保 JSON 目录存在并写入
-    const jsonDir = path.dirname(targetJsonPath);
-    if (!fs.existsSync(jsonDir)) {
-      fs.mkdirSync(jsonDir, { recursive: true });
-    }
-    // 使用 JSON.stringify 的第三个参数 2 来美化输出格式
-    fs.writeFileSync(targetJsonPath, JSON.stringify(jsonContent, null, 2), 'utf-8');
-    console.log(`✅ upgrade.json 自动生成成功: ${targetJsonPath}`);
-
-  } catch (error) {
-    console.error('❌ 获取 GitHub Release 失败:', error);
-    // 容错处理：如果网络失败且本地没有这个文件，就生成一个缺省文件，防止 VitePress 找不到页面而报错
-    if (!fs.existsSync(targetPath)) {
-      fs.writeFileSync(targetPath, '# 更新日志\n\n网络请求失败，请直接前往 [GitHub Releases](https://github.com/donknap/dpanel/releases) 查看。', 'utf-8');
-    }
-  }
-}
-
-// 阻塞执行：确保 upgrade.md 生成完毕后，再往下执行后续配置解析
-await generateUpgradeDocs();
-
-
-// ==============================================================================
-// 2. 定义 NEW 图标逻辑工具函数
+// 1. 定义 NEW 图标逻辑工具函数
 // ==============================================================================
 
 const NEW_THRESHOLD_DAYS = 10;
@@ -187,7 +110,7 @@ function injectNewBadge(config: any, baseDir: string) {
 }
 
 // ==============================================================================
-// 3. 加工配置
+// 2. 加工配置
 // ==============================================================================
 
 // 这里的 'docs/zh-CN' 对应你项目根目录下的实际文件夹路径
@@ -195,7 +118,7 @@ const finalZhConfig = injectNewBadge(zhCNConfig, 'docs/zh-CN');
 const finalEnConfig = injectNewBadge(enUSConfig, 'docs/en-US');
 
 // ==============================================================================
-// 4. 原始配置导出
+// 3. 原始配置导出
 // ==============================================================================
 export default defineConfig({
   rewrites: {

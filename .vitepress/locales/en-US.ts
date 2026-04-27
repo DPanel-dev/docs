@@ -10,7 +10,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       { text: 'Home', link: getLink("") },
       { text: 'License', link: getLink("license") },
       { text: 'Pro Edition', link: getLink("pro") },
-      { text: 'Upgrade', link: getLink("upgrade") },
+      { text: 'Upgrade', link: "/upgrade/release" },
       { text: 'Sponsor', link: 'https://afdian.com/a/dpanel' },
       { text: 'Demo', link: "https://demo.dpanel.cc" },
     ],

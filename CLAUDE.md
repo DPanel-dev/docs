@@ -28,7 +28,7 @@ npm run docs:preview
 
 The config file performs critical build-time operations **before** VitePress configuration:
 
-1. **Auto-generates `upgrade.md`**: Fetches latest releases from GitHub API (`donknap/dpanel`) and generates both `docs/zh-CN/upgrade.md` and `storage/api/upgrade.json`. This happens via `await generateUpgradeDocs()` at the top level.
+1. **Upgrade pages are runtime-loaded**: `/upgrade/latest` and `/upgrade/release` use a shared VitePress component to fetch Markdown content from the CDN in the browser.
 
 2. **Injects "New" badges**: The `injectNewBadge()` function walks the sidebar configuration, checks each linked file's last git commit time, and adds a `<span class="vp-badge-new">New</span>` badge to files modified within 30 days. Files checked via `git log -1 --format=%ct`.
 
@@ -93,5 +93,4 @@ layout: home   # Use homepage layout
 ## File Organization Notes
 
 - Static assets (images, scripts) live in `storage/`
-- `storage/api/` contains JSON data files (like `upgrade.json`) for potential API use
 - Git history drives the "New" badge system—avoid rewriting history on doc files if you want accurate badge display

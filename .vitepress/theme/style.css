@@ -158,3 +158,35 @@
 .dark .vp-badge-new {
   background-color: #42b983;
 }
+
+.release-notes__top-link,
+.release-notes__source,
+.release-notes__state {
+  margin: 0 0 16px;
+}
+
+.release-notes__top-link a,
+.release-notes__source a {
+  word-break: break-all;
+}
+
+.release-notes__state {
+  color: var(--vp-c-text-2);
+}
+
+.release-notes__state--error {
+  color: var(--vp-c-danger-1);
+}
+
+.release-notes__content h2,
+.release-notes__content h3,
+.release-notes__content h4,
+.release-notes__content h5,
+.release-notes__content h6 {
+  margin: 28px 0 16px;
+}
+
+.release-notes__content p,
+.release-notes__content ul {
+  margin: 16px 0;
+}

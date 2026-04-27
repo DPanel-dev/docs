@@ -14,4 +14,4 @@
 ## 下载地址
 
 - [dpanel-amd64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-amd64.fpk)
-- [dpanel-amd64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-arm64.fpk)
+- [dpanel-arm64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-arm64.fpk)

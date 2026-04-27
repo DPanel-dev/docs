@@ -1,10 +1,11 @@
 // https://vitepress.dev/guide/custom-theme
 import { h, onMounted } from 'vue'
 import type { Theme } from 'vitepress'
-import DefaultTheme, { VPImage } from 'vitepress/theme'
+import DefaultTheme from 'vitepress/theme'
 import './style.css'
 import mediumZoom from 'medium-zoom'
 import DPAds from '../components/DPAds.vue'
+import RemoteReleaseNotes from '../components/RemoteReleaseNotes.vue'
 
 export default {
   extends: DefaultTheme,
@@ -14,8 +15,8 @@ export default {
       'home-hero-after': () => h(DPAds)
     })
   },
-  enhanceApp({ app, router, siteData }) {
-    // ...
+  enhanceApp({ app }) {
+    app.component('RemoteReleaseNotes', RemoteReleaseNotes)
   },
   setup() {
     onMounted(() => {
