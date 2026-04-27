@@ -12,6 +12,12 @@ const loading = ref(true)
 const error = ref('')
 const html = ref('')
 
+const topLinkText = computed(() => {
+  return props.locale === 'zh-CN'
+    ? '到 GitHub Releases 获取完整的更新记录'
+    : 'Get the complete changelog from GitHub Releases'
+})
+
 const loadingText = computed(() => {
   return props.locale === 'zh-CN' ? '正在加载更新记录...' : 'Loading release notes...'
 })
@@ -39,6 +45,7 @@ function renderMarkdown(markdown: string) {
   const source = markdown
     .replace(/\\\r?\n/g, '\n')
     .replace(/\\/g, '')
+    .replace(/^\s*#\s+.+?(?:\r?\n)+/, '')
     .trim() || emptyText.value
   const lines = source.replace(/\r\n/g, '\n').split('\n')
   const blocks: string[] = []
@@ -129,12 +136,7 @@ onMounted(() => {
     <div v-else class="release-notes__content" v-html="html" />
   </div>
   <p class="release-notes__top-link">
-      <hr />
-      <a href="https://github.com/donknap/dpanel/releases" target="_blank" rel="noreferrer">{{ computed(() => {
-      return props.locale === 'zh-CN'
-          ? '到 GitHub Releases 获取完整的更新记录'
-          : 'Get the complete changelog from GitHub Releases'
-      }) }}
-      </a>
-    </p>
+    <hr />
+    <a href="https://github.com/donknap/dpanel/releases" target="_blank" rel="noreferrer">{{ topLinkText }}</a>
+  </p>
 </template>
