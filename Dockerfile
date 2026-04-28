@@ -22,6 +22,7 @@ RUN set -eux; \
 
 FROM nginx:1.27
 
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY ./storage /usr/share/nginx/html/storage
 COPY ./storage/image/dpanel.ico /usr/share/nginx/html/favicon.ico
 COPY ./storage/ads.txt /usr/share/nginx/html/ads.txt
@@ -29,23 +30,7 @@ COPY ./storage/quick.sh /usr/share/nginx/html/quick.sh
 COPY ./storage/quick-v1.sh /usr/share/nginx/html/quick-v1.sh
 COPY ./storage/quick.ps1 /usr/share/nginx/html/quick.ps1
 
-RUN sed -i '/root.*;/a\ \ \ \ location = /upgrade/api/latest {\
-\ \ \ \ \ \ \ \ add_header Cache-Control "no-cache";\
-\ \ \ \ \ \ \ \ proxy_ssl_server_name on;\
-\ \ \ \ \ \ \ \ proxy_set_header Host cdn.w7.cc;\
-\ \ \ \ \ \ \ \ proxy_pass https://cdn.w7.cc/dpanel/upgrade/latest.md;\
-\ \ \ \ }\
-\
-\ \ \ \ location = /upgrade/api/release {\
-\ \ \ \ \ \ \ \ add_header Cache-Control "no-cache";\
-\ \ \ \ \ \ \ \ proxy_ssl_server_name on;\
-\ \ \ \ \ \ \ \ proxy_set_header Host cdn.w7.cc;\
-\ \ \ \ \ \ \ \ proxy_pass https://cdn.w7.cc/dpanel/upgrade/release.md;\
-\ \ \ \ }\
-\
-\ \ \ \ try_files \$uri \$uri\/ \$uri.html =404;' \
-  /etc/nginx/conf.d/default.conf && \
-  tar czvf /usr/share/nginx/html/install.tar -C /usr/share/nginx/html/storage/install ./install.sh ./lang && \
+RUN tar czvf /usr/share/nginx/html/install.tar -C /usr/share/nginx/html/storage/install ./install.sh ./lang && \
   mkdir -p /usr/share/nginx/html/download/
 
 COPY --from=builder /app/.vitepress/dist /usr/share/nginx/html/
