@@ -135,8 +135,8 @@ onMounted(() => {
     <p v-else-if="error" class="release-notes__state release-notes__state--error">{{ error }}</p>
     <div v-else class="release-notes__content" v-html="html" />
   </div>
-  <p class="release-notes__top-link">
+  <div class="release-notes__top-link">
     <hr />
     <a href="https://github.com/donknap/dpanel/releases" target="_blank" rel="noreferrer">{{ topLinkText }}</a>
-  </p>
+  </div>
 </template>
