@@ -22,6 +22,7 @@ RUN set -eux; \
 
 FROM nginx:1.27
 
+COPY ./nginx/upgrade-api.conf /etc/nginx/conf.d/upgrade-api.conf
 COPY ./storage /usr/share/nginx/html/storage
 COPY ./storage/image/dpanel.ico /usr/share/nginx/html/favicon.ico
 COPY ./storage/ads.txt /usr/share/nginx/html/ads.txt
