@@ -22,10 +22,18 @@ jobs:
           registry: registry.cn-hangzhou.aliyuncs.com
           username: ${{ secrets.ALIYUN_USERNAME }}
           password: ${{ secrets.ALIYUN_TOKEN }}
+      - name: Login to ZPK
+        uses: docker/login-action@v3
+        with:
+          registry: zpk.w7.cc
+          username: ${{ secrets.ZPK_USERNAME }}
+          password: ${{ secrets.ZPK_PASSWORD }}
       - name: Docker BuildX
         run: |
+          SHORT_SHA="$(git rev-parse --short=9 HEAD)"
           docker buildx build \
-          -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc-vitepress \
+          -t zpk.w7.cc/dpanel/dpanel:doc-${SHORT_SHA} \
           -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc \
+          -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc-${SHORT_SHA} \
           --platform linux/amd64 \
           . --push
