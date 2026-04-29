@@ -6,6 +6,8 @@ type Locale = 'zh-CN' | 'en-US'
 
 const PREFERRED_LOCALE_KEY = 'dpanel-docs-preferred-locale'
 const PROMPT_DISMISSED_PREFIX = 'dpanel-docs-locale-switch-dismissed:'
+const PROMPT_DEADLINE_PREFIX = 'dpanel-docs-locale-switch-deadline:'
+const AUTO_REDIRECT_KEY = 'dpanel-docs-locale-auto-redirect'
 const SHARED_PATH_PREFIXES = ['/upgrade/']
 
 const route = useRoute()
@@ -89,19 +91,40 @@ function clearPromptTimers() {
   }
 }
 
-function startAutoDismiss() {
+function getPromptDeadlineKey(locale: Locale) {
+  return `${PROMPT_DEADLINE_PREFIX}${locale}`
+}
+
+function clearPromptDeadline(locale: Locale) {
+  window.sessionStorage.removeItem(getPromptDeadlineKey(locale))
+}
+
+function updateRemainingSeconds(deadline: number) {
+  const millisecondsLeft = Math.max(deadline - Date.now(), 0)
+  remainingSeconds.value = Math.max(1, Math.ceil(millisecondsLeft / 1000))
+}
+
+function startAutoDismiss(locale: Locale) {
   clearPromptTimers()
-  remainingSeconds.value = Math.ceil(AUTO_DISMISS_MS / 1000)
+  const deadlineKey = getPromptDeadlineKey(locale)
+  const storedDeadline = Number(window.sessionStorage.getItem(deadlineKey))
+  const deadline = storedDeadline > Date.now() ? storedDeadline : Date.now() + AUTO_DISMISS_MS
+
+  window.sessionStorage.setItem(deadlineKey, String(deadline))
+  updateRemainingSeconds(deadline)
 
   countdownTimer = window.setInterval(() => {
-    if (remainingSeconds.value > 1) {
-      remainingSeconds.value -= 1
+    const timeLeft = deadline - Date.now()
+    if (timeLeft <= 0) {
+      dismissPrompt()
+      return
     }
+    updateRemainingSeconds(deadline)
   }, 1000)
 
   dismissTimer = window.setTimeout(() => {
     dismissPrompt()
-  }, AUTO_DISMISS_MS)
+  }, Math.max(deadline - Date.now(), 0))
 }
 
 function getTargetLocale() {
@@ -124,6 +147,16 @@ function evaluate() {
 
   const targetLocale = getTargetLocale()
   if (currentLocale.value !== targetLocale) {
+    const pendingRedirect = window.sessionStorage.getItem(AUTO_REDIRECT_KEY)
+    if (pendingRedirect === targetLocale) {
+      window.sessionStorage.removeItem(AUTO_REDIRECT_KEY)
+    } else {
+      window.localStorage.setItem(PREFERRED_LOCALE_KEY, currentLocale.value)
+    }
+  }
+
+  if (currentLocale.value !== getTargetLocale()) {
+    window.sessionStorage.setItem(AUTO_REDIRECT_KEY, targetLocale)
     redirectTo(toLocalePath(path, targetLocale))
     return
   }
@@ -131,9 +164,10 @@ function evaluate() {
   const dismissedKey = `${PROMPT_DISMISSED_PREFIX}${currentLocale.value}`
   visible.value = window.sessionStorage.getItem(dismissedKey) !== '1'
   if (visible.value) {
-    startAutoDismiss()
+    startAutoDismiss(currentLocale.value)
   } else {
     clearPromptTimers()
+    clearPromptDeadline(currentLocale.value)
   }
   ready.value = true
 }
@@ -141,14 +175,22 @@ function evaluate() {
 function switchLocale() {
   const nextLocale: Locale = currentLocale.value === 'zh-CN' ? 'en-US' : 'zh-CN'
   window.localStorage.setItem(PREFERRED_LOCALE_KEY, nextLocale)
+  window.sessionStorage.removeItem(AUTO_REDIRECT_KEY)
   window.sessionStorage.removeItem(`${PROMPT_DISMISSED_PREFIX}${nextLocale}`)
+  clearPromptDeadline(currentLocale.value)
   visible.value = false
   redirectTo(toLocalePath(currentPath.value, nextLocale))
+}
+
+function keepCurrentLocale() {
+  window.localStorage.setItem(PREFERRED_LOCALE_KEY, currentLocale.value)
+  dismissPrompt()
 }
 
 function dismissPrompt() {
   clearPromptTimers()
   window.sessionStorage.setItem(`${PROMPT_DISMISSED_PREFIX}${currentLocale.value}`, '1')
+  clearPromptDeadline(currentLocale.value)
   visible.value = false
 }
 
@@ -156,8 +198,12 @@ onMounted(() => {
   evaluate()
 })
 
-watch(() => route.path, () => {
+watch(() => route.path, (newPath, oldPath) => {
   if (!ready.value) return
+  if (visible.value && oldPath && newPath !== oldPath && detectPathLocale(newPath) === detectPathLocale(oldPath)) {
+    keepCurrentLocale()
+    return
+  }
   evaluate()
 })
 
@@ -194,10 +240,12 @@ onBeforeUnmount(() => {
   gap: 14px;
   width: min(720px, calc(100vw - 32px));
   padding: 12px 16px;
-  border: 1px solid var(--vp-c-tip-1);
+  border: 1px solid color-mix(in srgb, var(--vp-c-tip-1) 45%, white);
   border-radius: 14px;
-  background: var(--vp-c-tip-soft);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+  background: color-mix(in srgb, var(--vp-c-bg) 72%, var(--vp-c-tip-soft));
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
 }
 
 .locale-switch-prompt__title {
