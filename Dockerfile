@@ -34,4 +34,3 @@ RUN tar czvf /usr/share/nginx/html/install.tar -C /usr/share/nginx/html/storage/
   mkdir -p /usr/share/nginx/html/download/
 
 COPY --from=builder /app/.vitepress/dist /usr/share/nginx/html/
-COPY --from=downloader /download/* /usr/share/nginx/html/download/
