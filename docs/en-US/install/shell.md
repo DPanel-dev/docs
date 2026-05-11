@@ -93,52 +93,68 @@ Global flags:
 
 - `-y, --yes`: auto-confirm prompts
 - `-v, --version`: show version
+- `--progress`: output mode, `plain` (default) or `quiet`
+- `-d, --detach`: run the current command in detached mode
 
 ### install
 
-- `--name`: instance name, default `dpanel`
-- `--type`: install type, `container` or `binary`, defaults to `container`
+- `--name`: instance name (required)
+- `--data-path`: data path (required). In `container` mode, this is the bind mount directory; in `binary` mode, this is the install storage directory
+- `--type`: install type, `container` or `binary`. If omitted, it is auto-detected based on Docker availability
 - `--version`: version, `ce` community edition, `pe` professional edition
 - `--edition`: edition, `standard` or `lite`
 - `--dev`: use development version
-- `--data-path`: data directory, install directory in `binary` mode
+- `--base-image`: base image system in `container` mode, `alpine`, `debian`
+- `--network-mode`: container network mode, `bridge` or `host`
 - `--server-host`: server bind host
 - `--server-port`: server port, `0` means random
-- `--docker-sock`: Docker socket path
+- `--docker-sock`: Docker socket path (local connection)
 - `--dns`: DNS address
-- `--proxy`: proxy address
-- `--base-image`: base image system in `container` mode, `alpine`, `debian`
+- `--proxy`: proxy address (used for both HTTP and HTTPS)
+- `--base-url`: panel base URL path prefix, e.g. `/dpanel`
+- `--log-level`: log level, `info` or `debug`
 
 Example:
 
 ```shell
-curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --name dpanel --type container
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --name dpanel --data-path /home/dpanel --type container
 ```
 
 ### upgrade
 
-:::tip
-To keep the existing config and only upgrade the container, just specify the `--name` parameter.
-:::
+#### In-place upgrade
 
-- `--name`: instance name to upgrade
-- `--version`: version, `ce` community edition, `pe` professional edition
-- `--edition`: edition, `standard` or `lite`
-- `--dev`: use development version
-- `--dns`: override existing DNS config
-- `--proxy`: override existing proxy config
-- `--disable-backup`: skip backup before upgrade
+Use this when you want to keep current settings and only upgrade the instance:
 
-Example:
+- `--name` is required
+- `--data-path` is optional (only needed when default discovery cannot find the instance)
 
 ```shell
 curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel
 ```
 
+#### Upgrade with changed parameters
+
+Use this when you want to override part of the existing settings during upgrade:
+
+- `--name` is required
+- `--data-path` is optional (use it when discovery fails)
+- You can override these settings during upgrade:
+  - version/image selection: `--version`, `--edition`, `--dev`, `--base-image`
+  - runtime/network settings: `--network-mode`, `--dns`, `--proxy`, `--base-url`, `--log-level`
+  - upgrade behavior: `--backup`
+  - connection/discovery assistance: `--docker-sock`, `--data-path`
+
+```shell
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel --version ce --edition standard --network-mode bridge --backup
+```
+
 ### uninstall
 
-- `--name`: instance name to uninstall
+- `--name`: instance name to uninstall (required)
 - `--remove-data`: remove the data directory too
+- `--data-path`: existing install directory when auto-discovery fails
+- `--docker-sock`: Docker socket path (local connection)
 
 Example:
 

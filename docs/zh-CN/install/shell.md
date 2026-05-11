@@ -1,6 +1,13 @@
 # 使用安装程序
 
-DPanel 安装器支持两种使用模式。
+DPanel 安装器支持安装、更新、卸载三类操作。
+
+安装器有两种**运行方式**：
+
+- 通过脚本运行（`quick.sh` / `quick.ps1`）
+- 通过容器运行（`docker run`）
+
+安装器有两种**工作模式**：
 
 - `TUI` 向导模式：通过交互界面安装面板，并支持获取已安装列表进行更新或卸载。
 - `CLI` 命令模式：适合无人值守或集成场景。
@@ -16,7 +23,6 @@ Windows 运行 `quick.ps1` 前请确保系统已安装 `PowerShell`、`tar` 命�
 :::
 
 :::code-group
-
 
 ```shell [Linux / macOS]
 curl -sSL https://dpanel.cc/quick.sh | bash
@@ -93,52 +99,76 @@ docker run --rm -it --pull always \
 
 - `-y, --yes`：自动确认提示
 - `-v, --version`：查看版本
+- `--progress`：输出模式，`plain`（默认）或 `quiet`
+- `-d, --detach`：以后台任务模式执行当前命令
 
 ### install
 
-- `--name`：实例名称，默认 `dpanel`
-- `--type`：安装方式，`container`、 `binary`，缺省下会优先使用 `container`
+- `--name`：实例名称（必填）
+- `--data-path`：数据目录（必填）。`container` 模式为挂载目录，`binary` 模式为安装存储目录
+- `--type`：安装方式，`container`、`binary`。未指定时自动检测 Docker 可用性后决定
 - `--version`：版本，`ce` 社区版、`pe` 专业版
 - `--edition`：版本类型，`standard` 标准版、`lite` 精简版
 - `--dev`：使用开发版
-- `--data-path`：数据目录，`binary` 模式下为安装目录
+- `--base-image`：`container` 模式下指定基础镜像系统，`alpine`、`debian`
+- `--network-mode`：容器网络模式，`bridge`、`host`
 - `--server-host`：服务绑定地址
 - `--server-port`：服务端口，`0` 表示随机端口
-- `--docker-sock`：Docker Socket 路径
+- `--docker-sock`：Docker Socket 路径（本地连接）
 - `--dns`：DNS 地址
-- `--proxy`：代理地址
-- `--base-image`：`container` 模式下指定基础镜像系统，`alpine`、`debian`
+- `--proxy`：代理地址（同时用于 HTTP/HTTPS）
+- `--base-url`：面板访问前缀路径，例如 `/dpanel`
+- `--log-level`：日志级别，`info` 或 `debug`
+
+:::tip
+如果检测到同名已安装实例，安装器会自动切换到 `upgrade` 流程。
+:::
 
 示例：
 
 ```shell
-curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --name dpanel --type container
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- install --name dpanel --data-path /home/dpanel --type container
 ```
 
 ### upgrade
 
-:::tip
-保留旧配置仅升级容器时，只需要指定 `--name` 参数即可
-:::
+#### 原样升级
 
-- `--name`：指定要升级的实例名称
-- `--version`：版本，`ce` 社区版、`pe` 专业版
-- `--edition`：版本类型，`standard` 标准版、`lite` 精简版
-- `--dev`：使用开发版
-- `--dns`：覆盖原有 DNS 配置
-- `--proxy`：覆盖原有代理配置
-- `--disable-backup`：更新前不备份
+用于保持现有配置不变，只执行升级：
 
-示例：
+- `--name`：必填
+- `--data-path`：按需指定（仅在默认自动发现找不到实例时需要）
 
 ```shell
 curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel
 ```
 
+#### 修改升级参数
+
+用于在升级时覆盖部分现有配置：
+
+- `--name`：必填
+- `--data-path`：按需指定（自动发现失败时使用）
+- 可覆盖参数：
+  - 版本与镜像：`--version`、`--edition`、`--dev`、`--base-image`
+  - 运行与网络：`--network-mode`、`--dns`、`--proxy`、`--base-url`、`--log-level`
+  - 升级行为：`--backup`
+  - 连接与发现辅助：`--docker-sock`、`--data-path`
+
+```shell
+curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel --version ce --edition standard --network-mode bridge --backup
+```
+
 ### uninstall
 
-- `--name`：：指定要卸载的实例名称
+- `--name`：指定要卸载的实例名称（必填）
 - `--remove-data`：同时删除数据目录
+- `--data-path`：自动发现失败时指定已有安装目录
+- `--docker-sock`：Docker Socket 路径（本地连接）
+
+:::warning
+`--remove-data` 会删除数据目录，删除后不可恢复。
+:::
 
 示例：
 
@@ -148,7 +178,7 @@ curl -sSL https://dpanel.cc/quick.sh | bash -s -- uninstall --name dpanel --remo
 
 ## 配置文件
 
-安装器默认保存在 `~/.dpanel/installer` 目录中。运行安装器后会生成默认的 `config.yaml` 配置文件，
+安装器会在可执行文件同目录生成并读取 `config.yaml`。
 主要用于在安装面板时自定义或扩展一些环境变量，示例如下：
 
 ```yaml
@@ -158,27 +188,8 @@ settings:
   # Installer log file path, supports $SETTING_LOG_PATH or ${SETTING_LOG_PATH-./run.log}
   log_path: ${SETTING_LOG_PATH-./run.log}
 
-install:
-  # HTTP proxy used by binary runtime and container environment
-  HTTP_PROXY: ""
-  # HTTPS proxy used by binary runtime and container environment
-  HTTPS_PROXY: ""
-  # Custom DNS server passed to DPanel runtime
-  DP_DNS: ""
-  # Console log level, e.g. info or debug
-  DP_LOG_CONSOLE_LEVEL: ""
-  # File log level, e.g. warn or debug
-  DP_LOG_FILE_LEVEL: ""
-  # Public base URL used by DPanel runtime
-  DP_SYSTEM_BASEURL: ""
-  # SQLite open mode, e.g. ro rw rwc
-  DP_DB_MODE: ""
-  # SQLite journal mode, e.g. DELETE or WAL
-  DP_DB_JOURNAL: ""
-  # Custom acme command path
-  DP_ACME_COMMAND_NAME: ""
-  # Custom acme config directory
-  DP_ACME_CONFIG_HOME: ""
+env:
+  # Extra env vars only. Do not put installer-managed keys (APP_*, DP_* managed by UI/CLI) here.
 
 script:
   install_docker:
