@@ -176,6 +176,28 @@ curl -sSL https://dpanel.cc/quick.sh | bash -s -- upgrade --name dpanel --versio
 curl -sSL https://dpanel.cc/quick.sh | bash -s -- uninstall --name dpanel --remove-data
 ```
 
+## 二进制安装与 `.env` 说明
+
+如果你是手动安装的二进制，后续想继续使用安装器 `upgrade`，请在安装目录（`--data-path`）准备 `.env`；安装器会通过该文件识别并沿用配置。
+
+```dotenv
+APP_NAME=dpanel                 # 实例名称（需与 --name 对应）
+APP_SERVER_HOST=0.0.0.0         # 绑定地址（可选）
+APP_SERVER_PORT=8080            # 服务端口
+STORAGE_LOCAL_PATH=/home/dpanel/data  # 数据目录
+
+APP_ENV=standard                # 版本类型：standard / lite
+APP_FAMILY=ce                   # 版本系列：ce / pe
+APP_DEV=false                   # 是否开发版：true / false
+
+HTTP_PROXY=                     # 代理（可选）
+HTTPS_PROXY=                    # 代理（可选）
+DP_DNS=                         # DNS（可选）
+DP_SYSTEM_BASEURL=              # 访问前缀（可选）
+DP_LOG_CONSOLE_LEVEL=info       # 控制台日志级别（可选）
+DP_LOG_FILE_LEVEL=info          # 文件日志级别（可选）
+```
+
 ## 配置文件
 
 安装器会在可执行文件同目录生成并读取 `config.yaml`。
