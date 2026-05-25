@@ -1,6 +1,6 @@
 # 常见问题
 
-### docker hub 镜取失败
+### docker hub 拉取失败
 
 ##### 错误信息
 
@@ -33,4 +33,4 @@ proxy: listen tcp4 0.0.0.0:80: bind: address already in us
 network dpanel-local was found but has incorrect label com.docker.compose.network set to ""
 ```
 
-- 删掉dpanel-local网络  docker network rm dpanel-loca
+- 删掉 `dpanel-local` 网络：`docker network rm dpanel-local`

@@ -40,7 +40,7 @@ docker run -d --name dpanel --restart=always \
 
 ## Podman
 
-Podman 与 Docker 命令兼容，将创建命令中的 docker 替换为 podman 即可：
+Podman 提供与 Docker 高度兼容的 CLI，将创建命令中的 docker 替换为 podman 即可：
 
 ```shell
 podman run -d --name dpanel --restart=always \
@@ -66,7 +66,7 @@ podman run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Docker Desktop (Windows / Macos)
+## Docker Desktop (Windows / macOS)
 
 通过 `//var/run/docker.sock` 挂载 docker.sock 文件：
 
@@ -79,7 +79,7 @@ docker run -d --name dpanel --restart=always \
  -v D:\data\dpanel:/dpanel dpanel/dpanel:latest // [!code focus]
 ```
 
-```js [Macos]
+```js [macOS]
 docker run -d --name dpanel --restart=always \
  -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
  -v //var/run/docker.sock:/var/run/docker.sock // [!code focus] \

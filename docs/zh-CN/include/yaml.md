@@ -20,7 +20,7 @@
       # 配置面板访问的二级目录
       - DP_SYSTEM_BASEURL=
     volumes:
-      # windows、 macos 将冒号前更改为 //var/run/docker.sock
+      # windows、macOS 将冒号前更改为 //var/run/docker.sock
       - /var/run/docker.sock:/var/run/docker.sock
       # 将 /home/dpanel 更改为你想要挂载的宿主机目录
       - /home/dpanel:/dpanel

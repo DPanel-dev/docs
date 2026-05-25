@@ -53,4 +53,4 @@ Registry address: `quay.io`
 When configuring an acceleration address for a registry, the acceleration address only takes effect for the current registry.
 :::
 
-You can configure multiple acceleration addresses, one address per line. The panel will use polling to pull.
+You can configure multiple acceleration addresses, one address per line. The panel will prioritize the fastest address when pulling.

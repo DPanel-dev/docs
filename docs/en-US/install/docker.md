@@ -40,7 +40,7 @@ docker run -d --name dpanel --restart=always \
 
 ## Podman
 
-Podman is compatible with Docker commands. Simply replace docker in the creation command with podman and run it. For example:
+Podman provides a CLI that is highly compatible with Docker commands. Simply replace docker in the creation command with podman and run it.
 
 ```shell
 podman run -d --name dpanel --restart=always \

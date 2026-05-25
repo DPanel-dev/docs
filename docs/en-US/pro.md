@@ -9,7 +9,7 @@ aside: false
 
 DPanel will continue to be a community-focused platform. The Pro and Community versions are not in conflict with each other; rather, they contribute to the community and ensure the long-term viability of the project.
 
-The Pro version is a derivative of the Community version, sharing most of the code. The Professional version builds upon the Community version with customized functional modules (the code is located in the app/pro directory). You don't need to worry about security vulnerabilities caused by invisible code.
+The Pro version is a derivative of the Community version, sharing most of the code. The Professional version builds upon the Community version, developing customized functional modules (the code is located in the app/pro directory). You don't need to worry about security vulnerabilities caused by invisible code.
 
 The Pro version merely enhances and supplements the Community version. Common, broadly based functional requirements will not be included in the Pro version. We will only enhance and upgrade some of the Community version's features, or address highly customized needs.
 

@@ -10,7 +10,7 @@
 
 通过 [Release](https://github.com/donknap/dpanel/releases) 页面下载已打包好的二进制文件。
 
-### 适用于 Ubuntu Centos Debian 等主流发行版
+### 适用于 Ubuntu、CentOS、Debian 等主流发行版
 
 - dpanel-ce-gnu-amd64
 - dpanel-ce-gnu-arm
@@ -39,7 +39,7 @@
 
 ## 手动编译
 
-如当前系统不适用以上二进制文件，可通过源码自行编译二进制包。
+如当前系统不适合以上系统，可通过源码自行编译二进制包。
 
 ### 环境要求
 
