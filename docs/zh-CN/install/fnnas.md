@@ -15,3 +15,7 @@
 
 - [dpanel-amd64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-amd64.fpk)
 - [dpanel-arm64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-arm64.fpk)
+
+## 历史版本
+
+- [Github](https://github.com/DPanel-dev/fnnas/releases)

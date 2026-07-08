@@ -12,5 +12,9 @@ Because there may be some delay in the FNNAS App Store review process, you can i
 
 ## Download Links
 
-- [dpanel-amd64.fpk (GitHub)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-amd64.fpk)
-- [dpanel-arm64.fpk (GitHub)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-arm64.fpk)
+- [dpanel-amd64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-amd64.fpk)
+- [dpanel-arm64.fpk](https://cdn.w7.cc/dpanel/release/dpanel-arm64.fpk)
+
+## Historical Versions
+
+- [Github](https://github.com/DPanel-dev/fnnas/releases)
