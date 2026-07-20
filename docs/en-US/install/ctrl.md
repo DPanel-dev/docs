@@ -71,16 +71,18 @@ When resetting username, must specify password
 - --name Specify the container name to detect
 - --docker-env Specify docker env environment name, default: local
 
+Each command execution bypasses the existing check cache and queries the remote registry directly.
+
 ```
 ./dpanel -f config.yaml container:upgrade --name containerName --docker-env local
 ```
 
 ### Return
 
-> upgrade is true means there is an update
+> `upgrade` set to `true` means an update is available. When a check fails, `error` contains the reason.
 
 ```
-{"upgrade":false,"digest":"sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55","digestLocal":["registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel@sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55"]}
+{"upgrade":false,"digest":"sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55","digestLocal":["registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel@sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55"],"error":""}
 ```
 
 ## Upgrade Container
@@ -97,7 +99,7 @@ When resetting username, must specify password
 
 ### Return
 
-> When the container has no update, the return is consistent with [Check if container image has new version]
+> Before upgrading, DPanel checks the container image for updates using the same logic as **Detect Container Updates**.
 
 ```
 {"containerId": "14fc0a4d5e3e31f98f9179512085299b5c502ddf57d584ce39a7cadab6e3f643"}

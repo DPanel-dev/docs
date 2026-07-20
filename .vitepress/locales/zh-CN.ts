@@ -48,7 +48,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         items: [
           { text: '快速创建', link: getLink("manual/container-create") },
           { text: '参数详解', link: getLink("manual/container-create-option") },
-          { text: '检测与升级', link: getLink("manual/container-upgrade") },
+          { text: '容器更新', link: getLink("manual/container-upgrade") },
           { text: '快照与恢复', link: getLink("manual/container-snapshot") },
           { text: '计划任务', link: getLink("manual/container-cron") },
           { text: '端口访问', link: getLink("manual/container-port") },

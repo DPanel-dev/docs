@@ -48,7 +48,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         items: [
           { text: 'Quick Create', link: getLink("manual/container-create") },
           { text: 'Parameter Details', link: getLink("manual/container-create-option") },
-          { text: 'Detection and Upgrade', link: getLink("manual/container-upgrade") },
+          { text: 'Container Updates', link: getLink("manual/container-upgrade") },
           { text: 'Snapshot and Restore', link: getLink("manual/container-snapshot") },
           { text: 'Scheduled Tasks', link: getLink("manual/container-cron") },
           { text: 'Port Access', link: getLink("manual/container-port") },

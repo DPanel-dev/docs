@@ -1,6 +1,6 @@
-# Detection and Upgrade <Badge type="tip" text="DPanel Version >= 1.4.2" />
+# Container Updates <Badge type="tip" text="DPanel Version >= 1.4.2" />
 
-The container details page can check whether the current container has updates and upgrade the container.
+The Container Updates page lists the containers in the current Docker environment. You can check image updates, review check results, and update containers from one place.
 The upgrade operation retains all configurations of the current container, re-pulls the image, and redeploys the container.
 
 :::tip
@@ -9,13 +9,17 @@ Under multi-server, please ensure that each server's version is consistent, othe
 
 ![container-upgrade-1](https://cdn.w7.cc/dpanel/container-upgrade-1.png)
 
-## Detection Strategy
+## Check for Updates
 
-To avoid overly frequent requests to external interfaces, you can configure [Detection Strategy] when checking container upgrades:
+Update checks are now part of the container update feature. DPanel queries the remote registry for the image used by each container and records the check time, status, local digest, remote digest, and any error details.
 
-- **Auto Detect**: Checks for updates every time you enter the container details page, can skip cache and force detection once.
-- **Ignore This Time**: When the image used by the container has not changed, detection will be ignored.
-- **Permanently Ignore**: Ignore the current container, other containers using the same image are not affected.
+To avoid frequent remote registry requests, DPanel reuses results from the last 10 minutes by default. Select **Force Check** to bypass the cache and query the remote registry again. A cached result is invalidated automatically when the image used by the container changes.
+
+You can configure how a container is ignored:
+
+- **Ignore Current Version**: Ignores only the image version currently used by the container. Checks resume after its image changes.
+- **Ignore Permanently**: Always ignores this container. Other containers using the same image are not affected.
+- **Resume Detection**: Removes the ignore setting for this container.
 
 
 ## Image Update Detection Logic
@@ -23,7 +27,7 @@ To avoid overly frequent requests to external interfaces, you can configure [Det
 ### Digest
 
 The image's digest value is the unique identifier of the image in the remote repository. The panel detects image updates through this value.
-If the image does not contain a digest value, updates cannot be detected.
+If the local image does not contain a digest value, DPanel cannot compare it with the remote image and reports that no update is currently available.
 
 For images supporting different architecture platforms, even if only one platform changes, it will cause the digest value to change, thereby detecting an update.
 

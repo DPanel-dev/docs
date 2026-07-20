@@ -71,16 +71,18 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 - \--name 指定检测的容器名称
 - \--docker-env 指定 docker env 环境名称，默认: local
 
+控制命令每次执行都会跳过已有检查缓存，直接查询远程仓库。
+
 ```
 ./dpanel -f config.yaml container:upgrade --name containerName --docker-env local
 ```
 
 ### 返回
 
-> upgrade 为 true 表示有更新
+> `upgrade` 为 `true` 表示有更新。检查失败时，`error` 会返回具体原因。
 
 ```
-{"upgrade":false,"digest":"sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55","digestLocal":["registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel@sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55"]}
+{"upgrade":false,"digest":"sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55","digestLocal":["registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel@sha256:8f4ac2974ff707bace98ab14923fdf220f44a9803045b655f1d8d3e098f97e55"],"error":""}
 ```
 
 ## 升级容器
@@ -97,7 +99,7 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 
 ### 返回
 
-> 当容没有更新时，返回与 【检测容器镜像是否有新版】 一致
+> 执行升级前会先检查容器镜像更新，检查逻辑与【检测容器更新】一致。
 
 ```
 {"containerId": "14fc0a4d5e3e31f98f9179512085299b5c502ddf57d584ce39a7cadab6e3f643"}
