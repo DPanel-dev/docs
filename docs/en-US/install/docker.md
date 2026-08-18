@@ -163,7 +163,7 @@ docker run -d --name dpanel --restart=always \
 ## Volume
 
 :::tip
-If you need to mount a compose yaml file or use a relative path in compose yaml, be sure to mount the /dpanel directory to the host and create a new compose task in the directory. See [Create Compose task](/manual/compose-create#mount)
+If `/dpanel` is bind-mounted from a host directory, Compose can use relative directories directly. If `/dpanel` uses a Docker volume, mount its subdirectories with volume `subpath` instead. See [Compose Relative Directories](/docs/en-US/manual/compose-relative-bind).
 :::
 
 The DPanel will generate some data when running and store it in the /dpanel directory in the DPanel container. If the directory is not mounted when creating, Docker will automatically generate a storage volume for the directory

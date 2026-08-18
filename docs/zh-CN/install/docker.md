@@ -163,7 +163,7 @@ docker run -d --name dpanel --restart=always \
 ## 自定义宿主机目录存储
 
 :::tip
-如果需要挂载 compose yaml 文件或是在 compose yaml 中使用相对路径，请务必将挂载 /dpanel 目录到宿主机。添加 compose 任务查看 [通过挂载存储路径的方式创建](/manual/compose-create#mount)
+如果 `/dpanel` 挂载的是宿主机目录，Compose 中可以直接使用相对目录；如果 `/dpanel` 使用 Docker 存储卷，则需要通过存储卷 `subpath` 挂载其中的子目录。具体查看[Compose 相对目录](/manual/compose-relative-bind)。
 :::
 
 面板运行时产生的数据存储在容器内的 `/dpanel` 目录中。创建时如未挂载该目录，Docker 会自动挂载到存储卷。

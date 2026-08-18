@@ -85,6 +85,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         collapsed: false,
         items: [
           { text: 'Quick Start', link: getLink("manual/compose-create") },
+          { text: 'Relative Directories', link: getLink("manual/compose-relative-bind") },
           { text: 'Environment Variables', link: getLink("manual/compose-create-env") },
           { text: 'Override Configuration', link: getLink("manual/compose-create-override") },
           { text: 'Manage External Tasks', link: getLink("manual/compose-create-outpath") },

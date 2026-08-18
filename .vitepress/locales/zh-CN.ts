@@ -85,6 +85,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         collapsed: false,
         items: [
           { text: '快速开始', link: getLink("manual/compose-create") },
+          { text: '相对目录', link: getLink("manual/compose-relative-bind") },
           { text: '环境变量', link: getLink("manual/compose-create-env") },
           { text: '覆盖配置', link: getLink("manual/compose-create-override") },
           { text: '管理外部任务', link: getLink("manual/compose-create-outpath") },
