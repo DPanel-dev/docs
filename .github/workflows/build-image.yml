@@ -36,4 +36,5 @@ jobs:
           -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc \
           -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc-${SHORT_SHA} \
           --platform linux/amd64 \
+          --provenance=false \
           . --push
