@@ -22,9 +22,9 @@
     volumes:
       # windows、macOS 将冒号前更改为 //var/run/docker.sock
       - /var/run/docker.sock:/var/run/docker.sock
-      # 将 /home/dpanel 更改为你想要挂载的宿主机目录
+      # 将 /home/dpanel 更改为你想要挂载的宿主机目录，容器内路径为 /dpanel
       - /home/dpanel:/dpanel
-      # 单独挂载 compose 目录
+      # 可单独绑定面板容器内的 /dpanel/compose；宿主机路径由冒号前的源目录决定
       # - /opt/compose:/dpanel/compose
     extra_hosts:
       - "host.dpanel.local:host-gateway"

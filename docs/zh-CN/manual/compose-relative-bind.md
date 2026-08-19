@@ -1,18 +1,7 @@
 # Compose 相对目录
 
-## 什么是 Compose 相对目录
-
-Compose 中以 `./` 或 `../` 开头的路径称为相对目录。相对目录以 `compose.yaml` 所在目录为基准。
-
-假设 `compose.yaml` 位于 `/dpanel/compose/example`：
-
-```text
-/dpanel/compose/example
-├── compose.yaml
-└── data
-```
-
-Compose 配置如下：
+在 Compose YAML 中挂载数据时，可以使用 `相对目录` 来指定数据挂载目录。相对目录会以 YAML 文件所在目录为基准。
+使用相对目录的好处是便于统一管理 Compose 配置及数据。
 
 ```yaml
 services:
@@ -22,45 +11,50 @@ services:
       - ./data:/data
 ```
 
-其中，`./data` 表示 `/dpanel/compose/example/data`，`/data` 表示该目录在 `app` 容器内的挂载位置。
+假设项目名为 `example`，上方的 YAML 位于 `/home/compose/example/compose.yaml`，那么 `./data` 表示 YAML 同级的 `/home/compose/example/data` 目录
 
-DPanel 的 `/dpanel` 可以挂载宿主机目录，也可以使用 Docker 存储卷。两种存储方式对应不同的配置方法。
+## 使用宿主机目录挂载 /dpanel 目录
 
-## `/dpanel` 挂载宿主机目录
+创建 DPanel 容器时，假设使用宿主机目录 `/home/dpanel` 挂载 `/dpanel` 目录。
 
-创建 DPanel 时，将宿主机的 `/home/dpanel` 挂载到容器的 `/dpanel`：
+:::tip
+你也可以将 compose 目录单独进行挂载
 
-```bash
-docker run -d --name dpanel \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /home/dpanel:/dpanel \
-  dpanel/dpanel:latest
+-v /home/dpanel:/dpanel <br />
+-v /home/compose:/dpanel/compose
+
+:::
+
+```js
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest // [!code focus] 
 ```
 
-此时，DPanel 容器内的 `/dpanel/compose/example` 对应宿主机的 `/home/dpanel/compose/example`，可以直接使用相对目录：
+那么上方示例中的 `./data` 在 DPanel 容器中位于 `/dpanel/compose/example/data`，对应宿主机上的实际路径为 `/home/dpanel/compose/example/data`，并最终挂载到应用容器的 `/data`。
 
-```yaml
-services:
-  app:
-    image: example/app
-    volumes:
-      - ./data:/data
+也就是说 `相对目录` 的实际位置取决于 DPanel 容器的 `/dpanel` 目录或是 `/dpanel/compose` 目录挂载到了宿主机的哪个目录。
+
+## 使用存储卷挂载 /dpanel 目录
+
+创建 DPanel 容器时，假设使用存储卷 `dpanel-data` 挂载 `/dpanel` 目录。
+
+```js
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \ 
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v dpanel-data:/dpanel dpanel/dpanel:latest // [!code focus] 
 ```
 
-部署后，宿主机的 `/home/dpanel/compose/example/data` 会挂载到 `app` 容器的 `/data`。
+未显式挂载 `/dpanel` 目录或者使用 `-v dpanel-data:/dpanel` 时，都是采用存储卷的形式来挂载目录，存储卷是由 Docker 统一管理的挂载形式。
 
-## `/dpanel` 使用 Docker 存储卷
+卷内目录是不能直接使用的宿主机路径，因此使用 `./data:/data` 将无法将数据挂载到 `相对目录` 中。
+如果需要使用卷内的项目数据，可以将 `dpanel-data` 声明为外部存储卷，并通过 `volume.subpath` 指定相对目录。
 
-创建 DPanel 时，也可以使用名为 `dpanel-data` 的存储卷：
-
-```bash
-docker run -d --name dpanel \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v dpanel-data:/dpanel \
-  dpanel/dpanel:latest
-```
-
-此时项目文件位于 `dpanel-data` 存储卷中，不能使用 `./data:/data` 引用卷内目录。需要将该存储卷声明为外部存储卷，并通过 `subpath` 指定项目的数据目录：
+:::tip
+`subpath` 必须相对于存储卷根目录填写；对应目录需要提前存在，且不能以 `/` 开头。`volume.subpath` 要求 Docker API `1.45` 及以上。
+:::
 
 ```yaml
 services:
@@ -78,12 +72,4 @@ volumes:
     external: true
 ```
 
-上述配置会将 `dpanel-data` 存储卷中的 `compose/example/data` 子目录挂载到 `app` 容器的 `/data`。
-
-::: tip
-
-- `subpath` 相对于存储卷根目录填写，不能以 `/` 开头。
-- `subpath` 对应的目录必须在启动服务前已经存在。
-- Docker API 版本必须不低于 `1.45`。
-
-:::
+上述配置会将 `dpanel-data` 存储卷中的 `compose/example/data` 子目录挂载到应用容器的 `/data`。

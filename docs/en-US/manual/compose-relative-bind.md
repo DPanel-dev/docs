@@ -1,18 +1,8 @@
 # Compose Relative Directories
 
-## What Is a Compose Relative Directory?
-
-Paths beginning with `./` or `../` are relative directories in Compose. They are resolved from the directory containing `compose.yaml`.
-
-Suppose `compose.yaml` is stored in `/dpanel/compose/example`:
-
-```text
-/dpanel/compose/example
-├── compose.yaml
-└── data
-```
-
-The Compose configuration is:
+When mounting data in a Compose YAML file, you can use a `relative directory` to specify the data mount directory.
+A relative directory is resolved from the directory containing the YAML file.
+Using relative directories makes it easier to manage Compose configuration and data together.
 
 ```yaml
 services:
@@ -22,45 +12,58 @@ services:
       - ./data:/data
 ```
 
-Here, `./data` refers to `/dpanel/compose/example/data`, while `/data` is its mount point inside the `app` container.
+Assume the project is named `example` and the YAML file is located at `/home/compose/example/compose.yaml`.
+Then `./data` refers to the `/home/compose/example/data` directory beside the YAML file.
 
-DPanel's `/dpanel` directory can use either a host bind mount or a Docker volume. Each storage type requires a different configuration.
+## Mount `/dpanel` from a Host Directory
 
-## Bind Mount `/dpanel` from the Host
+Assume that the host directory `/home/dpanel` is mounted to `/dpanel` when creating the DPanel container.
 
-When creating DPanel, mount the host directory `/home/dpanel` at `/dpanel` in the container:
+:::tip
+You can also mount the Compose directory separately:
 
-```bash
-docker run -d --name dpanel \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /home/dpanel:/dpanel \
-  dpanel/dpanel:latest
+-v /home/dpanel:/dpanel <br />
+-v /home/compose:/dpanel/compose
+
+:::
+
+```js
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest // [!code focus]
 ```
 
-The DPanel path `/dpanel/compose/example` now corresponds to `/home/dpanel/compose/example` on the host, so the relative directory can be used directly:
+In the example above, `./data` is located at `/dpanel/compose/example/data` inside the DPanel container,
+corresponds to `/home/dpanel/compose/example/data` on the host, and is ultimately mounted at `/data`
+in the application container.
 
-```yaml
-services:
-  app:
-    image: example/app
-    volumes:
-      - ./data:/data
+In other words, the actual location of a `relative directory` depends on which host directory the DPanel
+container's `/dpanel` or `/dpanel/compose` directory is mounted to.
+
+## Mount `/dpanel` Using a Docker Volume
+
+Assume that the Docker volume `dpanel-data` is mounted to `/dpanel` when creating the DPanel container.
+
+```js
+docker run -d --name dpanel --restart=always \
+ -p 80:80 -p 443:443 -p 8807:8080 -e APP_NAME=dpanel \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v dpanel-data:/dpanel dpanel/dpanel:latest // [!code focus]
 ```
 
-After deployment, `/home/dpanel/compose/example/data` on the host is mounted at `/data` inside the `app` container.
+If `/dpanel` is not mounted explicitly, or if `-v dpanel-data:/dpanel` is used, the directory is mounted
+as a Docker volume. Docker manages the contents of a volume and its mount internally.
 
-## Mount `/dpanel` from a Docker Volume
+Directories inside a volume cannot be used directly as host paths. Therefore, using `./data:/data` cannot
+mount data from a `relative directory`.
+If you need to use project data inside the volume, declare `dpanel-data` as an external volume and use
+`volume.subpath` to specify the relative directory.
 
-You can also create DPanel with a Docker volume named `dpanel-data`:
-
-```bash
-docker run -d --name dpanel \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v dpanel-data:/dpanel \
-  dpanel/dpanel:latest
-```
-
-The project files are now stored in the `dpanel-data` volume, so `./data:/data` cannot reference the directory inside that volume. Declare the volume as external and use `subpath` to select the project data directory:
+:::tip
+`subpath` must be specified relative to the root of the Docker volume. The directory must already exist,
+must not begin with `/`, and `volume.subpath` requires Docker API `1.45` or newer.
+:::
 
 ```yaml
 services:
@@ -78,12 +81,5 @@ volumes:
     external: true
 ```
 
-This configuration mounts `compose/example/data` from the `dpanel-data` volume at `/data` inside the `app` container.
-
-::: tip
-
-- `subpath` is relative to the volume root and must not start with `/`.
-- The directory referenced by `subpath` must exist before the service starts.
-- Docker API `1.45` or newer is required.
-
-:::
+The configuration above mounts the `compose/example/data` subdirectory from the `dpanel-data` volume at
+`/data` in the application container.

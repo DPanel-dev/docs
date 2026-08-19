@@ -20,9 +20,9 @@
     volumes:
       # For Windows and macOS, change the part before the colon to //var/run/docker.sock
       - /var/run/docker.sock:/var/run/docker.sock
-      # Change `/home/dpanel` to the host directory you want to mount.
+      # Change `/home/dpanel` to the host directory you want to mount; `/dpanel` is the container path.
       - /home/dpanel:/dpanel
-      # Mount the compose directory.
+      # Optionally bind-mount the container's `/dpanel/compose`; the host path is the source before the colon.
       # - /opt/compose:/dpanel/compose
     extra_hosts:
       - "host.dpanel.local:host-gateway"
