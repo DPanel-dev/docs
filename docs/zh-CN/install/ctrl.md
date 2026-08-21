@@ -28,6 +28,14 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 /app/server/dpanel -f /app/server/config.yaml user:reset
 ```
 
+## 查看系统信息
+
+`system:info` 输出当前 DPanel 的运行环境、访问地址、安全入口以及管理员账号（密码脱敏）等信息。
+
+```
+./dpanel -f config.yaml system:info
+```
+
 ## 重置管理员用户
 
 ### 快速重置
@@ -50,6 +58,27 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 
 ```
 ./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+```
+
+## 设置安全入口
+
+:::warning
+配置 `none` 时为关闭安全入口访问功能
+:::
+
+- \--entrance 指定安全访问地址，为空为随机生成
+
+```
+./dpanel -f config.yaml system:reset --entrance 
+```
+
+## 系统清理与重置
+
+- \--cache 清理可重建缓存、通知、Docker 事件和临时文件
+- \--online-user 使所有在线用户失效
+
+```
+./dpanel -f config.yaml system:reset --cache --online-user
 ```
 
 ## 更新应用商店数据
@@ -140,22 +169,6 @@ docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
 
 ```
 {"name":"test123"}
-
-```
-
-## 清理系统消息、事件及缓存 <Badge type="tip" text="DPanel Version >= 1.9.2" />
-
-- \--enable-notice 清除通知和事件
-- \--enable-temp-file 清理临时文件
-
-```
-./dpanel -f config.yaml system:prune
-```
-
-### 返回
-
-```
-{"db":"vacuum","events":204,"gc":true,"notice":7,"temp":0}
 
 ```
 

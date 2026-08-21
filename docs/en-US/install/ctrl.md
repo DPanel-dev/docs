@@ -28,6 +28,14 @@ When calling in a scheduled task, leave the execution container empty or specify
 /app/server/dpanel -f /app/server/config.yaml user:reset
 ```
 
+## View System Information
+
+`system:info` displays the current DPanel runtime environment, access address, security entrance, and administrator account (with the password masked).
+
+```
+./dpanel -f config.yaml system:info
+```
+
 ## Reset Admin User
 
 ### Quick Reset
@@ -50,6 +58,27 @@ When resetting username, must specify password
 
 ```
 ./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+```
+
+## Set the Security Entrance
+
+:::warning
+Set `--entrance` to `none` to disable access through the security entrance.
+:::
+
+- `--entrance` specifies the security entrance. Leave it empty to generate a random entrance.
+
+```
+./dpanel -f config.yaml system:reset --entrance
+```
+
+## System Cleanup and Reset
+
+- `--cache` clears rebuildable caches, notices, Docker events, and temporary files.
+- `--online-user` invalidates all online users.
+
+```
+./dpanel -f config.yaml system:reset --cache --online-user
 ```
 
 ## Update App Store Data
@@ -140,22 +169,6 @@ Each command execution bypasses the existing check cache and queries the remote 
 
 ```
 {"name":"test123"}
-
-```
-
-## Clean System Messages, Events & Cache <Badge type="tip" text="DPanel Version >= 1.9.2" />
-
-- --enable-notice Clear notifications and events
-- --enable-temp-file Clean temporary files
-
-```
-./dpanel -f config.yaml system:prune
-```
-
-### Return
-
-```
-{"db":"vacuum","events":204,"gc":true,"notice":7,"temp":0}
 
 ```
 
