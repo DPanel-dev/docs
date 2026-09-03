@@ -245,6 +245,37 @@ docker run -d --name dpanel --restart=always \
 如 Docker 环境未配置默认 IPv6 支持，标准版将无法转发 IPv6 地址。可在面板中创建任意 IPv6 网络，并将面板容器加入该网络。
 
 
+## 禁用安全策略
+
+通过执行 `docker info` 可以查看安全策略：
+
+```
+ runc version: v1.1.12-0-g51d5e94
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+ Kernel Version: 4.19.91-27.7.an7.x86_64
+```
+
+当系统开启了 `Seccomp` 安全策略后，在更新、重建 DPanel 容器时会出现目录没有权限访问的错误信息。，如下：
+
+```text
+disk I/O error: operation not permitted
+panic: disk I/O error: operation not permitted
+```
+
+通过 `--security-opt` 参数来临时关掉安全策略：
+
+```js
+docker run -d --restart=always \ 
+ --name dpanel
+ --security-opt seccomp=unconfined \ // [!code focus] 
+ -p 80:80 -p 443:443 -p 8807:8080  \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
+
 ## 更新或重建面板
 
 更新与重建的区别在于是否保留面板挂载目录（`/dpanel`）的配置。
