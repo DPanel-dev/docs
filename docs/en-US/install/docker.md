@@ -1,15 +1,17 @@
 # Install with Docker
 
 :::danger
- In order to isolate permissions, the DPanel automatically creates a dpanel-plugin-explorer container when managing container files. \
-The dpanel-plugin-explorer container does not expose any ports, and the DPanel will automatically remove this container after you close all pages.\
-The dpanel-plugin-explorer container uses the alpine image. You can also [create by hand](/docs/en-US/install/docker#create-explorer-plugin) and keep the name dpanel-plugin-explorer.\
-If there is no dpanel-plugin-explorer container DPanel will be automatically created. If you cannot accept this, please do not use the [File Explorer] function.！！！！ 
+When managing container files, DPanel automatically creates a dpanel-plugin-explorer container to isolate permissions.
+This container uses the alpine image, exposes no ports, and is automatically removed after you close all file-management pages.
+You can also [create it manually](/docs/en-US/install/docker#create-explorer-plugin); the container name must remain dpanel-plugin-explorer.
+If you cannot accept automatic creation, please do not use the [File Explorer] function.
 :::
 
 <br />
 
 ###### [:rocket::rocket::rocket: Use install script to quickly install or upgrade the DPanel container](/docs/en-US/install/shell)
+
+<!--@include: ../include/image.md-->
 
 ## Standard Edition
 
@@ -18,7 +20,7 @@ If there is no dpanel-plugin-explorer container DPanel will be automatically cre
 :::
 
 
-The Standard Edition provides Nginx proxy-pass and HTTPS certificate features, which require binding ports 80 and 443. If you do not need these features, please use the Lite Edition.
+The Standard Edition provides domain binding and certificate features, which require binding ports 80 and 443. If you do not need these features, please use the Lite Edition.
 
 The Lite Edition differs from the Standard Edition only in the image. Binding ports 80 and 443 is no longer required. Other configurations are same.
 
@@ -105,10 +107,9 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel dpanel/dpanel:latest
 ```
 
-## Custom Management Port
+## Custom DPanel Management Port
 
-By default, after the DPanel is installed, the management url is http://127.0.0.1:8807. 
-You can also use the -p parameter to specify the management port.
+After installation with the default command, access the panel at `http://127.0.0.1:8807`. You can customize the host port mapped to the container's 8080 port:
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -117,21 +118,27 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Host Network Mode (--network host)
+## Use Host Network (--network host)
 
-In host network mode, the panel uses http://hostip:8080 by default. Port changes require environment variable configuration. Ensure ports (including 80/443 for Standard Edition) are not occupied.
+In host network mode, access the panel at `http://hostip:8080` by default. To change the port, add `APP_SERVER_PORT=2456`.
+Make sure the host ports are not already in use (the Standard Edition also requires ports 80 and 443).
+
+:::warning
+When configuring container domain forwarding in host network mode, use the `IP:PORT` format only.
+:::
+
 ```js
 docker run -d --name dpanel --restart=always \
- -e APP_NAME=dpanel -e APP_SERVER_PORT=2456 \  // [!code focus]
+ -e APP_NAME=dpanel -e APP_SERVER_PORT=2456 --network host \  // [!code focus]
  -v /var/run/docker.sock:/var/run/docker.sock \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
 
-## HTTP(S) Proxy
+## Configure DPanel Proxy
 
-Configure the proxy address in the container through environment variables.
-If the proxy address is the host, do not use `127.0.0.1` or `localhost`, these addresses point to the container itself rather than the host. Please use the host's LAN address:
+Configure the proxy address inside the container through environment variables.
+If the proxy is running on the host, do not use `127.0.0.1` or `localhost` (these addresses point to the container itself); use the host's LAN address instead:
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -142,7 +149,7 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Mount DPanel Key File <Badge type="tip" text="DPanel Version >= 1.8.1" />
+## Customize DPanel Key File <Badge type="tip" text="DPanel Version >= 1.8.1" />
 
 DPanel uses RSA for login authentication and SSH login. It automatically generates RSA public and private key files upon startup (only if they don't already exist). The files are located in the **_/dpanel/cert/rsa_** directory.
 
@@ -160,17 +167,14 @@ docker run -d --name dpanel --restart=always \
 -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Volume
+## Customize Host Directory Storage
 
 :::tip
 If `/dpanel` is bind-mounted from a host directory, Compose can use relative directories directly. If `/dpanel` uses a Docker volume, mount its subdirectories with volume `subpath` instead. See [Compose Relative Directories](/docs/en-US/manual/compose-relative-bind).
 :::
 
-The DPanel will generate some data when running and store it in the /dpanel directory in the DPanel container. If the directory is not mounted when creating, Docker will automatically generate a storage volume for the directory
-
-If you want to customize the directory mounted to the host, you can modify the -v parameter.
-
-The volume mount directory must be an absolute directory. If the directory does not exist, it will be created automatically.
+DPanel stores runtime data in the `/dpanel` directory inside the container. If this directory is not mounted when the container is created, Docker automatically mounts a storage volume.
+You can customize the host path mounted to the container's `/dpanel` directory (an absolute path is required):
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -179,14 +183,14 @@ docker run -d --name dpanel --restart=always \
  -v /home/test/dpanel:/dpanel dpanel/dpanel:latest // [!code focus] 
 ```
 
-## Admin Account
+## Configure DPanel Administrator Username and Password
 
-After creating the DPanel container, you need to configure the admin account for the first time. If you forget your password, you can use [Reset Username and Password](/install/ctrl#user-reset)
+After creating the DPanel container, configure the administrator username and password on first access. If you forget the password, you can [reset the username and password](/docs/en-US/install/ctrl#reset-admin-user).
 
 
-## DPanel Container Name
+## Customize DPanel Container Name
 
-If you want to change the DPanel container name or install multiple panels at the same time, you can specify the APP_NAME environment variable to the specified container name in the installation command.
+To change the DPanel container name or install multiple panels, configure the name with the `APP_NAME` environment variable:
 
 ```js
 docker run -d --restart=always \ 
@@ -197,9 +201,13 @@ docker run -d --restart=always \
 ```
 
 
-## Customizing DPanel Access to Second-Level Directories
+## Customize DPanel Second-Level Access Directory
 
-By default, the panel access address is **http://127.0.0.1:8807/dpanel/ui**. You can specify the second-level access directory as **http://127.0.0.1:8807/apps/dpanel/ui** by configuring the environment variable **DP_SYSTEM_BASEURL**.
+By default, the panel access address is **http://127.0.0.1:8807/dpanel/ui**. You can set the second-level access directory to **http://127.0.0.1:8807/apps/dpanel/ui** with the **DP_SYSTEM_BASEURL** environment variable.
+
+:::warning
+When customizing the directory, avoid including `/dpanel`, `/ws/common`, or `/api` where possible to prevent path errors caused by duplicate replacement.
+:::
 
 ```js
 docker run -d --restart=always \ 
@@ -211,11 +219,11 @@ docker run -d --restart=always \
 ```
 
 
-## Host IP Address
+## Bind Host {#bind-host}
 
-Accessing `127.0.0.1` or `localhost` from within a container refers to the container itself.
+Within a container, `127.0.0.1` and `localhost` refer to the container itself.
 
-To access the host from within a container, you need to use the host's local network address or the host address injected into the container, `host.dpanel.local`.
+To access the host, use its local network address or the host address injected into the container, `host.dpanel.local`:
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -225,10 +233,10 @@ docker run -d --name dpanel --restart=always \
  -v /home/dpanel:/dpanel dpanel/dpanel:latest
 ```
 
-## Log File
+## Rotate Log Files
 
-DPanel writes logs of warning level and above to the `/dpanel/logs/` directory during runtime. Runtime logs are managed by Docker.
-To prevent log files from becoming too large due to long-term operation, you can configure log options for the DPanel container:
+DPanel writes warning-level and higher logs to `/dpanel/logs/`; runtime logs are managed by Docker.
+To prevent log files from becoming too large, configure container log rotation:
 
 ```js
 docker run -d --name dpanel --restart=always \
@@ -240,21 +248,51 @@ docker run -d --name dpanel --restart=always \
 
 ## Enabling IPv6
 
-If your Docker environment does not have default IPv6 support configured, the standard version will not be able to forward IPv6 addresses. You can create any IPv6 network in the panel and add the panel container to that network.
+If your Docker environment does not have default IPv6 support configured, the Standard Edition will not be able to forward IPv6 addresses. You can create any IPv6 network in the panel and add the panel container to that network.
+
+## Disable Security Policy
+
+Run `docker info` to view the active security policy:
+
+```
+ runc version: v1.1.12-0-g51d5e94
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+ Kernel Version: 4.19.91-27.7.an7.x86_64
+```
+
+When the `Seccomp` security policy is enabled, updating or recreating the DPanel container may fail with a directory permission error:
+
+```text
+disk I/O error: operation not permitted
+panic: disk I/O error: operation not permitted
+```
+
+Temporarily disable the security policy with the `--security-opt` parameter:
+
+```js
+docker run -d --restart=always \
+ --name dpanel
+ --security-opt seccomp=unconfined \ // [!code focus]
+ -p 80:80 -p 443:443 -p 8807:8080  \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ -v /home/dpanel:/dpanel dpanel/dpanel:latest
+```
 
 ## Upgrade & Recreate
 
-The difference between updating and re-creating is whether to keep the directory data (/dpanel) previously mounted on the panel container. If you delete the host mount directory or re-specify the directory, the panel is re-created.
+The difference between updating and recreating is whether the configuration in the panel's mounted `/dpanel` directory is retained.
+Deleting the host mount directory or specifying a different directory recreates the panel; otherwise, it is an upgrade. [See the upgrade command](/manual/system-dpanel-upgrade).
 
-If you keep the original mount directory data and mount configuration, rebuilding the panel container means upgrading. [See the panel upgrade command](/manual/system-dpanel-upgrade)
-
-## Create dpanel-plugin-explorer container {#create-explorer-plugin}
+## Manually Create the File Explorer Plugin {#create-explorer-plugin}
 
 :::tip
 
-If you set the dpanel-plugin-explorer container tag com.dpanel.container.auto_remove=true, DPanel will automatically clean up the container after each browser is closed. If you set it to false, it will not clean up.
+When the `com.dpanel.container.auto_remove` label on the file management container is set to `true`, DPanel automatically removes the container each time the browser is closed; when set to `false`, it is retained.
 :::
 
 ```js
-docker run -it -d --name dpanel-plugin-explorer --restart always --pid host --label com.dpanel.container.title="DPanel Explorer" --label com.dpanel.container.auto_remove=false alpine
+docker run -it -d --name dpanel-plugin-explorer --restart always --pid host --label com.dpanel.container.title="DPanel File Explorer" --label com.dpanel.container.auto_remove=false alpine
 ```
