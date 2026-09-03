@@ -41,6 +41,7 @@ export STORAGE_LOCAL_PATH=/home/dpanel && dpanel server:start -f /etc/dpanel/con
 | DP_ACME_COMMAND_NAME | Override acme command path | /root/.acme/acme.sh | - |
 | DP_ACME_CONFIG_HOME | Override acme configuration directory | /root/.acme/ | - |
 | DP_SYSTEM_BASEURL | Panel access baseurl | - | > 1.9.1 |
+| DP_SYSTEM_ENTRANCE | Secure entrance path; set to `none` to disable | - | > 1.10.7 |
 | DP_LOG_CONSOLE_LEVEL | Log level info\|debug | info | > 1.10.0 |
 | DP_RUN_IN_CONTAINER | Whether to run in container | 1 | > 1.10.0 |
 | DP_DB_JOURNAL | sqlite mode WAL \| DELETE | DELETE | > 1.10.0 |

@@ -41,6 +41,7 @@ export STORAGE_LOCAL_PATH=/home/dpanel && dpanel server:start -f /etc/dpanel/con
 | DP_ACME_COMMAND_NAME | 覆盖 acme 的命令路径 | /root/.acme/acme.sh | - |
 | DP_ACME_CONFIG_HOME | 覆盖 acme 的配置目录 | /root/.acme/ | - |
 | DP_SYSTEM_BASEURL | 面板访问 baseurl | - | > 1.9.1 |
+| DP_SYSTEM_ENTRANCE | 安全入口路径，设置为 `none` 可关闭 | - | > 1.10.7 |
 | DP_LOG_CONSOLE_LEVEL | 日志级别 info\|debug | info | > 1.10.0 |
 | DP_RUN_IN_CONTAINER | 是否在容器中运行 | 1 | > 1.10.0 |
 | DP_DB_JOURNAL | sqlite 模式 WAL \| DELETE | DELETE | > 1.10.0 |

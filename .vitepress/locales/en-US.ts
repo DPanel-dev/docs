@@ -105,6 +105,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         collapsed: false,
         items: [
           { text: 'Interface Configuration', link: getLink("manual/system-basic-theme") },
+          { text: 'Secure Entrance', link: getLink("manual/system-security-entrance") },
           { text: 'Multi-Server Management', link: getLink("manual/system-env") },
           { text: 'Host Management', link: getLink("manual/system-env-host") },
           { text: 'App Store', link: getLink("manual/system-store") },

@@ -4,10 +4,10 @@
 
 执行命令时请根据当前环境修改示例代码。
 
-### 在宿主机中调用
+### 容器安装
 
 :::tip
-实际运行时，请将下方命令中的 **dpanel** 替换成你的面板容器名字
+实际运行时，请将下方命令中的 `dpanel` 替换成你的面板容器名字
 :::
 
 1. 登录服务器 ssh
@@ -15,20 +15,20 @@
 3. 根据需求执行对应的命令
 
 ```
-docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
+docker exec dpanel system:info
 ```
 
-### 计划任务与二进制调用
+### 二进制调用
 
-:::tip
-计划任务中调用时，执行容器留空或是指定为 DPanel 容器
-:::
-
-```
-/app/server/dpanel -f /app/server/config.yaml user:reset
+```shell [使用 YAML 配置文件]
+/app/server/dpanel -f /app/server/config.yaml system:info
 ```
 
-## 查看系统信息
+```shell [使用环境变量配置]
+export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/config.yaml system:info
+```
+
+## 查看系统信息 {#system:info}
 
 `system:info` 输出当前 DPanel 的运行环境、访问地址、安全入口以及管理员账号（密码脱敏）等信息。
 

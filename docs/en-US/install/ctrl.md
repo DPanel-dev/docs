@@ -4,31 +4,31 @@
 
 Please modify the example code according to the current environment when executing commands.
 
-### Call in Host Machine
+### Container Installation
 
 :::tip
-When actually running, please replace **dpanel** in the command below with your panel container name
+Replace `dpanel` in the command below with the name of your panel container.
 :::
 
-1. Login to server ssh
-2. Execute DPanel container control commands through `docker exec` command
-3. Execute corresponding commands as needed
+1. Log in to the server via SSH.
+2. Use `docker exec` to run a control command in the DPanel container.
+3. Run the command you need.
 
 ```
-docker exec dpanel /app/server/dpanel -f /app/server/config.yaml user:reset
+docker exec dpanel system:info
 ```
 
-### Scheduled Task and Binary Call
+### Binary Invocation
 
-:::tip
-When calling in a scheduled task, leave the execution container empty or specify it as the DPanel container
-:::
-
-```
-/app/server/dpanel -f /app/server/config.yaml user:reset
+```shell [Using a YAML config file]
+/app/server/dpanel -f /app/server/config.yaml system:info
 ```
 
-## View System Information
+```shell [Using environment variables]
+export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/config.yaml system:info
+```
+
+## View System Information {#system:info}
 
 `system:info` displays the current DPanel runtime environment, access address, security entrance, and administrator account (with the password masked).
 

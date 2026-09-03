@@ -194,6 +194,7 @@ HTTP_PROXY=                     # 代理（可选）
 HTTPS_PROXY=                    # 代理（可选）
 DP_DNS=                         # DNS（可选）
 DP_SYSTEM_BASEURL=              # 访问前缀（可选）
+DP_SYSTEM_ENTRANCE=             # 安全入口路径（可选，none 表示关闭）
 DP_LOG_CONSOLE_LEVEL=info       # 控制台日志级别（可选）
 DP_LOG_FILE_LEVEL=info          # 文件日志级别（可选）
 ```

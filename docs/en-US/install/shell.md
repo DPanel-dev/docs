@@ -187,6 +187,8 @@ install:
   DP_LOG_FILE_LEVEL: ""
   # Public base URL used by DPanel runtime
   DP_SYSTEM_BASEURL: ""
+  # Secure entrance path; set to none to disable
+  DP_SYSTEM_ENTRANCE: ""
   # SQLite open mode, e.g. ro rw rwc
   DP_DB_MODE: ""
   # SQLite journal mode, e.g. DELETE or WAL

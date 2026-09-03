@@ -105,6 +105,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
         collapsed: false,
         items: [
           { text: '界面配置', link: getLink("manual/system-basic-theme") },
+          { text: '安全入口', link: getLink("manual/system-security-entrance") },
           { text: '多服务端管理', link: getLink("manual/system-env") },
           { text: '宿主机管理', link: getLink("manual/system-env-host") },
           { text: '应用商店', link: getLink("manual/system-store") },
