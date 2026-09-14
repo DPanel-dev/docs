@@ -47,17 +47,38 @@ function Remove-OldInstallers {
     Get-ChildItem -Path $InstallerHomeDir -Filter "install-*" -File -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
 }
 
-function Get-ShortDigest {
-    param([string]$Digest)
+function Stop-RunningInstallers {
+    foreach ($process in Get-Process -ErrorAction SilentlyContinue) {
+        try {
+            $processPath = $process.Path
+        } catch {
+            continue
+        }
+        if ([string]::IsNullOrWhiteSpace($processPath)) {
+            continue
+        }
 
-    $value = $Digest
-    if ($value.StartsWith("sha256:")) {
-        $value = $value.Substring(7)
+        $processFile = [IO.Path]::GetFileName($processPath)
+        $processDir = [IO.Path]::GetDirectoryName($processPath)
+        $isManagedInstaller = $processFile -eq "installer.exe" -or $processFile -like "install-*.exe"
+        if (-not $isManagedInstaller -or $processDir -ne $InstallerHomeDir) {
+            continue
+        }
+
+        try {
+            Write-Log "stopping running installer process $($process.Id)"
+            Stop-Process -Id $process.Id -Force -ErrorAction Stop
+            Wait-Process -Id $process.Id -Timeout 5 -ErrorAction SilentlyContinue
+            if ($null -ne (Get-Process -Id $process.Id -ErrorAction SilentlyContinue)) {
+                Fail "failed to stop running installer process $($process.Id)"
+            }
+        } catch {
+            if ($null -eq (Get-Process -Id $process.Id -ErrorAction SilentlyContinue)) {
+                continue
+            }
+            Fail "failed to stop running installer process $($process.Id): $($_.Exception.Message)"
+        }
     }
-    if ($value.Length -gt 8) {
-        return $value.Substring(0, 8)
-    }
-    return $value
 }
 
 function Get-ArchTag {
@@ -324,14 +345,12 @@ function Extract-Installer {
         & tar -xzf $LayerFile -C $extractDir $InstallerTarPath 2>$null
     }
     if ($LASTEXITCODE -ne 0) {
-        Remove-Item -Path $OutputFile -Force -ErrorAction SilentlyContinue
         return $false
     }
 
     $relativePath = $InstallerTarPath -replace "/", [IO.Path]::DirectorySeparatorChar
     $sourcePath = Join-Path $extractDir $relativePath
     if (-not (Test-Path $sourcePath)) {
-        Remove-Item -Path $OutputFile -Force -ErrorAction SilentlyContinue
         return $false
     }
 
@@ -344,6 +363,7 @@ Require-Command "tar"
 $arch = Get-ArchTag
 $os = "windows"
 Prepare-InstallerHome
+Stop-RunningInstallers
 $imageTag = "windows-$arch"
 
 # [深度修复 2]：使用 ${} 显式包裹变量名，防止 PowerShell 在内存执行 (iex) 时将 `:` 错误解析为磁盘驱动器
@@ -352,6 +372,8 @@ $registry = Select-Registry $imageTag
 
 # [深度修复 3]：使用进程 ID ($PID) 建立独立的临时目录，防止用户并发/双击多次运行时因目录占用导致的竞态锁死
 $tempDir = Join-Path $InstallerHomeDir "tmp_$PID"
+$installerPath = Join-Path $InstallerHomeDir "installer.exe"
+$envPath = Join-Path $InstallerHomeDir ".env"
 
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
@@ -372,41 +394,61 @@ try {
     if ($null -eq $firstLayer -or [string]::IsNullOrWhiteSpace($firstLayer.digest)) {
         Fail "failed to resolve image layer digest"
     }
-
-    $installerPath = Join-Path $InstallerHomeDir ("install-" + (Get-ShortDigest $firstLayer.digest) + ".exe")
-    
-    Write-Log "downloading installer to $installerPath"
-
-    if (Test-Path $installerPath) {
-        Remove-Item -Path (Join-Path $InstallerHomeDir "manifest.json") -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path $layerFile -Force -ErrorAction SilentlyContinue
-        & $installerPath @args
-        exit $LASTEXITCODE
+    $selectedDigest = $firstLayer.digest
+    $storedHash = ""
+    if (Test-Path $envPath) {
+        foreach ($line in Get-Content -Path $envPath) {
+            if ($line -match '^INSTALLER_HASH=(.*)$') {
+                $storedHash = $matches[1].Trim()
+                if ($storedHash.Length -ge 2) {
+                    $firstChar = $storedHash.Substring(0, 1)
+                    $lastChar = $storedHash.Substring($storedHash.Length - 1, 1)
+                    if (($firstChar -eq '"' -and $lastChar -eq '"') -or ($firstChar -eq "'" -and $lastChar -eq "'")) {
+                        $storedHash = $storedHash.Substring(1, $storedHash.Length - 2)
+                    }
+                }
+                break
+            }
+        }
     }
 
     Remove-OldInstallers
-    $installed = $false
-    foreach ($layer in $manifest.layers) {
-        if ($null -eq $layer -or [string]::IsNullOrWhiteSpace($layer.digest)) {
-            continue
+    if ($storedHash -eq $selectedDigest -and (Test-Path $installerPath -PathType Leaf)) {
+        Write-Log "using cached installer $installerPath"
+    } else {
+        Write-Log "downloading installer to $installerPath"
+        $installed = $false
+        foreach ($layer in $manifest.layers) {
+            if ($null -eq $layer -or [string]::IsNullOrWhiteSpace($layer.digest)) {
+                continue
+            }
+
+            Download-Layer $registry $imageTag $layer.digest $layerFile
+            if (Extract-Installer $layerFile $installerPath $tempDir) {
+                $installed = $true
+                break
+            }
         }
 
-        Download-Layer $registry $imageTag $layer.digest $layerFile
-        if (Extract-Installer $layerFile $installerPath $tempDir) {
-            $installed = $true
-            break
+        if (-not $installed) {
+            Fail "failed to extract $InstallerTarPath from image layers"
         }
     }
 
-    if (-not $installed) {
-        Fail "failed to extract $InstallerTarPath from image layers"
-    }
-
-    Remove-Item -Path (Join-Path $InstallerHomeDir "manifest.json") -Force -ErrorAction SilentlyContinue
-    Remove-Item -Path $layerFile -Force -ErrorAction SilentlyContinue
 } finally {
-    # 退出前安全清理属于当前进程的临时目录
     Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-& $installerPath @args
+$previousHash = $env:INSTALLER_HASH
+try {
+    $env:INSTALLER_HASH = $selectedDigest
+    & $installerPath @args
+    $installerExitCode = $LASTEXITCODE
+} finally {
+    if ($null -eq $previousHash) {
+        Remove-Item Env:INSTALLER_HASH -ErrorAction SilentlyContinue
+    } else {
+        $env:INSTALLER_HASH = $previousHash
+    }
+}
+exit $installerExitCode

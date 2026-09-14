@@ -36,10 +36,41 @@ cleanup_old_installers() {
   find "$INSTALLER_HOME_DIR" -maxdepth 1 -type f -name 'install-*' -exec rm -f {} +
 }
 
-digest_short_name() {
-  local digest="$1"
-  digest="${digest#sha256:}"
-  printf '%.8s\n' "$digest"
+stop_running_installers() {
+  local pid command attempt
+
+  while read -r pid command; do
+    [ -n "$pid" ] || continue
+    case "$command" in
+      "$INSTALLER_HOME_DIR/installer"|"$INSTALLER_HOME_DIR/installer "*|"$INSTALLER_HOME_DIR"/install-* )
+        log "stopping running installer process ${pid}"
+        if ! kill "$pid" 2>/dev/null; then
+          if kill -0 "$pid" 2>/dev/null; then
+            fail "failed to stop running installer process ${pid}"
+          fi
+          continue
+        fi
+        attempt=0
+        while kill -0 "$pid" 2>/dev/null && [ "$attempt" -lt 50 ]; do
+          sleep 0.1
+          attempt=$((attempt + 1))
+        done
+        if kill -0 "$pid" 2>/dev/null; then
+          kill -9 "$pid" 2>/dev/null || fail "failed to stop running installer process ${pid}"
+        fi
+        attempt=0
+        while kill -0 "$pid" 2>/dev/null && [ "$attempt" -lt 10 ]; do
+          sleep 0.1
+          attempt=$((attempt + 1))
+        done
+        if kill -0 "$pid" 2>/dev/null; then
+          fail "failed to stop running installer process ${pid}"
+        fi
+        ;;
+    esac
+  done <<EOF
+$(ps -ax -o pid= -o command=)
+EOF
 }
 
 detect_os() {
@@ -370,18 +401,21 @@ extract_installer() {
 main() {
   require_command curl
   require_command gzip
+  require_command ps
   require_command tar
 
-  local os arch image_tag registry installer_path manifest_file layer_file digests found_installer short_digest selected_digest
+  local os arch image_tag registry installer_path env_path stored_hash manifest_file layer_file staging_file digests found_installer selected_digest
   os="$(detect_os)"
   arch="$(detect_arch)"
   prepare_installer_home
+  stop_running_installers
   image_tag="${os}-${arch}"
   log "probing registries for ${IMAGE_REPO}:${image_tag}"
   registry="$(select_registry "$image_tag")"
 
   manifest_file="${INSTALLER_HOME_DIR}/manifest.json"
   layer_file="${INSTALLER_HOME_DIR}/layer.tar"
+  staging_file="${INSTALLER_HOME_DIR}/installer.new"
 
   log "selected registry: ${registry}"
   log "selected image: ${IMAGE_REPO}:${image_tag}"
@@ -392,12 +426,17 @@ main() {
 
   selected_digest="$(printf '%s\n' "$digests" | sed -n '1p')"
   [ -n "$selected_digest" ] || fail "failed to resolve image layer digest"
-  short_digest="$(digest_short_name "$selected_digest")"
-  installer_path="${INSTALLER_HOME_DIR}/install-${short_digest}"
-  if [ -f "$installer_path" ]; then
+  installer_path="${INSTALLER_HOME_DIR}/installer"
+  env_path="${INSTALLER_HOME_DIR}/.env"
+  stored_hash=""
+  if [ -f "$env_path" ]; then
+    stored_hash="$(awk -F= '$1 == "INSTALLER_HASH" { value = substr($0, index($0, "=") + 1); sub(/\r$/, "", value); if (value ~ /^".*"$/ || value ~ /^\047.*\047$/) value = substr(value, 2, length(value) - 2); print value; exit }' "$env_path")"
+  fi
+  if [ "$stored_hash" = "$selected_digest" ] && [ -x "$installer_path" ]; then
     log "using cached installer ${installer_path}"
+    cleanup_old_installers
     rm -f "$manifest_file" "$layer_file"
-    exec "$installer_path" "$@"
+    INSTALLER_HASH="$selected_digest" exec "$installer_path" "$@"
   fi
 
   log "downloading installer to ${installer_path}"
@@ -406,7 +445,7 @@ main() {
   while IFS= read -r digest; do
     [ -n "$digest" ] || continue
     download_layer "$registry" "$image_tag" "$digest" "$layer_file"
-    if extract_installer "$layer_file" "$installer_path" 2>/dev/null; then
+    if extract_installer "$layer_file" "$staging_file" 2>/dev/null; then
       found_installer="1"
       break
     fi
@@ -415,10 +454,11 @@ $digests
 EOF
 
   [ -n "$found_installer" ] || fail "failed to extract ${INSTALLER_TAR_PATH} from image layers"
+  chmod +x "$staging_file"
+  mv -f "$staging_file" "$installer_path"
   rm -f "$manifest_file" "$layer_file"
-  chmod +x "$installer_path"
 
-  exec "$installer_path" "$@"
+  INSTALLER_HASH="$selected_digest" exec "$installer_path" "$@"
 }
 
 main "$@"
