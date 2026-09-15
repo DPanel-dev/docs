@@ -7,33 +7,49 @@
 ### 容器安装
 
 :::tip
-实际运行时，请将下方命令中的 `dpanel` 替换成你的面板容器名字
+请将下方命令中的 `dpanel` 替换成你的面板容器名字
 :::
+
+#### 在宿主机执行
 
 1. 登录服务器 ssh
 2. 通过 `docker exec` 命令执行 DPanel 容器中的控制命令
-3. 根据需求执行对应的命令
 
 ```
 docker exec dpanel system:info
 ```
 
+#### 在操作台 / 容器内部执行
+
+如果可以登录 DPanel 面板可以在操作台中的 `本地 Shell` 执行命令
+
+```
+dpanel system:info
+```
+
 ### 二进制调用
 
-```shell [使用 YAML 配置文件]
-/app/server/dpanel -f /app/server/config.yaml system:info
+:::tip
+旧版本没有 service.sh 脚本，可使用 `安装器` 重新生成。飞牛系统请更新 DPanel 到最新版。
+:::
+
+```
+/root/dpanel-5/service.sh system:info
 ```
 
-```shell [使用环境变量配置]
-export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/config.yaml system:info
+#### 飞牛系统
+
 ```
+/vol1/@appcenter/dpanel/server/service.sh system:info
+```
+
 
 ## 查看系统信息 {#system:info}
 
 `system:info` 输出当前 DPanel 的运行环境、访问地址、安全入口以及管理员账号（密码脱敏）等信息。
 
 ```
-./dpanel -f config.yaml system:info
+dpanel -f config.yaml system:info
 ```
 
 ## 重置管理员用户
@@ -43,13 +59,13 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 使用随机密码重置用户
 
 ```
-./dpanel -f config.yaml user:reset
+dpanel -f config.yaml user:reset
 ```
 
 ### 重置密码
 
 ```
-./dpanel -f config.yaml user:reset --password 123456
+dpanel -f config.yaml user:reset --password 123456
 ```
 
 ### 重置用户名
@@ -57,7 +73,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 重置用户名时，必须指定密码
 
 ```
-./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+dpanel -f config.yaml user:reset user:reset --password 123456 --username root
 ```
 
 ## 设置安全入口
@@ -69,7 +85,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--entrance 指定安全访问地址，为空为随机生成
 
 ```
-./dpanel -f config.yaml system:reset --entrance 
+dpanel -f config.yaml system:reset --entrance 
 ```
 
 ## 系统清理与重置
@@ -78,7 +94,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--online-user 使所有在线用户失效
 
 ```
-./dpanel -f config.yaml system:reset --cache --online-user
+dpanel -f config.yaml system:reset --cache --online-user
 ```
 
 ## 更新应用商店数据
@@ -86,7 +102,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--name 指定应用商店名称
 
 ```
-./dpanel -f config.yaml store:sync --name test
+dpanel -f config.yaml store:sync --name test
 ```
 
 ### 返回
@@ -103,7 +119,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 控制命令每次执行都会跳过已有检查缓存，直接查询远程仓库。
 
 ```
-./dpanel -f config.yaml container:upgrade --name containerName --docker-env local
+dpanel -f config.yaml container:upgrade --name containerName --docker-env local
 ```
 
 ### 返回
@@ -123,7 +139,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--image-tag 指定新的镜像名称，此镜像一定要与容器的镜像完全兼容
 
 ```
-./dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name containerName 
+dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name containerName 
 ```
 
 ### 返回
@@ -145,7 +161,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--backup-volume 指定备份的挂载目录
 
 ```
-./dpanel -f config.yaml container:backup --name 容器名称 --enable-image --enable-volume
+dpanel -f config.yaml container:backup --name 容器名称 --enable-image --enable-volume
 ```
 
 ### 返回
@@ -162,7 +178,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--pull-image 指定拉取镜像方式 dpanel command
 
 ```
-./dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
+dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
 ```
 
 ### 返回
@@ -180,7 +196,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--channel 通知的方式 email 
 
 ```
-./dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
+dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
 ```
 
 ### 返回
@@ -199,7 +215,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--keep 缓存生命周期（秒），默认为 -1（直到主程序重启）
 
 ```
-./dpanel -f config.yaml system:cache --key test1 --value 123
+dpanel -f config.yaml system:cache --key test1 --value 123
 ```
 
 ### 返回
@@ -217,7 +233,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 - \--ignore-path-prefix 跳过备份的目录前缀，--ignore-path-prefix storage/temp 跳过 storage/temp 开头的目录或是文件
 
 ```
-./dpanel -f config.yaml system:backup
+dpanel -f config.yaml system:backup
 ```
 
 ### 返回
