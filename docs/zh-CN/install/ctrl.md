@@ -49,7 +49,7 @@ dpanel system:info
 `system:info` 输出当前 DPanel 的运行环境、访问地址、安全入口以及管理员账号（密码脱敏）等信息。
 
 ```
-dpanel -f config.yaml system:info
+dpanel system:info
 ```
 
 ## 重置管理员用户
@@ -59,13 +59,13 @@ dpanel -f config.yaml system:info
 使用随机密码重置用户
 
 ```
-dpanel -f config.yaml user:reset
+dpanel user:reset
 ```
 
 ### 重置密码
 
 ```
-dpanel -f config.yaml user:reset --password 123456
+dpanel user:reset --password 123456
 ```
 
 ### 重置用户名
@@ -73,7 +73,7 @@ dpanel -f config.yaml user:reset --password 123456
 重置用户名时，必须指定密码
 
 ```
-dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+dpanel user:reset user:reset --password 123456 --username root
 ```
 
 ## 设置安全入口
@@ -85,7 +85,7 @@ dpanel -f config.yaml user:reset user:reset --password 123456 --username root
 - \--entrance 指定安全访问地址，为空为随机生成
 
 ```
-dpanel -f config.yaml system:reset --entrance 
+dpanel system:reset --entrance 
 ```
 
 ## 系统清理与重置
@@ -94,7 +94,7 @@ dpanel -f config.yaml system:reset --entrance
 - \--online-user 使所有在线用户失效
 
 ```
-dpanel -f config.yaml system:reset --cache --online-user
+dpanel system:reset --cache --online-user
 ```
 
 ## 更新应用商店数据
@@ -102,7 +102,7 @@ dpanel -f config.yaml system:reset --cache --online-user
 - \--name 指定应用商店名称
 
 ```
-dpanel -f config.yaml store:sync --name test
+dpanel store:sync --name test
 ```
 
 ### 返回
@@ -119,7 +119,7 @@ dpanel -f config.yaml store:sync --name test
 控制命令每次执行都会跳过已有检查缓存，直接查询远程仓库。
 
 ```
-dpanel -f config.yaml container:upgrade --name containerName --docker-env local
+dpanel container:upgrade --name containerName --docker-env local
 ```
 
 ### 返回
@@ -139,7 +139,7 @@ dpanel -f config.yaml container:upgrade --name containerName --docker-env local
 - \--image-tag 指定新的镜像名称，此镜像一定要与容器的镜像完全兼容
 
 ```
-dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name containerName 
+dpanel container:upgrade --upgrade --disable-bak --name containerName 
 ```
 
 ### 返回
@@ -161,7 +161,7 @@ dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name container
 - \--backup-volume 指定备份的挂载目录
 
 ```
-dpanel -f config.yaml container:backup --name 容器名称 --enable-image --enable-volume
+dpanel container:backup --name 容器名称 --enable-image --enable-volume
 ```
 
 ### 返回
@@ -178,7 +178,7 @@ dpanel -f config.yaml container:backup --name 容器名称 --enable-image --enab
 - \--pull-image 指定拉取镜像方式 dpanel command
 
 ```
-dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
+dpanel compose:deploy --name 任务名称 --environment name=test --environment age=10 --pull-image dpanel
 ```
 
 ### 返回
@@ -196,7 +196,7 @@ dpanel -f config.yaml compose:deploy --name 任务名称 --environment name=test
 - \--channel 通知的方式 email 
 
 ```
-dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
+dpanel system:notice  --content test123 --target 914417117@qq.com --subject 我来测试一下
 ```
 
 ### 返回
@@ -215,7 +215,7 @@ dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com
 - \--keep 缓存生命周期（秒），默认为 -1（直到主程序重启）
 
 ```
-dpanel -f config.yaml system:cache --key test1 --value 123
+dpanel system:cache --key test1 --value 123
 ```
 
 ### 返回
@@ -233,7 +233,7 @@ dpanel -f config.yaml system:cache --key test1 --value 123
 - \--ignore-path-prefix 跳过备份的目录前缀，--ignore-path-prefix storage/temp 跳过 storage/temp 开头的目录或是文件
 
 ```
-dpanel -f config.yaml system:backup
+dpanel system:backup
 ```
 
 ### 返回

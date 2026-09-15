@@ -10,22 +10,37 @@ Please modify the example code according to the current environment when executi
 Replace `dpanel` in the command below with the name of your panel container.
 :::
 
+#### Run on the Host
+
 1. Log in to the server via SSH.
 2. Use `docker exec` to run a control command in the DPanel container.
-3. Run the command you need.
 
 ```
 docker exec dpanel system:info
 ```
 
-### Binary Invocation
+#### Run in the Console / Container
 
-```shell [Using a YAML config file]
-/app/server/dpanel -f /app/server/config.yaml system:info
+If you can log in to DPanel, run the command in **Console > Local Shell**.
+
+```
+dpanel system:info
 ```
 
-```shell [Using environment variables]
-export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/config.yaml system:info
+### Binary Invocation
+
+:::tip
+Older versions do not include the `service.sh` script. You can regenerate it with the installer. On fnOS, update DPanel to the latest version.
+:::
+
+```
+/root/dpanel-5/service.sh system:info
+```
+
+#### fnOS
+
+```
+/vol1/@appcenter/dpanel/server/service.sh system:info
 ```
 
 ## View System Information {#system:info}
@@ -33,7 +48,7 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 `system:info` displays the current DPanel runtime environment, access address, security entrance, and administrator account (with the password masked).
 
 ```
-./dpanel -f config.yaml system:info
+dpanel system:info
 ```
 
 ## Reset Admin User
@@ -43,13 +58,13 @@ export STORAGE_LOCAL_PATH=/dpanel/data && /app/server/dpanel -f /app/server/conf
 Use a random password to reset user
 
 ```
-./dpanel -f config.yaml user:reset
+dpanel user:reset
 ```
 
 ### Reset Password
 
 ```
-./dpanel -f config.yaml user:reset --password 123456
+dpanel user:reset --password 123456
 ```
 
 ### Reset Username
@@ -57,7 +72,7 @@ Use a random password to reset user
 When resetting username, must specify password
 
 ```
-./dpanel -f config.yaml user:reset user:reset --password 123456 --username root
+dpanel user:reset user:reset --password 123456 --username root
 ```
 
 ## Set the Security Entrance
@@ -69,7 +84,7 @@ Set `--entrance` to `none` to disable access through the security entrance.
 - `--entrance` specifies the security entrance. Leave it empty to generate a random entrance.
 
 ```
-./dpanel -f config.yaml system:reset --entrance
+dpanel system:reset --entrance
 ```
 
 ## System Cleanup and Reset
@@ -78,7 +93,7 @@ Set `--entrance` to `none` to disable access through the security entrance.
 - `--online-user` invalidates all online users.
 
 ```
-./dpanel -f config.yaml system:reset --cache --online-user
+dpanel system:reset --cache --online-user
 ```
 
 ## Update App Store Data
@@ -86,7 +101,7 @@ Set `--entrance` to `none` to disable access through the security entrance.
 - --name Specify app store name
 
 ```
-./dpanel -f config.yaml store:sync --name test
+dpanel store:sync --name test
 ```
 
 ### Return
@@ -103,7 +118,7 @@ Set `--entrance` to `none` to disable access through the security entrance.
 Each command execution bypasses the existing check cache and queries the remote registry directly.
 
 ```
-./dpanel -f config.yaml container:upgrade --name containerName --docker-env local
+dpanel container:upgrade --name containerName --docker-env local
 ```
 
 ### Return
@@ -123,7 +138,7 @@ Each command execution bypasses the existing check cache and queries the remote 
 - --image-tag Specify new image name, this image must be fully compatible with the container's image
 
 ```
-./dpanel -f config.yaml container:upgrade --upgrade --disable-bak --name containerName
+dpanel container:upgrade --upgrade --disable-bak --name containerName
 ```
 
 ### Return
@@ -145,7 +160,7 @@ Each command execution bypasses the existing check cache and queries the remote 
 - --backup-volume Specify the mount directory to backup
 
 ```
-./dpanel -f config.yaml container:backup --name ContainerName --enable-image --enable-volume
+dpanel container:backup --name ContainerName --enable-image --enable-volume
 ```
 
 ### Return
@@ -162,7 +177,7 @@ Each command execution bypasses the existing check cache and queries the remote 
 - --pull-image Specify image pull method dpanel command
 
 ```
-./dpanel -f config.yaml compose:deploy --name TaskName --environment name=test --environment age=10 --pull-image dpanel
+dpanel compose:deploy --name TaskName --environment name=test --environment age=10 --pull-image dpanel
 ```
 
 ### Return
@@ -180,7 +195,7 @@ Each command execution bypasses the existing check cache and queries the remote 
 - --channel Notification method email
 
 ```
-./dpanel -f config.yaml system:notice  --content test123 --target 914417117@qq.com --subject Test notification
+dpanel system:notice  --content test123 --target 914417117@qq.com --subject Test notification
 ```
 
 ### Return
@@ -199,7 +214,7 @@ Using the cache data storage function, you can cache data or detect flag bits in
 - --keep Cache lifecycle (seconds), default is -1 (until main program restarts)
 
 ```
-./dpanel -f config.yaml system:cache --key test1 --value 123
+dpanel system:cache --key test1 --value 123
 ```
 
 ### Return
@@ -217,7 +232,7 @@ Backup DPanel panel data
 - --ignore-path-prefix Skip directory prefix to backup, --ignore-path-prefix storage/temp skips directories or files starting with storage/temp
 
 ```
-./dpanel -f config.yaml system:backup
+dpanel system:backup
 ```
 
 ### Return
