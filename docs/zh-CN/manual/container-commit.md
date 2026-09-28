@@ -118,3 +118,28 @@ root@donknap-1:~# docker info | grep -i runtime
  Runtimes: io.containerd.runc.v2 runc sysbox-runc
  Default Runtime: runc
 ```
+
+
+### 兼容配置
+
+因为 sysbox 并没有支持新版 docker 的一些新特征，所以可能会报错一些错误，在安装 sysbox-runc 后可以在 `daemon.json` 中增加以下配置，禁用一些新特性即可。
+
+```js
+{
+    "runtimes": {
+        "sysbox-runc": {
+            "path": "/usr/bin/sysbox-runc"
+        }
+    },
+    "bip": "172.20.0.1/16",
+    "default-address-pools": [
+        {
+            "base": "172.25.0.0/16",
+            "size": 24
+        }
+    ],
+    "features": {                                    // [!code focus]
+        "time-namespaces": false                     // [!code focus]
+    }                                                // [!code focus]
+}
+```
