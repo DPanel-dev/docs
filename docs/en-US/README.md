@@ -26,7 +26,7 @@ https://www.youtube.com/@dpanel
 
 ## Preview
 
-![home.png](https://cdn.w7.cc/dpanel/home.png?t=1)
+![home.png](https://cdn.w7.cc/dpanel/home-en.png?t=2)
 
 #### Container
 ![app-list.png](https://cdn.w7.cc/dpanel/app-list.png?t=1)
