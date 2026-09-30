@@ -34,7 +34,7 @@ https://space.bilibili.com/346309066
 <img src="https://cdn.w7.cc/dpanel/qq.png" width="300" />
 
 ## 界面预览
-![home.png](https://cdn.w7.cc/dpanel/home.png?t=2)
+![home.png](https://cdn.w7.cc/dpanel/home.png?t=3)
 #### 容器管理
 ![app-list.png](https://cdn.w7.cc/dpanel/app-list.png?t=1)
 #### 文件管理
