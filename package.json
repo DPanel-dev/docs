@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.10",
-    "vitepress": "^1.6.3"
+    "vitepress": "^2.0.0-alpha.20"
   },
   "dependencies": {
     "medium-zoom": "^1.1.0"

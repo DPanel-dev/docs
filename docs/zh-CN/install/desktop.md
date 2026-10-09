@@ -5,20 +5,103 @@
 DPanel Desktop 基于 [Wails V3](https://wails.io/) 实现。
 本质是一个 CLI 程序管理器，通过 GUI 可视化界面管理主程序的环境变量、运行程序、接管控制台日志输出。
 
-在 Windows 系统中，可不再受 Docker 环境束缚，双击程序即可运行 DPanel 面板。
+在 Windows 和 macOS 系统中，可不再受 Docker 环境束缚，打开程序即可运行 DPanel 面板。
 可简单、快速地使用本地 DPanel 面板的【多服务端功能】管理本地、内网、公网的 Docker 主机。
 
 即开即用，随关随停。实现了对服务器的零侵入和零占用，杜绝了面板产生的任何安全风险。
 通过 DPanel Desktop 还可将其他基于 CLI 的程序像 DPanel 一样方便地运行起来。
 
-## 下载地址
+## 安装
+
+### 下载安装
+
+#### Windows
 
 :::tip
-DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 docker-compose.exe。
+DPanel Desktop Installer 安装包会默认包含 `docker.exe` `docker-compose.exe` 命令
 :::
 
 - [DPanel Desktop 安装版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-installer.exe)
 - [DPanel Desktop 绿色版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-portable.zip)
+
+#### MacOS
+
+:::tip
+MacOS 需要自行安装 `docker``docker compose` `docker buildx` 命令
+:::
+
+- [DPanel Desktop CE（Apple 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-ce-darwin-arm64.app.zip)
+- [DPanel Desktop CE（Intel 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-ce-darwin-amd64.app.zip)
+- [DPanel Desktop PE（Apple 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-pe-darwin-arm64.app.zip)
+- [DPanel Desktop PE（Intel 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-pe-darwin-amd64.app.zip)
+
+### Homebrew
+
+```shell
+brew tap DPanel-dev/homebrew https://github.com/DPanel-dev/homebrew.git && brew trust DPanel-dev/homebrew
+```
+
+:::code-group
+
+```shell [社区版]
+brew install --cask DPanel-dev/homebrew/dpanel 
+```
+
+```shell [专业版]
+brew install --cask DPanel-dev/homebrew/dpanel-pe
+```
+:::
+
+
+## 数据
+
+运行时的数据存放于 `/用户目录/.dpanel/` 下，目录下包含程序运行的配置文件 `setting.json` 以及 `DPanel` 主程序。
+
+### setting.json
+
+:::tip
+你也可以参考 `DPanel` 程序的配置扩展使用其它 `CLI` 程序
+::: 
+
+```json
+{
+  "Apps": [
+    {
+      "HomeUrl": "${HOME_URL}:${APP_SERVER_PORT}",
+      "Name": "dpanel",
+      "RunOption": {
+        "AutoLaunch": true,
+        "Environment": [
+          "APP_SERVER_PORT=8086",
+          "HOME_URL=http://127.0.0.1",
+          "STORAGE_LOCAL_PATH=${DP_HOME_DIR}/dpanel"
+        ],
+        "LogMaxLine": 1000,
+        "StartCommand": "./dpanel server:start",
+        "StopCommand": "",
+        "WorkDir": "./apps/dpanel"
+      },
+      "Setting": {
+        "Environment": {
+          "APP_SERVER_PORT": {
+            "Description": "服务运行端口"
+          },
+          "HOME_URL": {
+            "Description": "访问地址"
+          },
+          "STORAGE_LOCAL_PATH": {
+            "Description": "数据存储目录"
+          }
+        }
+      }
+    }
+  ],
+  "System": {
+    "CloseWindowHide": false,
+    "Theme": "light"
+  }
+}
+```
 
 ## 预览
 
@@ -36,64 +119,18 @@ DPanel Desktop Installer 安装包会默认包含 dpanel.exe、 docker.exe 及 d
 
 Windows 10 及以上版本默认会安装 WebView2 运行时，如系统未包含相关组件，请通过 [Microsoft Edge WebView2](https://developer.microsoft.com/zh-cn/Microsoft-edge/webview2) 下载。
 
-### dpanel.exe
+### Docker CLI、Compose 与 Buildx
 
-DPanel Desktop 运行时需要调用 DPanel 主程序，通过 [Releases](https://github.com/donknap/dpanel/releases) 页面下载 dpanel.exe 程序。
-后续升级时，将 dpanel.exe 覆盖即可。
+#### Windows
 
-### docker.exe & docker-compose.exe
+DPanel 的 Docker 功能需要 Docker CLI、Compose 和 Buildx。Windows 安装包已包含 `docker.exe` 和 `docker-compose.exe`；如未安装 Docker Desktop，还需从 [Buildx Releases](https://github.com/docker/buildx/releases) 安装 Buildx 插件。需要单独下载客户端时，可使用 [Docker CLI](https://download.docker.com/win/static/stable/x86_64/) 和 [Compose Releases](https://github.com/docker/compose/releases)。
 
-DPanel 面板会调用 docker 命令及 docker-compose 命令，本机未安装 Docker Desktop 时将不包含相关命令。
-可通过 [docker-cli](https://download.docker.com/win/static/stable/x86_64/) 和 [docker-compose-cli](https://github.com/docker/compose/releases) 下载。
 
-## 配置文件 setting.json
+#### MacOS
 
-```json
-{
-  "Apps": [
-    {
-      "HomeUrl": "${HOME_URL}:${APP_SERVER_PORT}",
-      "Name": "dpanel",
-      "RunOption": {
-        "AutoLaunch": true,
-        "Environment": [
-          "APP_SERVER_PORT=9999",
-          "HOME_URL=http://127.0.0.1",
-          "STORAGE_LOCAL_PATH=${DP_HOME_DIR}\\dpanel"
-        ],
-        "LogMaxLine": 1000,
-        "StartCommand": "./dpanel server:start",
-        "StopCommand": "",
-        "WorkDir": ".\\apps\\dpanel"
-      },
-      "Setting": {
-        "Environment": {
-          "APP_SERVER_PORT": {
-            "Description": "服务运行端口"
-          },
-          "HOME_URL": {
-            "Description": "访问地址"
-          },
-          "STORAGE_LOCAL_PATH": {
-            "Description": "数据存储目录"
-          }
-        }
-      }
-    },
-    {
-      "Name": "xray",
-      "RunOption": {
-        "LogMaxLine": 1000,
-        "StartCommand": "xray",
-        "StopCommand": "",
-        "WorkDir": ".\\apps\\Xray-windows-64"
-      }
-    }
-  ],
-  "System": {
-    "AutoLaunch": false,
-    "CloseWindowHide": false,
-    "Theme": "light"
-  }
-}
+可通过 Homebrew 安装：
+
+```shell
+brew install docker docker-compose docker-buildx
 ```
+
