@@ -51,7 +51,7 @@ Thank you for your support and love.
         <td>✅</td>
       </tr>
       <tr>
-        <td>Container Check upgrade, Quick upgrade</td>
+        <td>Container update checks, quick upgrades, batch checks and upgrades</td>
         <td>✅</td>
         <td>✅</td>
         <td>✅</td>
@@ -135,7 +135,7 @@ Thank you for your support and love.
         <td>✅</td>
       </tr>
       <tr>
-        <td>Container Import snapshot file</td>
+        <td>Import and download container snapshot files</td>
         <td> - </td>
         <td>✅</td>
         <td>✅</td>
@@ -159,7 +159,7 @@ Thank you for your support and love.
         <td>✅</td>
       </tr>
       <tr>
-        <td>Check upgrade with cron</td>
+        <td>Scheduled container checks, rebuilds or upgrades, with target filters and execution logs</td>
         <td> - </td>
         <td>✅</td>
         <td>✅</td>
@@ -178,6 +178,18 @@ Thank you for your support and love.
       </tr>
       <tr>
         <td>Login 2FA</td>
+        <td>-</td>
+        <td>✅</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Custom default page after login</td>
+        <td>-</td>
+        <td>✅</td>
+        <td>✅</td>
+      </tr>
+      <tr>
+        <td>Passkey login and credential management</td>
         <td>-</td>
         <td>✅</td>
         <td>✅</td>
