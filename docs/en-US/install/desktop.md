@@ -75,7 +75,9 @@ scoop install extras/dpanel-pe
 
 Runtime data is stored in `${DP_HOME_DIR}/dpanel`. By default, `DP_HOME_DIR` points to `~/.dpanel` in the user's home directory, which also contains `setting.json`.
 
-For the Windows portable package, `DP_HOME_DIR` points into the application directory.
+For the Windows portable package, `DP_HOME_DIR` points to `data` under the application directory.
+
+The portable package reads `setting.json` beside the executable by default. If `DP_HOME_DIR` is set before launch, every installation reads `setting.json` from that directory.
 
 ### setting.json
 

@@ -73,7 +73,9 @@ scoop install extras/dpanel-pe
 
 运行时的数据存放于 `${DP_HOME_DIR}/dpanel` 目录中，默认情况此环境变量指向 `/用户目录/.dpanel/` 目录，目录下包含程序运行的配置文件 `setting.json` 。
 
-Windows 的便携绿色版，则会将 `${DP_HOME_DIR}` 此环境变量指向到程序的运行目录中。
+Windows 的便携绿色版，则会将 `${DP_HOME_DIR}` 此环境变量指向程序运行的目录中 `/程序运行目录/data/`。
+
+绿色版的 `setting.json` 默认位于程序目录；启动前设置 `DP_HOME_DIR` 后，各安装方式都从指定目录读取 `setting.json`。
 
 ### setting.json
 
@@ -166,4 +168,3 @@ DPanel 的 Docker 功能需要 Docker CLI、Compose 和 Buildx。Windows 安装�
 ```shell
 brew install docker docker-compose docker-buildx
 ```
-
