@@ -18,11 +18,10 @@ DPanel Desktop 基于 [Wails V3](https://wails.io/) 实现。
 #### Windows
 
 :::tip
-DPanel Desktop Installer 安装包会默认包含 `docker.exe` `docker-compose.exe` 命令
+DPanel Desktop 绿色版包含 `docker.exe` 和 `docker-compose.exe` 命令。
 :::
 
-- [DPanel Desktop 安装版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-installer.exe)
-- [DPanel Desktop 绿色版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-portable.zip)
+- [DPanel Desktop CE 绿色版](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-portable.zip)
 
 #### MacOS
 
@@ -30,10 +29,9 @@ DPanel Desktop Installer 安装包会默认包含 `docker.exe` `docker-compose.e
 MacOS 需要自行安装 `docker``docker compose` `docker buildx` 命令
 :::
 
-- [DPanel Desktop CE（Apple 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-ce-darwin-arm64.app.zip)
-- [DPanel Desktop CE（Intel 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-ce-darwin-amd64.app.zip)
-- [DPanel Desktop PE（Apple 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-pe-darwin-arm64.app.zip)
-- [DPanel Desktop PE（Intel 芯片）](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-pe-darwin-amd64.app.zip)
+- [DPanel Desktop CE（Apple 芯片）](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-darwin-arm64.app.zip)
+
+Windows 安装版、macOS Intel 版及 PE 版等，请在 [更多版本（Release 页面）](https://github.com/donknap/dpanel/releases) 中下载。
 
 ### Homebrew
 
