@@ -112,6 +112,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: '应用商店', link: getLink("manual/system-store") },
           { text: '更新面板', link: getLink("manual/system-dpanel-upgrade") },
           { text: '迁移面板', link: getLink("manual/system-dpanel-migrate") },
+          { text: '系统插件', link: getLink("manual/system-plugin") },
         ]
       },
       {
