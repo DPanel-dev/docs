@@ -54,9 +54,28 @@ brew install --cask DPanel-dev/homebrew/dpanel-pe
 ```
 :::
 
+### Scoop
+
+```shell
+scoop bucket add extras
+```
+
+:::code-group
+
+```shell [Community Edition]
+scoop install extras/dpanel
+```
+
+```shell [Professional Edition]
+scoop install extras/dpanel-pe
+```
+:::
+
 ## Data
 
-Runtime data is stored under `~/.dpanel/` in your home directory. This directory contains the `setting.json` configuration file and the DPanel executable.
+Runtime data is stored in `${DP_HOME_DIR}/dpanel`. By default, `DP_HOME_DIR` points to `~/.dpanel` in the user's home directory, which also contains `setting.json`.
+
+For the Windows portable package, `DP_HOME_DIR` points into the application directory.
 
 ### setting.json
 
@@ -67,40 +86,55 @@ You can use the DPanel configuration as a reference to add other CLI programs.
 ```json
 {
   "Apps": [
-    {
-      "HomeUrl": "${HOME_URL}:${APP_SERVER_PORT}",
-      "Name": "dpanel",
-      "RunOption": {
-        "AutoLaunch": true,
-        "Environment": [
-          "APP_SERVER_PORT=8086",
-          "HOME_URL=http://127.0.0.1",
-          "STORAGE_LOCAL_PATH=${DP_HOME_DIR}/dpanel"
-        ],
-        "LogMaxLine": 1000,
-        "StartCommand": "./dpanel server:start",
-        "StopCommand": "",
-        "WorkDir": "./apps/dpanel"
-      },
-      "Setting": {
-        "Environment": {
-          "APP_SERVER_PORT": {
-            "Description": "Service port"
-          },
-          "HOME_URL": {
-            "Description": "Access URL"
-          },
-          "STORAGE_LOCAL_PATH": {
-            "Description": "Data storage directory"
+      {
+        "HomeUrl": "${DP_HOME_URL}:${APP_SERVER_PORT}",
+        "Name": "dpanel",
+        "RunOption": {
+          "AutoLaunch": true,
+          "Environment": [
+            "APP_SERVER_PORT=9999",
+            "DP_SYSTEM_STORAGE_LOCAL_PATH=${DP_HOME_DIR}/dpanel",
+            "DP_HOME_URL=http://127.0.0.1"
+          ],
+          "LogMaxLine": 1000,
+          "StartCommand": "./dpanel server:start",
+          "StopCommand": "",
+          "WorkDir": "./apps/dpanel"
+        },
+        "Setting": {
+          "Environment": {
+            "APP_SERVER_PORT": {
+              "Description": {
+                "zh-CN": "服务运行端口",
+                "en-US": "Service port"
+              }
+            },
+            "DP_HOME_URL": {
+              "Description": {
+                "zh-CN": "访问地址",
+                "en-US": "Access address"
+              }
+            },
+            "DP_SYSTEM_STORAGE_LOCAL_PATH": {
+              "Description": {
+                "zh-CN": "数据存储目录",
+                "en-US": "Data storage directory"
+              },
+              "Help": {
+                "zh-CN": "数据存储目录为 ${DP_HOME_DIR}/dpanel；如需更改，请在启动桌面程序前设置 DP_HOME_DIR 环境变量。",
+                "en-US": "Data is stored in ${DP_HOME_DIR}/dpanel. To change it, set DP_HOME_DIR before starting the desktop app."
+              },
+              "Disabled": true
+            }
           }
         }
       }
+    ],
+    "System": {
+      "CloseWindowHide": true,
+      "Theme": "light",
+      "Language": "auto"
     }
-  ],
-  "System": {
-    "CloseWindowHide": false,
-    "Theme": "light"
-  }
 }
 ```
 
