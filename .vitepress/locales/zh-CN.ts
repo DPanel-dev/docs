@@ -89,7 +89,7 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: '相对目录', link: getLink("manual/compose-relative-bind") },
           { text: '环境变量', link: getLink("manual/compose-create-env") },
           { text: '覆盖配置', link: getLink("manual/compose-create-override") },
-          { text: '管理外部任务', link: getLink("manual/compose-create-outpath") },
+          { text: '数据隔离', link: getLink("manual/compose-isolation") },
           { text: '批量拉取镜像', link: getLink("manual/compose-image-pull") },
           { text: '其它平台迁移', link: getLink("manual/compose-third-party") },
         ]

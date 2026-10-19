@@ -89,7 +89,7 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: 'Relative Directories', link: getLink("manual/compose-relative-bind") },
           { text: 'Environment Variables', link: getLink("manual/compose-create-env") },
           { text: 'Override Configuration', link: getLink("manual/compose-create-override") },
-          { text: 'Manage External Tasks', link: getLink("manual/compose-create-outpath") },
+          { text: 'Data Isolation', link: getLink("manual/compose-isolation") },
           { text: 'Batch Pull Images', link: getLink("manual/compose-image-pull") },
           { text: 'Migrate from Other Platforms', link: getLink("manual/compose-third-party") },
         ]

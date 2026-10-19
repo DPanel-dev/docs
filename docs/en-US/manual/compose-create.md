@@ -35,11 +35,11 @@ You can directly clone a remote git repository locally to create tasks.
 When creating the DPanel panel, you can mount the panel's `/dpanel` directory to the host machine.
 Place projects in `/dpanel/compose`, and the panel will automatically discover these directories and create corresponding compose tasks.
 
-You can also mount the `/dpanel/compose` directory separately, for example:
+You can mount the entire `/dpanel/compose` directory or an individual task directory into the panel container. The following example includes both:
 
 ```js
 docker run -d -it --name dpanel ...(other parameters omitted)... \
--v /home/dpanel:/dpanel -v /mnt/compose:/dpanel/compose \   // [!code focus]
+-v /home/dpanel:/dpanel -v /mnt/compose:/dpanel/compose -v /test/dpanel:/dpanel/compose/dpanel \   // [!code focus]
 dpanel/dpanel:latest
 ```
 
@@ -62,16 +62,22 @@ The subdirectory contains one of `docker-compose.yaml`, `docker-compose.yml`, `c
 └─ ....
 ```
 
-## Multi-Server YAML Data Isolation <Badge type="tip" text="DPanel Version >= 1.5.1" />
+#### Symlink Compose Directories for Binary Deployments
 
-The panel supports multiple Docker server endpoints sharing compose task files.
-After creating a compose task, this data can be deployed on each client.
+These examples apply when running the DPanel binary on the host. `/home/dpanel-1` is an example data directory; replace it with your actual path. Choose one of the two approaches below; do not run them in sequence.
 
-It also supports configuring independent compose directories for any remote server endpoint for file data isolation.
+Before creating a symlink, the source directory and the parent directory of the link location must exist. The link location must not already contain a file, directory, or symlink with the same name. If it does, safely migrate the existing content first; `ln -s` does not replace an existing directory with a symlink.
 
-### Enable Configuration
+Entire directory:
 
-Enable independent directories through [multi-server management](/manual/system-env#enable-compose-path).
-The directory is prefixed with `compose-` and ends with the current environment name.
+```shell
+ln -s /mnt/compose /home/dpanel-1/compose
+```
 
-For example: if the remote docker environment name is `test123`, the directory name is `compose-test123`. Its internal structure is consistent with the default compose directory.
+Individual task directory:
+
+Automatic discovery does not currently detect symlinks to individual task directories. To add a task, select "Mounted Directory" on the creation page, use the link directory name as the task identifier, and prepare `docker-compose.yaml` in the source directory.
+
+```shell
+ln -s /mnt/compose/dpanel /home/dpanel-1/compose/dpanel
+```
