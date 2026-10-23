@@ -59,11 +59,11 @@ scoop bucket add extras
 :::code-group
 
 ```shell [社区版]
-scoop install extras/dpanel
+scoop install dpanel-desktop-ce 
 ```
 
 ```shell [专业版]
-scoop install extras/dpanel-pe
+scoop install dpanel-desktop-pe
 ```
 :::
 

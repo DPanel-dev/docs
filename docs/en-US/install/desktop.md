@@ -61,11 +61,11 @@ scoop bucket add extras
 :::code-group
 
 ```shell [Community Edition]
-scoop install extras/dpanel
+scoop install dpanel-desktop-ce 
 ```
 
 ```shell [Professional Edition]
-scoop install extras/dpanel-pe
+scoop install dpanel-desktop-pe
 ```
 :::
 
