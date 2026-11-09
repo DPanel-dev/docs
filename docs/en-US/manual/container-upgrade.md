@@ -1,62 +1,70 @@
-# Container Updates <Badge type="tip" text="DPanel Version >= 1.4.2" />
+# Container Updates <Badge type="tip" text="DPanel Version >= 1.11.2" />
 
-The Container Updates page lists the containers in the current Docker environment. You can check image updates, review check results, and update containers from one place.
-The upgrade operation retains all configurations of the current container, re-pulls the image, and redeploys the container.
+When updating a container, DPanel pulls the image again and recreates the container using its existing configuration. Whether the old container is retained depends on the backup option. If the image has not changed, this simply rebuilds the container with the same image.
 
-:::tip
-Under multi-server, please ensure that each server's version is consistent, otherwise incompatibility may occur and cause the upgrade to fail.
-:::
+You can check and update a single container in `Container Details`, or check and update multiple containers on the `Container Updates` page.
 
-![container-upgrade-1](https://cdn.w7.cc/dpanel/container-upgrade-1.png)
+##### Update a Container
 
-## Check for Updates
+![container-upgrade-1](https://cdn.w7.cc/dpanel/container-upgrade-1.png?t=3)
 
-Update checks are now part of the container update feature. DPanel queries the remote registry for the image used by each container and records the check time, status, local digest, remote digest, and any error details.
+##### Batch Updates
 
-To avoid frequent remote registry requests, DPanel reuses results from the last 10 minutes by default. Select **Force Check** to bypass the cache and query the remote registry again. A cached result is invalidated automatically when the image used by the container changes.
+![container-upgrade-2](https://cdn.w7.cc/dpanel/container-upgrade-2.png?t=3)
 
-You can configure how a container is ignored:
+## Check Cache
 
-- **Ignore Current Version**: Ignores only the image version currently used by the container. Checks resume after its image changes.
+Container update checks are managed through `Container Updates`. DPanel records the check time, status, and any errors for each container.
+
+To avoid frequent registry requests, opening or refreshing `Container Details` reuses results from the last 10 minutes and runs a new check if they are older. Batch check results in `Container Updates` are refreshed only when you run a check manually.
+
+## Ignore Checks
+
+For containers using local images or those you do not want to update, you can choose one of the following ignore modes. Running a manual check in `Container Details` removes the container's ignore setting.
+
+- **Ignore Current Version**: Ignores only the image version currently used by the container. Checks can resume after its image changes.
 - **Ignore Permanently**: Always ignores this container. Other containers using the same image are not affected.
-- **Resume Detection**: Removes the ignore setting for this container.
+
+## How Update Detection Works
+
+A digest identifies image content. DPanel compares local and remote digests to detect updates. It also reports an update when the same local tag points to a different image from the one used by the container.
+
+For multi-architecture images, changes to another architecture may change the overall digest and trigger an update notice, even if the image for your architecture is unchanged.
+
+If deleting a registry mirror tag removes the local digest, DPanel can still try using historical digests saved in the container.
+
+Containers created with a fixed image ID or an `image@sha256:…` reference do not support update checks.
 
 
-## Image Update Detection Logic
+### Detection Rules
 
-### Digest
+If the same local tag points to a different image, DPanel reports an update immediately. Otherwise, it queries the remote digest. When local digests are missing, it tries historical digests saved in the container.
 
-The image's digest value is the unique identifier of the image in the remote repository. The panel detects image updates through this value.
-If the local image does not contain a digest value, DPanel cannot compare it with the remote image and reports that no update is currently available.
-
-For images supporting different architecture platforms, even if only one platform changes, it will cause the digest value to change, thereby detecting an update.
-
-Images pulled using the panel's repository acceleration address have a digest value belonging to the acceleration tag. After deleting this tag, updates cannot be detected.
+| Condition | Result |
+| :--- | :--- |
+| The same local tag points to a different image from the one used by the container | Update available; no remote query |
+| The remote digest matches any local or historical digest used for comparison | No update available |
+| The remote digest matches none of the available digests | Update available |
+| Both local and historical digests are missing, but the remote manifest is successfully retrieved | Update available, even if the remote response contains no digest |
+| The remote manifest does not exist, or local or historical digests are available but the remote response contains no digest | Unable to check |
+| A query fails due to network, authentication, or other errors | Check failed |
 
 ### Naming Convention
 
-The image name such as `dpanel/dpanel:latest`, `dpanel/dpanel:lite`, etc., the part after the colon (:) is called Tag, used to identify the image version (digest).
+The part after the colon in an image name is called a tag, such as `latest` in `dpanel/dpanel:latest`. Tags identify versions or release variants, and the same tag can point to different image content over time.
 
-Usually, the composition of tags has the following situations:
+Common tag naming patterns include:
 
 | Type | Example |
 | :--- | :--- |
-| Fixed identifier | `dpanel/dpanel:lite`, `nginx:latest`, `nginx:mainline`|
-| Major version number | `dpanel/dpanel:1` `nginx:1.27` |
-| Minor version number | `dpanel/dpanel:1.4.0-lite`, `nginx:1.27.3` |
-| Based on release time | `minio/minio:RELEASE.2024-10-02T17-50-41Z` |
+| Fixed identifier | `dpanel/dpanel:lite`, `nginx:latest`, `nginx:mainline` |
+| Version series | `dpanel/dpanel:1`, `nginx:1.27` |
+| Specific version | `dpanel/dpanel:1.4.0-lite`, `nginx:1.27.3` |
+| Release timestamp | `minio/minio:RELEASE.2024-10-02T17-50-41Z` |
 
-When an image is released, it will cover tags from large to small in order. For example, when nginx releases 1.27.4, it will be pushed to `nginx:1.27`, `nginx:latest`, `nginx:mainline`, `nginx:1.27.4`, etc. at the same time, while the minor version `nginx:1.27.3` will not be covered.
-
-### Detect Updates
-
-- When you use nginx:latest to create a container, when nginx has an update push, it can detect an update.
-- When you use nginx:1.27 to create a container, an update is detected only when nginx releases a 1.27.* related version.
-- When you use nginx:1.27.3 to create a container, usually no update can be detected.
-
-When creating a container, you need to choose an appropriate image Tag based on your own situation to ensure that the [Quick Upgrade Container] function can be used normally.
+The publisher decides whether a tag is updated. DPanel checks only the image associated with the current tag; it does not compare version numbers or switch tags automatically.
 
 ## Update Rollback
 
-When DPanel updates a container, it will stop the old container and rename it to [Container Name-Update Time], and the old image will also be renamed to [Image Name-Update Time].
-After updating the container, you can restart the old container to complete the update rollback.
+Select `Back up the old container before updating` to retain a backup named `container-name-bak-timestamp`. No backup is retained by default.
+To roll back, stop the new container, then start the backup container. This does not restore mounted data.
