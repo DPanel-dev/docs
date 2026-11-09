@@ -16,23 +16,34 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Login to ALiYun
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          registry: registry.cn-hangzhou.aliyuncs.com
-          username: ${{ secrets.ALIYUN_USERNAME }}
-          password: ${{ secrets.ALIYUN_TOKEN }}
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Login to ZPK
         uses: docker/login-action@v3
         with:
           registry: zpk.w7.cc
           username: ${{ secrets.ZPK_USERNAME }}
           password: ${{ secrets.ZPK_PASSWORD }}
-      - name: Docker BuildX
+      - name: Build and push to Docker Hub
         run: |
           SHORT_SHA="$(git rev-parse --short=9 HEAD)"
           docker buildx build \
-          -t zpk.w7.cc/dpanel/dpanel:doc-${SHORT_SHA} \
+          -t docker.io/dpanel/dpanel:doc-${SHORT_SHA} \
           --platform linux/amd64 \
           --provenance=false \
           . --push
+      - name: Install Skopeo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y skopeo
+      - name: Sync image to ZPK
+        run: |
+          SHORT_SHA="$(git rev-parse --short=9 HEAD)"
+          skopeo copy --all --preserve-digests --retry-times 3 \
+            --authfile "${DOCKER_CONFIG:-$HOME/.docker}/config.json" \
+            "docker://docker.io/dpanel/dpanel:doc-${SHORT_SHA}" \
+            "docker://zpk.w7.cc/dpanel/dpanel:doc-${SHORT_SHA}"
