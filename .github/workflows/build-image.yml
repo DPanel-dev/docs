@@ -33,8 +33,6 @@ jobs:
           SHORT_SHA="$(git rev-parse --short=9 HEAD)"
           docker buildx build \
           -t zpk.w7.cc/dpanel/dpanel:doc-${SHORT_SHA} \
-          -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc \
-          -t registry.cn-hangzhou.aliyuncs.com/dpanel/dpanel:doc-${SHORT_SHA} \
           --platform linux/amd64 \
           --provenance=false \
           . --push
