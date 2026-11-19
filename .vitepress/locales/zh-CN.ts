@@ -14,7 +14,6 @@ export const zhCNConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
       { text: '赞助', link: 'https://afdian.com/a/dpanel' },
       { text: '演示', link: "https://demo.dpanel.cc" },
     ],
-
     sidebar: [
       {
         text: '安装部署',
