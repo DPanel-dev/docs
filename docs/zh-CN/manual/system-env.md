@@ -50,6 +50,7 @@ docker:x:994:test1,dpanel // [!code focus]
 ```
 :::
 
+
 #### 验证权限
 
 切换至目标用户并执行 docker 命令，正常输出即表示添加成功。
@@ -57,6 +58,21 @@ docker:x:994:test1,dpanel // [!code focus]
 ```shell
 docker ps
 ```
+
+### 群辉
+
+#### 创建 docker 专属用户组
+
+```
+sudo sh -c "synogroup --add docker && chown root:docker /var/run/docker.sock"
+```
+
+#### 将用户添加至 docker 用户组
+
+```
+sudo synogroup --memberadd docker 你的用户名
+```
+
 
 ## 切换环境
 
