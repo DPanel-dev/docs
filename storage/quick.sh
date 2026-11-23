@@ -119,7 +119,7 @@ registry_blob_url() {
 extract_header_value() {
   local header_file="$1"
   local header_name="$2"
-  awk -F': ' -v key="$header_name" 'BEGIN { IGNORECASE=1 } $1 == key { sub("\r$", "", $2); print $2; exit }' "$header_file"
+  awk -F': ' -v key="$header_name" 'tolower($1) == tolower(key) { sub("\r$", "", $2); print $2; exit }' "$header_file"
 }
 
 request_auth_header() {
