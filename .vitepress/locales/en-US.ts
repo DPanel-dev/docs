@@ -26,7 +26,8 @@ export const enUSConfig: LocaleSpecificConfig<DefaultTheme.Config> = {
           { text: 'Install with DinD', link: getLink("install/dind") },
           { text: 'Run with binary', link: getLink("install/source") },
           { text: 'Run with DPanel Desktop', link: getLink("install/desktop") },
-          { text: 'Deploy via FNNAS App Store', link: getLink("install/fnnas") },
+          { text: 'Install on FNNAS', link: getLink("install/fnnas") },
+          { text: 'Install on Synology', link: getLink("install/synology") },
         ]
       },
       {

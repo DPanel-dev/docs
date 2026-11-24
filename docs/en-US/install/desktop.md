@@ -23,7 +23,7 @@ You can also use DPanel Desktop to run other CLI programs in the same way.
 The DPanel Desktop portable package includes the `docker.exe` and `docker-compose.exe` commands.
 :::
 
-- [DPanel Desktop CE Portable](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-amd64-portable.zip)
+- [DPanel Desktop CE Portable](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-ce-amd64-portable.zip)
 
 #### macOS
 
@@ -31,7 +31,7 @@ The DPanel Desktop portable package includes the `docker.exe` and `docker-compos
 On macOS, install the `docker`, `docker compose`, and `docker buildx` commands yourself.
 :::
 
-- [DPanel Desktop CE (Apple silicon)](https://cdn.w7.cc/dpanel/release/dpanel-desktop-ce-darwin-arm64.app.zip)
+- [DPanel Desktop CE (Apple silicon)](https://github.com/donknap/dpanel/releases/latest/download/dpanel-desktop-ce-darwin-arm64.app.zip)
 
 For the Windows installer, macOS Intel packages, PE, and other options, see [More versions (Release page)](https://github.com/donknap/dpanel/releases).
 

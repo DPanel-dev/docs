@@ -59,21 +59,6 @@ docker:x:994:test1,dpanel // [!code focus]
 docker ps
 ```
 
-### 群辉
-
-#### 创建 docker 专属用户组
-
-```
-sudo sh -c "synogroup --add docker && chown root:docker /var/run/docker.sock"
-```
-
-#### 将用户添加至 docker 用户组
-
-```
-sudo synogroup --memberadd docker 你的用户名
-```
-
-
 ## 切换环境
 
 通过顶部菜单切换不同的 Docker 客户端。
