@@ -19,7 +19,7 @@
 sudo sh -c 'chgrp dpanel /var/run/docker.sock && chmod 660 /var/run/docker.sock'
 ```
 
-## 开启群晖终端
+### 开启群晖终端
 
 ![synology-2](https://cdn.w7.cc/dpanel/synology-2.png?t=1)
 
@@ -30,6 +30,29 @@ Windows 中使用 `powershell`，MacOS 中使用 `终端`
 :::
 
 ![synology-3](https://cdn.w7.cc/dpanel/synology-3.gif?t=1)
+
+## 使用群晖反向代理
+
+在安装面板的时候可以配置 `访问方式` 为 `直连访问` 和 `反代访问`。直连访问会将面板端口暴露在群晖主机 IP，你可以直接通过 `http://ip:port` 的形式访问面板。
+
+反代访问则需要你在群晖中配置 `反向代理` 来访问面板，此时不能直连 DPanel 的服务端口，应访问反代规则配置的来源地址。
+
+### 配置反向代理
+
+| 分组 | 配置 |
+| --- | --- |
+| 来源 | 访问代理名称：dpanel |
+| - | 协议：如果开启 HTTPS，则选 HTTPS，否则选 HTTP |
+| - | 端口：配置外部访问的端口，比如 5002 |
+| 目的地 | 协议：HTTP |
+| - | 主机名：127.0.0.1 |
+| - | 端口：安装面板时配置的端口 |
+| 自定义标题 | 新增 WebSocket |
+| 高级设置 | 配置代理服务器读取超时：3600 |
+
+![synology-proxy-1](https://cdn.w7.cc/dpanel/synology-proxy-1.png?t=1)
+
+![synology-proxy-1](https://cdn.w7.cc/dpanel/synology-proxy-2.png?t=1)
 
 ## 将群晖做为远程主机管理
 
