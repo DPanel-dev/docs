@@ -16,7 +16,7 @@
 待面板启动后，需要管理员授权面板访问本机 Docker，复制下方命令在 SSH 中执行。
 
 ```
-sudo sh -c 'chgrp dpanel /var/run/docker.sock && chmod 660 /var/run/docker.sock'
+sudo sh -c '/usr/syno/sbin/synogroup --memberadd root dpanel && /usr/syno/bin/synopkg restart dpanel'
 ```
 
 ### 开启群晖终端
@@ -57,14 +57,5 @@ Windows 中使用 `powershell`，MacOS 中使用 `终端`
 ## 将群晖做为远程主机管理
 
 除了安装套件外，你还可以把通过 [多服务端管理](/manual/system-env) 将群晖做为远程主机来管理。
-在添加前同样需要先 `开启群晖终端` 并授权用户可以访问本机 Docker。
 
-登录 SSH 并执行以下命令后，使用 `SSH` 的方式添加群晖主机即可。
-
-```
-sudo sh -c "synogroup --add dpanel && chgrp dpanel /var/run/docker.sock && chmod 660 /var/run/docker.sock'"
-```
-
-```
-sudo synogroup --memberadd dpanel "$(id -un)"
-```
+使用 ssh 或是 docker tcp 来管理远程的群晖主机。
